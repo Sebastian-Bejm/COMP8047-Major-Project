@@ -70,6 +70,7 @@ private:
 		else {
 			std::cerr << "Shader contents cannot be read" << std::endl;
 		}
+		throw(errno);
 
 	}
 };

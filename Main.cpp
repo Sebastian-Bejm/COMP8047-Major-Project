@@ -10,16 +10,15 @@
 #define SCREEN_WIDTH 1000
 #define SCREEN_HEIGHT 800
 
-// Moving these up here - temporary
-// Create 2D object on screen - tutorial
+// Moving these up here - temporary until i learn about colour buffer
 GLfloat vertices[] =
 {
-	-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower left corner
-	0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower right corner
-	0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f, // Upper corner
-	-0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,
-	0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,
-	0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f
+	-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,	0.8f, 0.3f, 0.02f, // Lower left corner
+	0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,		0.8f, 0.3f, 0.02f, // Lower right corner
+	0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f,	0.8f, 0.3f, 0.02f, // Upper corner
+	-0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, 0.8f, 0.3f, 0.02f,
+	0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,	0.8f, 0.3f, 0.02f,
+	0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f,		0.8f, 0.3f, 0.02f,
 };
 
 GLuint indices[] = {
@@ -64,39 +63,21 @@ int main() {
 
 	Shader shaderProgram("DefaultVertShader.vs", "DefaultFragShader.fs");
 
+	// Create the VAO, VBO, and EBO for the current rendered object (must be in this order)
 	VAO vao;
 	vao.Bind();
 
 	VBO vbo(vertices, sizeof(vertices));
 	EBO ebo(indices, sizeof(indices));
 
-	vao.LinkVBO(vbo, 0);
+	// vao.LinkVBO(vbo, 0);
+	// temporary until i learn to use colour buffer as seperately
+	vao.LinkAttrib(vbo, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
+	vao.LinkAttrib(vbo, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3*sizeof(float)));
 
 	vao.Unbind();
 	vbo.Unbind();
 	ebo.Unbind();
-
-	// Create the VAO and VBO for the current object (must be in this order)
-	/*GLuint VAO, VBO, EBO;
-
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
-
-	glBindVertexArray(VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); 
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);*/
 
 	// Specify the color of the background (silver)
 	glClearColor(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
