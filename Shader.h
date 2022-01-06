@@ -18,7 +18,7 @@ public:
 		const char* vertexSource = vertexCode.c_str();
 		const char* fragmentSource = fragmentCode.c_str();
 
-		// Create basic shaders for this 2D object - tutorial
+		// Create basic shaders for a new object
 		GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(vertexShader, 1, &vertexSource, NULL);
 		glCompileShader(vertexShader);

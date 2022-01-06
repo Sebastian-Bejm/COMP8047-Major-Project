@@ -21,7 +21,7 @@ public:
 		glBindVertexArray(ID);
 	}
 
-	void UnBind() {
+	void Unbind() {
 		glBindVertexArray(0);
 	}
 
