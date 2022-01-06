@@ -2,6 +2,10 @@
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
 
+#include<glm/glm.hpp>
+#include<glm/gtc/matrix_transform.hpp>
+#include<glm/gtc/type_ptr.hpp>
+
 #include "Shader.h"
 #include "VAO.h"
 #include "VBO.h"
@@ -11,6 +15,7 @@
 #define SCREEN_HEIGHT 800
 
 // Moving these up here - temporary until i learn about colour buffer
+// first 3 are x y z, next 3 are r g b
 GLfloat vertices[] =
 {
 	-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,	0.8f, 0.3f, 0.02f, // Lower left corner
@@ -27,6 +32,7 @@ GLuint indices[] = {
 	5, 4, 1
 };
 
+// TODO: refactor later fot initalize, update, and teardown
 int initialize() {
 	return 0;
 }
@@ -82,19 +88,25 @@ int main() {
 
 	// Specify the color of the background (silver)
 	glClearColor(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
+	// Clean the back buffer and assign the new color to it
 	glClear(GL_COLOR_BUFFER_BIT);
+	// Swap the back buffer with the front buffer
 	glfwSwapBuffers(window);
 
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {
-
+		// Specify the color of the background (silver)
 		glClearColor(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
+		// Clean the back buffer and assign the new color to it
 		glClear(GL_COLOR_BUFFER_BIT);
-
+		// Tell OpenGL what Shader program we want to use
 		shaderProgram.Activate();
+		
+		glm::mat4 model = glm::mat4(1.0f);
 
+		// Bind the VAO so OpenGL knows to use it
 		vao.Bind();
-
+		// Draw primitives, number of indices, datatype of indices, index of indices (this would be when looping to render multiple objects)
 		glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, 0);
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);

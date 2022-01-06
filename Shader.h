@@ -12,8 +12,8 @@ class Shader {
 public:
 
 	Shader(const char* vertexFile, const char* fragmentFile) {
-		std::string vertexCode = get_file_contents(vertexFile);
-		std::string fragmentCode = get_file_contents(fragmentFile);
+		std::string vertexCode = GetFileContents(vertexFile);
+		std::string fragmentCode = GetFileContents(fragmentFile);
 
 		const char* vertexSource = vertexCode.c_str();
 		const char* fragmentSource = fragmentCode.c_str();
@@ -22,12 +22,12 @@ public:
 		GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(vertexShader, 1, &vertexSource, NULL);
 		glCompileShader(vertexShader);
-		compileErrors(vertexShader, "VERTEX");
+		CompileErrors(vertexShader, "VERTEX");
 
 		GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 		glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
 		glCompileShader(fragmentShader);
-		compileErrors(fragmentShader, "FRAGMENT");
+		CompileErrors(fragmentShader, "FRAGMENT");
 
 		// Attatch the shaders to the program
 		ID = glCreateProgram();
@@ -35,9 +35,9 @@ public:
 		glAttachShader(ID, fragmentShader);
 		// Link all shaders to the program
 		glLinkProgram(ID);
-		compileErrors(ID, "PROGRAM");
+		CompileErrors(ID, "PROGRAM");
 
-		// Now that they are attached they can be deleted to save memory
+		// Now that they are attached they can be deleted
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
 
@@ -55,7 +55,7 @@ private:
 
 	GLuint ID;
 
-	std::string get_file_contents(const char* filename) {
+	std::string GetFileContents(const char* filename) {
 		std::ifstream in(filename, std::ios::binary);
 
 		if (in) {
@@ -78,7 +78,7 @@ private:
 	}
 
 	// Checks if the different Shaders have compiled properly
-	void compileErrors(unsigned int shader, const char* type)
+	void CompileErrors(unsigned int shader, const char* type)
 	{
 		// Stores status of compilation
 		GLint hasCompiled;
