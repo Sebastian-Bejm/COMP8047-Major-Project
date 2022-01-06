@@ -10,7 +10,7 @@
 #include "VBO.h"
 #include "EBO.h"
 
-const int screenWidth = 1000;
+const int screenWidth = 800;
 const int screenHeight = 800;
 
 // Moving these up here - temporary until i learn about colour buffer
@@ -120,27 +120,25 @@ int main() {
 		// Tell OpenGL what Shader program we want to use
 		shaderProgram.Activate();
 		
-		
-		glm::mat4 model = glm::mat4(1.0f);
+		/*glm::mat4 model = glm::mat4(1.0f);
 		glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 proj = glm::mat4(1.0f);
 
 		view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
 		// temporary, I will want orthographic later on
-		proj = glm::perspective(glm::radians(45.0f), (float)(screenWidth / screenHeight), 0.1f, 100.0f);
+		proj = glm::perspective(glm::radians(45.0f), (float)(screenWidth / screenHeight), 0.1f, 50.0f);
 
 		int modelLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		int viewLoc = glGetUniformLocation(shaderProgram.GetID(), "view");
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(view));
 		int projlLoc = glGetUniformLocation(shaderProgram.GetID(), "proj");
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(proj));
-
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(proj));*/
 
 		// Bind the VAO so OpenGL knows to use it
 		vao.Bind();
 		// Draw primitives, number of indices, datatype of indices, index of indices (this would be when looping to render multiple objects)
-		glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 
