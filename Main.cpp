@@ -2,6 +2,11 @@
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
 
+#include "Shader.h"
+#include "VAO.h"
+#include "VBO.h"
+#include "EBO.h"
+
 #define SCREEN_WIDTH 1000
 #define SCREEN_HEIGHT 800
 
