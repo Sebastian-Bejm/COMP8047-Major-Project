@@ -22,4 +22,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="DefaultFragShader.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="DefaultVertShader.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>
