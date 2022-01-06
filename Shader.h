@@ -43,6 +43,10 @@ public:
 
 	}
 
+	GLuint GetID() {
+		return ID;
+	}
+
 	void Activate() {
 		glUseProgram(ID);
 	}

@@ -1,7 +1,6 @@
 #include<iostream>
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
-
 #include<glm/glm.hpp>
 #include<glm/gtc/matrix_transform.hpp>
 #include<glm/gtc/type_ptr.hpp>
@@ -11,12 +10,12 @@
 #include "VBO.h"
 #include "EBO.h"
 
-#define SCREEN_WIDTH 1000
-#define SCREEN_HEIGHT 800
+const int screenWidth = 1000;
+const int screenHeight = 800;
 
 // Moving these up here - temporary until i learn about colour buffer
 // first 3 are x y z, next 3 are r g b
-GLfloat vertices[] =
+/*GLfloat vertices[] =
 {
 	-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,	0.8f, 0.3f, 0.02f, // Lower left corner
 	0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,		0.8f, 0.3f, 0.02f, // Lower right corner
@@ -30,6 +29,25 @@ GLuint indices[] = {
 	0, 3, 5,
 	3, 2, 4,
 	5, 4, 1
+};*/
+
+// Pyramid
+GLfloat vertices[] =
+{
+	-0.5f, 0.0f, 0.5f,	0.8f, 0.7f, 0.4f, // Lower left corner
+	-0.5f, 0.0f, -0.5f,	0.8f, 0.7f, 0.4f, // Upper left corner
+	0.5f, 0.0f, -0.5f,	0.8f, 0.7f, 0.4f, // Upper right corner
+	0.5f, 0.0f, 0.5f,	0.8f, 0.7f, 0.4f, // Lower right corner
+	0.0f, 0.8f, 0.0f,	0.95f, 0.85f, 0.7f, // Lower left corner
+};
+
+GLuint indices[] = {
+	0, 1, 2,
+	0, 2, 3,
+	0, 1, 4,
+	1, 2, 4,
+	2, 3, 4,
+	3, 0, 4
 };
 
 // TODO: refactor later fot initalize, update, and teardown
@@ -52,7 +70,7 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Create GLFW window
-	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "COMP 8047 Major Project", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(screenWidth, screenHeight, "COMP 8047 Major Project", NULL, NULL);
 	// If window fails to create it exits
 	if (window == NULL) {
 		std::cout << "Failed to create window" << std::endl;
@@ -65,7 +83,7 @@ int main() {
 	gladLoadGL();
 
 	// Specify the viewport of OpenGL in the window
-	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	glViewport(0, 0, screenWidth, screenHeight);
 
 	Shader shaderProgram("DefaultVertShader.vs", "DefaultFragShader.fs");
 
@@ -102,7 +120,22 @@ int main() {
 		// Tell OpenGL what Shader program we want to use
 		shaderProgram.Activate();
 		
+		
 		glm::mat4 model = glm::mat4(1.0f);
+		glm::mat4 view = glm::mat4(1.0f);
+		glm::mat4 proj = glm::mat4(1.0f);
+
+		view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
+		// temporary, I will want orthographic later on
+		proj = glm::perspective(glm::radians(45.0f), (float)(screenWidth / screenHeight), 0.1f, 100.0f);
+
+		int modelLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		int viewLoc = glGetUniformLocation(shaderProgram.GetID(), "view");
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(view));
+		int projlLoc = glGetUniformLocation(shaderProgram.GetID(), "proj");
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(proj));
+
 
 		// Bind the VAO so OpenGL knows to use it
 		vao.Bind();
