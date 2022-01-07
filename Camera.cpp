@@ -31,6 +31,7 @@ void Camera::SetMatrix(float fovDeg, float nearPlane, float farPlane) {
 * Processes inputs to move the camera. This will primarily be used for debugging the scene.
 */
 void Camera::ProcessInput(GLFWwindow* window) {
+	// Key inputs
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 		position += speed * front;
 	}
@@ -48,6 +49,37 @@ void Camera::ProcessInput(GLFWwindow* window) {
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
 		position += speed * -up;
+	}
+
+	// Mouse inputs
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+
+		if (firstClick) {
+			glfwSetCursorPos(window, (viewWidth / 2), (viewHeight / 2));
+			firstClick = false;
+		}
+
+		double mouseX, mouseY;
+		glfwGetCursorPos(window, &mouseX, &mouseY);
+
+		float rotX = sensitivity * (float)(mouseY - (viewHeight / 2)) / viewHeight;
+		float rotY = sensitivity * (float)(mouseX - (viewWidth / 2)) / viewWidth;
+
+		glm::vec3 newOrientation = glm::rotate(front, glm::radians(-rotX), glm::normalize(glm::cross(front, up)));
+
+		if (!(glm::angle(newOrientation, up) <= glm::radians(5.0f) || glm::angle(newOrientation, -up) <= glm::radians(5.0f))) {
+			front = newOrientation;
+		}
+
+		front = glm::rotate(front, glm::radians(-rotY), up);
+
+		glfwSetCursorPos(window, (viewWidth / 2), (viewHeight / 2));
+	}
+	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		firstClick = true;
 	}
 }
 
