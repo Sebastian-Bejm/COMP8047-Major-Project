@@ -18,7 +18,10 @@ public:
 
 private:
 
-	float speed = 0.005f;
+	float deltaTime = 0.0f;
+	float lastFrame = 0.0f;
+
+	float cameraSpeed = 0.005f;
 	float sensitivity = 100.0f;
 
 	bool firstClick = true;
