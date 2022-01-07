@@ -94,7 +94,7 @@ int main() {
 	VBO vbo(vertices, sizeof(vertices));
 	EBO ebo(indices, sizeof(indices));
 
-	// temporary until I learn to set 
+	// temporary until I learn to set dynamically
 	// Links the attributes to the shader based on layout (2nd param)
 	vao.LinkAttrib(vbo, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
 	vao.LinkAttrib(vbo, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3*sizeof(float)));
