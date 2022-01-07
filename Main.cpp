@@ -33,7 +33,7 @@ GLuint indices[] = {
 };*/
 
 // Pyramid
-GLfloat vertices[] =
+GLfloat pyramidVertices[] =
 {
 	-0.5f, 0.0f, 0.5f,	0.8f, 0.7f, 0.4f, // Lower left corner
 	-0.5f, 0.0f, -0.5f,	0.8f, 0.7f, 0.4f, // Upper left corner
@@ -42,13 +42,56 @@ GLfloat vertices[] =
 	0.0f, 0.8f, 0.0f,	0.95f, 0.85f, 0.7f, // Lower left corner
 };
 
-GLuint indices[] = {
+GLuint pyramidIndices[] = {
 	0, 1, 2,
 	0, 2, 3,
 	0, 1, 4,
 	1, 2, 4,
 	2, 3, 4,
 	3, 0, 4
+};
+
+// Cube
+GLfloat cubeVertices[] = {
+	-0.5f, -0.5f, -0.5f,
+	-0.5f, -0.5f,  0.5f,
+	0.5f, -0.5f,  0.5f,
+	0.5f, -0.5f, -0.5f,
+	-0.5f,  0.5f, -0.5f,
+	-0.5f,  0.5f,  0.5f,
+	0.5f,  0.5f,  0.5f,
+	0.5f,  0.5f, -0.5f,
+	-0.5f, -0.5f, -0.5f,
+	-0.5f,  0.5f, -0.5f,
+	0.5f,  0.5f, -0.5f,
+	0.5f, -0.5f, -0.5f,
+	-0.5f, -0.5f, 0.5f,
+	-0.5f,  0.5f, 0.5f,
+	0.5f,  0.5f, 0.5f,
+	0.5f, -0.5f, 0.5f,
+	-0.5f, -0.5f, -0.5f,
+	-0.5f, -0.5f,  0.5f,
+	-0.5f,  0.5f,  0.5f,
+	-0.5f,  0.5f, -0.5f,
+	0.5f, -0.5f, -0.5f,
+	0.5f, -0.5f,  0.5f,
+	0.5f,  0.5f,  0.5f,
+	0.5f,  0.5f, -0.5f,
+};
+
+GLint cubeIndices[] = {
+	0, 2, 1,
+	0, 3, 2,
+	4, 5, 6,
+	4, 6, 7,
+	8, 9, 10,
+	8, 10, 11,
+	12, 15, 14,
+	12, 14, 13,
+	16, 17, 18,
+	16, 18, 19,
+	20, 23, 22,
+	20, 22, 21
 };
 
 // TODO: refactor later fot initalize, update, and teardown
@@ -92,8 +135,11 @@ int main() {
 	VAO vao;
 	vao.Bind();
 
-	VBO vbo(vertices, sizeof(vertices));
-	EBO ebo(indices, sizeof(indices));
+	VBO vbo(pyramidVertices, sizeof(pyramidVertices));
+	EBO ebo(pyramidIndices, sizeof(pyramidIndices));
+
+	int numVertices = sizeof(pyramidVertices) / sizeof(pyramidVertices[0]);
+	int numIndices = sizeof(pyramidIndices) / sizeof(pyramidIndices[0]);
 
 	// temporary until I learn to set these params dynamically based on object info
 	// Links the attributes to the shader based on layout
@@ -146,7 +192,7 @@ int main() {
 		// Bind the VAO so OpenGL knows to use it
 		vao.Bind();
 		// Draw primitives, number of indices, datatype of indices, index of indices (this would be when looping to render multiple objects)
-		glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, 0);
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 
