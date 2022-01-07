@@ -95,8 +95,8 @@ int main() {
 	VBO vbo(vertices, sizeof(vertices));
 	EBO ebo(indices, sizeof(indices));
 
-	// temporary until I learn to set dynamically
-	// Links the attributes to the shader based on layout (2nd param)
+	// temporary until I learn to set these params dynamically based on object info
+	// Links the attributes to the shader based on layout
 	vao.LinkAttrib(vbo, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
 	vao.LinkAttrib(vbo, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3*sizeof(float)));
 
@@ -112,10 +112,6 @@ int main() {
 	// Swap the back buffer with the front buffer
 	glfwSwapBuffers(window);
 
-	// Rotation for current object
-	//float rotation = 0.0f;
-	//double prevTime = glfwGetTime();
-
 	// Enable the depth buffer for 3D objects
 	glEnable(GL_DEPTH_TEST);
 
@@ -130,41 +126,22 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		// Tell OpenGL what Shader program we want to use
 		shaderProgram.Activate();
-		
-		// TODO: transfer this code to a Transform component for object
-		//double time = glfwGetTime();
-		//if (time - prevTime >= 1 / 60) {
-		//	rotation += 0.05f;
-		//	prevTime = time;
-		//}
 
-		// Create the model, view, and projection matrices
-		glm::mat4 model = glm::mat4(1.0f);
-		glm::mat4 view = glm::mat4(1.0f);
-		glm::mat4 proj = glm::mat4(1.0f);
-
-		//model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
-
+		camera.ProcessInput(window);
 		camera.SetMatrix(45.0f, 0.1f, 100.0f);
-		view = camera.GetViewMatrix();
-		proj = camera.GetProjectionMatrix();
 
-		//view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
-		// temporary, I will want orthographic later on
-		//proj = glm::perspective(glm::radians(45.0f), (float)(screenWidth / screenHeight), 0.1f, 100.0f);
+		// Get the model, view, and projection matrices
+		glm::mat4 model = glm::mat4(1.0f);
+		glm::mat4 view = camera.GetViewMatrix();
+		glm::mat4 proj = camera.GetProjectionMatrix();
 
+		// Set the uniforms in the shader
 		GLint modelLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		GLint viewLoc = glGetUniformLocation(shaderProgram.GetID(), "view");
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		GLint projLoc = glGetUniformLocation(shaderProgram.GetID(), "proj");
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
-
-		// Create the MVP matrix
-		//glm::mat4 mvp = proj * view * model;
-		// Pass the MVP to the vertex shader
-		//GLint mvpLoc = glGetUniformLocation(shaderProgram.GetID(), "mvp");
-		//glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(mvp));
 
 		// Bind the VAO so OpenGL knows to use it
 		vao.Bind();

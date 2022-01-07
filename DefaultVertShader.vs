@@ -6,9 +6,7 @@ layout (location = 1) in vec3 aColor;
 // Outputs the color to the fragment shader
 out vec3 color;
 
-// Model view projection matrix (proj * view * model)
-//uniform mat4 mvp;
-
+// Model view projection matrices (proj * view * model)
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 proj;
