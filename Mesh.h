@@ -21,7 +21,7 @@ private:
 
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
-	// vector for textures as well
+	// vector for textures / normals as well
 
 	VAO vao;
 	

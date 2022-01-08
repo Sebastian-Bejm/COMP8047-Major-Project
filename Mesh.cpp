@@ -33,7 +33,6 @@ void Mesh::Draw(Shader& shader, Camera& camera) {
 	// Handle texture drawing here later
 	
 	glm::mat4 cam = camera.GetCameraMatrix();
-
 	GLint cameraLoc = glGetUniformLocation(shader.GetID(), "camMatrix");
 	glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(cam));
 

@@ -11,6 +11,9 @@
 const int screenWidth = 1000;
 const int screenHeight = 800;
 
+float deltaTime;
+float currentFrame, lastFrame;
+
 Vertex pyramidVertices[] =
 {
 	glm::vec3(-0.5f, 0.0f, 0.5f),	glm::vec3(0.8f, 0.7f, 0.4f), // Lower left corner
@@ -127,11 +130,9 @@ int main() {
 	// Set up model matrixes for each new object
 	glm::mat4 pyrModel = glm::mat4(1.0f);
 
-	glm::vec3 cubePosition(1.0f, 0.5, 0.0f);
 	glm::mat4 cubeModel = glm::mat4(1.0f);
-	cubeModel = glm::translate(glm::vec3(cubePosition));
-
-	// Transform for the cube
+	glm::vec3 cubePosition(1.0f, 0.5, 0.0f);
+	// Transform for the cube - temp here
 	Transform transform(cubePosition, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
 	// Tell OpenGL what shader programs we want to use
@@ -168,21 +169,28 @@ int main() {
 		camera.ProcessInput(window);
 		camera.SetMatrix(45.0f, 0.1f, 100.0f);
 
-		pyramidMesh.Draw(shaderProgram, camera); 
-		cubeMesh.Draw(cubeShader, camera);
+		// This fixes the fast movement for now
+		currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
 
-		/*if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-			cubePosition.x -= 0.1f;
-			
+		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+			//cubePosition.x -= 0.1f;
+			transform.Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
 		}
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-			cubePosition.x += 0.1f;
+			//cubePosition.x += 0.1f;
+			transform.Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
+
 		}
-		cubeModel = glm::translate(glm::vec3(cubePosition));
+
+		cubeModel = transform.GetModelMatrix();
 
 		GLint cubeLoc = glGetUniformLocation(cubeShader.GetID(), "model");
-		glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(cubeModel));*/
+		glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(cubeModel));
 
+		pyramidMesh.Draw(shaderProgram, camera); 
+		cubeMesh.Draw(cubeShader, camera);
 		
 
 		// Swap the back buffer with the front buffer

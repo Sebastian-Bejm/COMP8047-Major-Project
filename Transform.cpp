@@ -21,10 +21,9 @@ void Transform::Translate(glm::vec3 translate, float speed) {
 	position.z += translate.z * speed;
 }
 
-
 glm::mat4 Transform::GetModelMatrix() {
-	modelMatrix = glm::translate(modelMatrix, position);
-
+	modelMatrix = glm::translate(position);
+	// add rotation and scale later
 	return modelMatrix;
 }
 
