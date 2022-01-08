@@ -127,14 +127,16 @@ int main() {
 	std::vector<GLuint> cInds(cubeIndices, cubeIndices + sizeof(cubeIndices) / sizeof(GLuint));
 
 	// Create new mesh with vertices and indices
-	//Mesh pyramidMesh(vertices, indices);
+	Mesh pyramidMesh(vertices, indices);
 	Mesh cubeMesh(cVerts, cInds);
 
 	// Set up model matrixes
 	glm::mat4 pyrModel = glm::mat4(1.0f);
 
+	glm::vec3 cubePosition(1.0f, 0.5, 0.0f);
+
 	glm::mat4 cubeModel = glm::mat4(1.0f);
-	cubeModel = glm::translate(glm::vec3(1.0f, 0.5f, 0.0f));
+	cubeModel = glm::translate(glm::vec3(cubePosition));
 
 	// Tell OpenGL what Shader program we want to use
 	shaderProgram.Activate();
@@ -146,25 +148,6 @@ int main() {
 	glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(cubeModel));
 
 
-	// Create the VAO, VBO, and EBO for the current rendered object (must be in this order)
-	//VAO vao;
-	//vao.Bind();
-
-	//VBO vbo(pyramidVertices, sizeof(pyramidVertices));
-	//EBO ebo(pyramidIndices, sizeof(pyramidIndices));
-
-	//int numVertices = sizeof(pyramidVertices) / sizeof(pyramidVertices[0]);
-	//int numIndices = sizeof(pyramidIndices) / sizeof(pyramidIndices[0]);
-
-	// temporary until I learn to set these params dynamically based on object info
-	// Links the attributes to the shader based on layout
-	//vao.LinkAttrib(vbo, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
-	//vao.LinkAttrib(vbo, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3*sizeof(float)));
-
-	// Unbind to prevent modification
-	//vao.Unbind();
-	//vbo.Unbind();
-	//ebo.Unbind();
 
 	// Specify the color of the background (silver)
 	glClearColor(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
@@ -179,6 +162,7 @@ int main() {
 	// Set up the camera
 	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 0.5f, 2.0f));
 
+
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {
 		// Specify the color of the background (silver)
@@ -189,14 +173,23 @@ int main() {
 		camera.ProcessInput(window);
 		camera.SetMatrix(45.0f, 0.1f, 100.0f);
 
-		//pyramidMesh.Draw(shaderProgram, camera); 
+		pyramidMesh.Draw(shaderProgram, camera); 
 		cubeMesh.Draw(cubeShader, camera);
 
+		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+			cubePosition.x -= 0.1f;
+			
+		}
+		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+			cubePosition.x += 0.1f;
+		}
+		cubeModel = glm::translate(glm::vec3(cubePosition));
 
-		// Bind the VAO so OpenGL knows to use it
-		//vao.Bind();
-		// Draw primitives, number of indices, datatype of indices, index of indices (this would be when looping to render multiple objects)
-		//glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, 0);
+		GLint cubeLoc = glGetUniformLocation(cubeShader.GetID(), "model");
+		glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(cubeModel));
+
+
+
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 
