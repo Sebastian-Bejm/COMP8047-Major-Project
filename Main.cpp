@@ -5,24 +5,35 @@
 #include<glm/gtc/matrix_transform.hpp>
 #include<glm/gtc/type_ptr.hpp>
 
-#include "Shader.h"
+/*#include "Shader.h"
 #include "VAO.h"
 #include "VBO.h"
 #include "EBO.h"
-#include "Camera.h"
+#include "Camera.h"*/
+
+#include "Mesh.h"
 
 const int screenWidth = 1000;
 const int screenHeight = 800;
 
 
 // Pyramid
-GLfloat pyramidVertices[] =
+/*GLfloat pyramidVertices[] =
 {
 	-0.5f, 0.0f, 0.5f,	0.8f, 0.7f, 0.4f, // Lower left corner
 	-0.5f, 0.0f, -0.5f,	0.8f, 0.7f, 0.4f, // Upper left corner
 	0.5f, 0.0f, -0.5f,	0.8f, 0.7f, 0.4f, // Upper right corner
 	0.5f, 0.0f, 0.5f,	0.8f, 0.7f, 0.4f, // Lower right corner
 	0.0f, 0.8f, 0.0f,	0.95f, 0.85f, 0.7f, // Lower left corner
+};*/
+
+Vertex pyramidVertices[] =
+{
+	glm::vec3(-0.5f, 0.0f, 0.5f),	glm::vec3(0.8f, 0.7f, 0.4f), // Lower left corner
+	glm::vec3(-0.5f, 0.0f, -0.5f),	glm::vec3(0.8f, 0.7f, 0.4f), // Upper left corner
+	glm::vec3(0.5f, 0.0f, -0.5f),	glm::vec3(0.8f, 0.7f, 0.4f), // Upper right corner
+	glm::vec3(0.5f, 0.0f, 0.5f),	glm::vec3(0.8f, 0.7f, 0.4f), // Lower right corner
+	glm::vec3(0.0f, 0.8f, 0.0f),	glm::vec3(0.95f, 0.85f, 0.7f), // Lower left corner
 };
 
 GLuint pyramidIndices[] = {
@@ -113,26 +124,32 @@ int main() {
 	glViewport(0, 0, screenWidth, screenHeight);
 
 	Shader shaderProgram("DefaultVertShader.vs", "DefaultFragShader.fs");
+	std::vector<Vertex> vertices(pyramidVertices, pyramidVertices + sizeof(pyramidVertices) / sizeof(Vertex));
+	std::vector<GLuint> indices(pyramidIndices, pyramidIndices + sizeof(pyramidIndices) / sizeof(GLuint));
+
+	Mesh pyramidMesh(vertices, indices);
+	shaderProgram.Activate();
+
 
 	// Create the VAO, VBO, and EBO for the current rendered object (must be in this order)
-	VAO vao;
-	vao.Bind();
+	//VAO vao;
+	//vao.Bind();
 
-	VBO vbo(pyramidVertices, sizeof(pyramidVertices));
-	EBO ebo(pyramidIndices, sizeof(pyramidIndices));
+	//VBO vbo(pyramidVertices, sizeof(pyramidVertices));
+	//EBO ebo(pyramidIndices, sizeof(pyramidIndices));
 
-	int numVertices = sizeof(pyramidVertices) / sizeof(pyramidVertices[0]);
-	int numIndices = sizeof(pyramidIndices) / sizeof(pyramidIndices[0]);
+	//int numVertices = sizeof(pyramidVertices) / sizeof(pyramidVertices[0]);
+	//int numIndices = sizeof(pyramidIndices) / sizeof(pyramidIndices[0]);
 
 	// temporary until I learn to set these params dynamically based on object info
 	// Links the attributes to the shader based on layout
-	vao.LinkAttrib(vbo, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
-	vao.LinkAttrib(vbo, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3*sizeof(float)));
+	//vao.LinkAttrib(vbo, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
+	//vao.LinkAttrib(vbo, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3*sizeof(float)));
 
 	// Unbind to prevent modification
-	vao.Unbind();
-	vbo.Unbind();
-	ebo.Unbind();
+	//vao.Unbind();
+	//vbo.Unbind();
+	//ebo.Unbind();
 
 	// Specify the color of the background (silver)
 	glClearColor(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
@@ -154,34 +171,27 @@ int main() {
 		// Clean the back buffer and assign the new color to it
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		// Tell OpenGL what Shader program we want to use
-		shaderProgram.Activate();
+		//shaderProgram.Activate();
 
 		camera.ProcessInput(window);
 		camera.SetMatrix(45.0f, 0.1f, 100.0f);
 
-		// Get the model, view, and projection matrices
+		// Get the model, and camera (view * projection) matrices
 		glm::mat4 model = glm::mat4(1.0f);
-		//glm::mat4 view = camera.GetViewMatrix();
-		//glm::mat4 proj = camera.GetProjectionMatrix();
-
-		//glm::mat4 camera = camera.GetCameraMatrix();
-		glm::mat4 cam = camera.GetCameraMatrix();
 
 		// Set the uniforms in the shader
 		GLint modelLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		/*GLint viewLoc = glGetUniformLocation(shaderProgram.GetID(), "view");
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		GLint projLoc = glGetUniformLocation(shaderProgram.GetID(), "proj");
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));*/
 
-		GLint cameraLoc = glGetUniformLocation(shaderProgram.GetID(), "camMatrix");
-		glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(cam));
+		pyramidMesh.Draw(shaderProgram, camera);
+
+		//GLint cameraLoc = glGetUniformLocation(shaderProgram.GetID(), "camMatrix");
+		//glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(cam));
 
 		// Bind the VAO so OpenGL knows to use it
-		vao.Bind();
+		//vao.Bind();
 		// Draw primitives, number of indices, datatype of indices, index of indices (this would be when looping to render multiple objects)
-		glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, 0);
+		//glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, 0);
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 
@@ -190,9 +200,9 @@ int main() {
 	}
 
 	// Cleanup objects we have created
-	vao.Delete();
-	vbo.Delete();
-	ebo.Delete();
+	//vao.Delete();
+	//vbo.Delete();
+	//ebo.Delete();
 	shaderProgram.Delete();
 
 	// Destroy window when done and exit

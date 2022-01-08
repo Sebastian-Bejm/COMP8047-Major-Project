@@ -23,6 +23,11 @@ void Mesh::Draw(Shader& shader, Camera& camera) {
 
 	// texture draw here
 	
-	glUniform3f(glGetUniformLocation(shader.GetID(), "camPos"), camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
+	glm::mat4 cam = camera.GetCameraMatrix();
+
+	GLint cameraLoc = glGetUniformLocation(shader.GetID(), "camMatrix");
+	glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(cam));
+
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 }
 
