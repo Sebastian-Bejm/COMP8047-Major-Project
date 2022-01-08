@@ -161,16 +161,22 @@ int main() {
 
 		// Get the model, view, and projection matrices
 		glm::mat4 model = glm::mat4(1.0f);
-		glm::mat4 view = camera.GetViewMatrix();
-		glm::mat4 proj = camera.GetProjectionMatrix();
+		//glm::mat4 view = camera.GetViewMatrix();
+		//glm::mat4 proj = camera.GetProjectionMatrix();
+
+		//glm::mat4 camera = camera.GetCameraMatrix();
+		glm::mat4 cam = camera.GetCameraMatrix();
 
 		// Set the uniforms in the shader
 		GLint modelLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		GLint viewLoc = glGetUniformLocation(shaderProgram.GetID(), "view");
+		/*GLint viewLoc = glGetUniformLocation(shaderProgram.GetID(), "view");
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		GLint projLoc = glGetUniformLocation(shaderProgram.GetID(), "proj");
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
+		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));*/
+
+		GLint cameraLoc = glGetUniformLocation(shaderProgram.GetID(), "camMatrix");
+		glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(cam));
 
 		// Bind the VAO so OpenGL knows to use it
 		vao.Bind();

@@ -3,18 +3,18 @@
 #include <glad//glad.h>
 #include <GLFW/glfw3.h>
 #include "GLMHeader.h"
+#include "Shader.h"
 
 class Camera {
 public:
 	Camera();
 	Camera(int viewWidth, int viewHeight, glm::vec3 position);
-	~Camera();
 
 	void SetMatrix(float fovDeg, float nearPlane, float farPlane);
 	void ProcessInput(GLFWwindow *window);
 
-	glm::mat4 GetViewMatrix();
-	glm::mat4 GetProjectionMatrix();
+	glm::mat4 GetCameraMatrix();
+	glm::vec3 GetPosition();
 
 private:
 
@@ -35,4 +35,5 @@ private:
 
 	glm::mat4 viewMatrix;
 	glm::mat4 projectionMatrix;
+	glm::mat4 cameraMatrix;
 };

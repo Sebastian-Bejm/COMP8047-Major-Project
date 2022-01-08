@@ -15,9 +15,9 @@ out vec3 currentPos;
 out vec3 color;
 
 // Model view projection matrices (proj * view * model)
+// Camera matrix = proj * view
+uniform mat4 camMatrix;
 uniform mat4 model;
-uniform mat4 view;
-uniform mat4 proj;
 
 void main()
 {
@@ -28,5 +28,5 @@ void main()
    color = aColor;
 
    //gl_Position = proj * view * model * vec4(aPos, 1.0);
-   gl_Position = proj * view * vec4(currentPos, 1.0);
+   gl_Position = camMatrix * vec4(currentPos, 1.0);
 }

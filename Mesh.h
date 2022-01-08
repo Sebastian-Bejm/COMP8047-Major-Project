@@ -5,13 +5,15 @@
 #include "VAO.h"
 #include "VBO.h"
 #include "EBO.h"
-#include "Shader.h"
+#include "Camera.h"
 // include textures later
 
 class Mesh {
 public:
 
-	Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, Shader& shader);
+	Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices);
+
+	void Draw(Shader& shader, Camera& camera);
 
 private:
 
