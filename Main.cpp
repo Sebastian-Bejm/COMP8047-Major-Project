@@ -46,31 +46,31 @@ GLuint pyramidIndices[] = {
 };
 
 // Cube
-GLfloat cubeVertices[] = {
-	-0.5f, -0.5f, -0.5f, 0.8f, 0.7f, 0.4f,
-	-0.5f, -0.5f,  0.5f, 0.95f, 0.85f, 0.7f,
-	0.5f, -0.5f,  0.5f, 0.8f, 0.7f, 0.4f,
-	0.5f, -0.5f, -0.5f, 0.95f, 0.85f, 0.7f,
-	-0.5f,  0.5f, -0.5f, 0.8f, 0.7f, 0.4f,
-	-0.5f,  0.5f,  0.5f, 0.95f, 0.85f, 0.7f,
-	0.5f,  0.5f,  0.5f, 0.8f, 0.7f, 0.4f,
-	0.5f,  0.5f, -0.5f, 0.95f, 0.85f, 0.7f,
-	-0.5f, -0.5f, -0.5f, 0.8f, 0.7f, 0.4f,
-	-0.5f,  0.5f, -0.5f, 0.95f, 0.85f, 0.7f,
-	0.5f,  0.5f, -0.5f, 0.8f, 0.7f, 0.4f,
-	0.5f, -0.5f, -0.5f, 0.95f, 0.85f, 0.7f,
-	-0.5f, -0.5f, 0.5f, 0.8f, 0.7f, 0.4f,
-	-0.5f,  0.5f, 0.5f, 0.95f, 0.85f, 0.7f,
-	0.5f,  0.5f, 0.5f, 0.8f, 0.7f, 0.4f,
-	0.5f, -0.5f, 0.5f, 0.95f, 0.85f, 0.7f,
-	-0.5f, -0.5f, -0.5f, 0.8f, 0.7f, 0.4f,
-	-0.5f, -0.5f,  0.5f, 0.95f, 0.85f, 0.7f,
-	-0.5f,  0.5f,  0.5f, 0.8f, 0.7f, 0.4f,
-	-0.5f,  0.5f, -0.5f, 0.95f, 0.85f, 0.7f,
-	0.5f, -0.5f, -0.5f, 0.8f, 0.7f, 0.4f,
-	0.5f, -0.5f,  0.5f, 0.95f, 0.85f, 0.7f,
-	0.5f,  0.5f,  0.5f, 0.8f, 0.7f, 0.4f,
-	0.5f,  0.5f, -0.5f, 0.95f, 0.85f, 0.7f,
+Vertex cubeVertices[] = {
+	glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
+	glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
+	glm::vec3(0.5f, -0.5f,  0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
+	glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
+	glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
+	glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
+	glm::vec3(0.5f,  0.5f,  0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
+	glm::vec3(0.5f,  0.5f, -0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
+	glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
+	glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
+	glm::vec3(0.5f,  0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
+	glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
+	glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
+	glm::vec3(-0.5f,  0.5f, 0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
+	glm::vec3(0.5f,  0.5f, 0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
+	glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
+	glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
+	glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
+	glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
+	glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
+	glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
+	glm::vec3(0.5f, -0.5f,  0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
+	glm::vec3(0.5f,  0.5f,  0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
+	glm::vec3(0.5f,  0.5f, -0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
 };
 
 GLint cubeIndices[] = {
@@ -88,7 +88,7 @@ GLint cubeIndices[] = {
 	20, 22, 21
 };
 
-// TODO: refactor later fot initalize, update, and teardown
+// TODO: refactor later for initalize, update, and teardown
 int initialize() {
 	return 0;
 }
@@ -124,10 +124,12 @@ int main() {
 	glViewport(0, 0, screenWidth, screenHeight);
 
 	Shader shaderProgram("DefaultVertShader.vs", "DefaultFragShader.fs");
+
 	std::vector<Vertex> vertices(pyramidVertices, pyramidVertices + sizeof(pyramidVertices) / sizeof(Vertex));
 	std::vector<GLuint> indices(pyramidIndices, pyramidIndices + sizeof(pyramidIndices) / sizeof(GLuint));
-
+	// Create new mesh with vertices and indices
 	Mesh pyramidMesh(vertices, indices);
+	// Tell OpenGL what Shader program we want to use
 	shaderProgram.Activate();
 
 
@@ -170,8 +172,6 @@ int main() {
 		glClearColor(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
 		// Clean the back buffer and assign the new color to it
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		// Tell OpenGL what Shader program we want to use
-		//shaderProgram.Activate();
 
 		camera.ProcessInput(window);
 		camera.SetMatrix(45.0f, 0.1f, 100.0f);
@@ -200,9 +200,6 @@ int main() {
 	}
 
 	// Cleanup objects we have created
-	//vao.Delete();
-	//vbo.Delete();
-	//ebo.Delete();
 	shaderProgram.Delete();
 
 	// Destroy window when done and exit

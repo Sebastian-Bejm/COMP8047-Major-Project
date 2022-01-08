@@ -21,13 +21,18 @@ void Mesh::Draw(Shader& shader, Camera& camera) {
 	shader.Activate();
 	vao.Bind();
 
-	// texture draw here
+	// Handle texture drawing here later
 	
 	glm::mat4 cam = camera.GetCameraMatrix();
 
 	GLint cameraLoc = glGetUniformLocation(shader.GetID(), "camMatrix");
 	glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(cam));
 
+	// Draw primitives, number of indices, datatype of indices, index of indices
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+}
+
+void Mesh::Cleanup() {
+
 }
 
