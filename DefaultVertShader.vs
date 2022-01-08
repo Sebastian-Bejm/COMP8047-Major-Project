@@ -14,9 +14,8 @@ out vec3 currentPos;
 // Outputs the color for the fragment shader
 out vec3 color;
 
-// Model view projection matrices (proj * view * model)
-// Camera matrix = proj * view
-uniform mat4 camMatrix;
+// Model view projection matrices 
+uniform mat4 camMatrix; // proj * view
 uniform mat4 model;
 
 void main()

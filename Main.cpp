@@ -5,12 +5,6 @@
 #include<glm/gtc/matrix_transform.hpp>
 #include<glm/gtc/type_ptr.hpp>
 
-/*#include "Shader.h"
-#include "VAO.h"
-#include "VBO.h"
-#include "EBO.h"
-#include "Camera.h"*/
-
 #include "Mesh.h"
 
 const int screenWidth = 1000;
@@ -124,13 +118,32 @@ int main() {
 	glViewport(0, 0, screenWidth, screenHeight);
 
 	Shader shaderProgram("DefaultVertShader.vs", "DefaultFragShader.fs");
+	Shader cubeShader("DefaultVertShader.vs", "DefaultFragShader.fs");
 
 	std::vector<Vertex> vertices(pyramidVertices, pyramidVertices + sizeof(pyramidVertices) / sizeof(Vertex));
 	std::vector<GLuint> indices(pyramidIndices, pyramidIndices + sizeof(pyramidIndices) / sizeof(GLuint));
+
+	std::vector<Vertex> cVerts(cubeVertices, cubeVertices + sizeof(cubeVertices) / sizeof(Vertex));
+	std::vector<GLuint> cInds(cubeIndices, cubeIndices + sizeof(cubeIndices) / sizeof(GLuint));
+
 	// Create new mesh with vertices and indices
-	Mesh pyramidMesh(vertices, indices);
+	//Mesh pyramidMesh(vertices, indices);
+	Mesh cubeMesh(cVerts, cInds);
+
+	// Set up model matrixes
+	glm::mat4 pyrModel = glm::mat4(1.0f);
+
+	glm::mat4 cubeModel = glm::mat4(1.0f);
+	cubeModel = glm::translate(glm::vec3(1.0f, 0.5f, 0.0f));
+
 	// Tell OpenGL what Shader program we want to use
 	shaderProgram.Activate();
+	GLint modelLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(pyrModel));
+
+	cubeShader.Activate();
+	GLint cubeLoc = glGetUniformLocation(cubeShader.GetID(), "model");
+	glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(cubeModel));
 
 
 	// Create the VAO, VBO, and EBO for the current rendered object (must be in this order)
@@ -176,17 +189,9 @@ int main() {
 		camera.ProcessInput(window);
 		camera.SetMatrix(45.0f, 0.1f, 100.0f);
 
-		// Get the model, and camera (view * projection) matrices
-		glm::mat4 model = glm::mat4(1.0f);
+		//pyramidMesh.Draw(shaderProgram, camera); 
+		cubeMesh.Draw(cubeShader, camera);
 
-		// Set the uniforms in the shader
-		GLint modelLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-
-		pyramidMesh.Draw(shaderProgram, camera);
-
-		//GLint cameraLoc = glGetUniformLocation(shaderProgram.GetID(), "camMatrix");
-		//glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(cam));
 
 		// Bind the VAO so OpenGL knows to use it
 		//vao.Bind();
@@ -201,6 +206,7 @@ int main() {
 
 	// Cleanup objects we have created
 	shaderProgram.Delete();
+	cubeShader.Delete();
 
 	// Destroy window when done and exit
 	glfwDestroyWindow(window);
