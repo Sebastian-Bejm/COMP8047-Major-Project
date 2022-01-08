@@ -14,23 +14,6 @@
 const int screenWidth = 1000;
 const int screenHeight = 800;
 
-// Moving these up here - temporary until i learn about colour buffer
-// first 3 are x y z, next 3 are r g b
-/*GLfloat vertices[] =
-{
-	-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,	0.8f, 0.3f, 0.02f, // Lower left corner
-	0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,		0.8f, 0.3f, 0.02f, // Lower right corner
-	0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f,	0.8f, 0.3f, 0.02f, // Upper corner
-	-0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, 0.8f, 0.3f, 0.02f,
-	0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,	0.8f, 0.3f, 0.02f,
-	0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f,		0.8f, 0.3f, 0.02f,
-};
-
-GLuint indices[] = {
-	0, 3, 5,
-	3, 2, 4,
-	5, 4, 1
-};*/
 
 // Pyramid
 GLfloat pyramidVertices[] =
@@ -53,30 +36,30 @@ GLuint pyramidIndices[] = {
 
 // Cube
 GLfloat cubeVertices[] = {
-	-0.5f, -0.5f, -0.5f,
-	-0.5f, -0.5f,  0.5f,
-	0.5f, -0.5f,  0.5f,
-	0.5f, -0.5f, -0.5f,
-	-0.5f,  0.5f, -0.5f,
-	-0.5f,  0.5f,  0.5f,
-	0.5f,  0.5f,  0.5f,
-	0.5f,  0.5f, -0.5f,
-	-0.5f, -0.5f, -0.5f,
-	-0.5f,  0.5f, -0.5f,
-	0.5f,  0.5f, -0.5f,
-	0.5f, -0.5f, -0.5f,
-	-0.5f, -0.5f, 0.5f,
-	-0.5f,  0.5f, 0.5f,
-	0.5f,  0.5f, 0.5f,
-	0.5f, -0.5f, 0.5f,
-	-0.5f, -0.5f, -0.5f,
-	-0.5f, -0.5f,  0.5f,
-	-0.5f,  0.5f,  0.5f,
-	-0.5f,  0.5f, -0.5f,
-	0.5f, -0.5f, -0.5f,
-	0.5f, -0.5f,  0.5f,
-	0.5f,  0.5f,  0.5f,
-	0.5f,  0.5f, -0.5f,
+	-0.5f, -0.5f, -0.5f, 0.8f, 0.7f, 0.4f,
+	-0.5f, -0.5f,  0.5f, 0.95f, 0.85f, 0.7f,
+	0.5f, -0.5f,  0.5f, 0.8f, 0.7f, 0.4f,
+	0.5f, -0.5f, -0.5f, 0.95f, 0.85f, 0.7f,
+	-0.5f,  0.5f, -0.5f, 0.8f, 0.7f, 0.4f,
+	-0.5f,  0.5f,  0.5f, 0.95f, 0.85f, 0.7f,
+	0.5f,  0.5f,  0.5f, 0.8f, 0.7f, 0.4f,
+	0.5f,  0.5f, -0.5f, 0.95f, 0.85f, 0.7f,
+	-0.5f, -0.5f, -0.5f, 0.8f, 0.7f, 0.4f,
+	-0.5f,  0.5f, -0.5f, 0.95f, 0.85f, 0.7f,
+	0.5f,  0.5f, -0.5f, 0.8f, 0.7f, 0.4f,
+	0.5f, -0.5f, -0.5f, 0.95f, 0.85f, 0.7f,
+	-0.5f, -0.5f, 0.5f, 0.8f, 0.7f, 0.4f,
+	-0.5f,  0.5f, 0.5f, 0.95f, 0.85f, 0.7f,
+	0.5f,  0.5f, 0.5f, 0.8f, 0.7f, 0.4f,
+	0.5f, -0.5f, 0.5f, 0.95f, 0.85f, 0.7f,
+	-0.5f, -0.5f, -0.5f, 0.8f, 0.7f, 0.4f,
+	-0.5f, -0.5f,  0.5f, 0.95f, 0.85f, 0.7f,
+	-0.5f,  0.5f,  0.5f, 0.8f, 0.7f, 0.4f,
+	-0.5f,  0.5f, -0.5f, 0.95f, 0.85f, 0.7f,
+	0.5f, -0.5f, -0.5f, 0.8f, 0.7f, 0.4f,
+	0.5f, -0.5f,  0.5f, 0.95f, 0.85f, 0.7f,
+	0.5f,  0.5f,  0.5f, 0.8f, 0.7f, 0.4f,
+	0.5f,  0.5f, -0.5f, 0.95f, 0.85f, 0.7f,
 };
 
 GLint cubeIndices[] = {

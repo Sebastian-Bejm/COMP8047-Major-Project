@@ -2,6 +2,11 @@
 
 out vec4 FragColor;
 
+// Inputs the current position from the vertex shader
+in vec3 currentPos;
+// Inputs the normal from the vertex shader
+//in vec3 normal;
+
 // Inputs the color from the vertex shader
 in vec3 color;
 

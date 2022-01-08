@@ -4,14 +4,21 @@
 
 #include "VAO.h"
 #include "VBO.h"
+#include "EBO.h"
 #include "Shader.h"
-// Include Transform
-// Later on I will need to include texture here
+// include textures later
 
-// Might need to make a Mesh class
-
-class GameObject {
+class Mesh {
 public:
 
+	Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, Shader& shader);
+
 private:
+
+	std::vector<Vertex> vertices;
+	std::vector<GLuint> indices;
+	// vector for textures as well
+
+	VAO vao;
+	
 };
