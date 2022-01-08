@@ -6,20 +6,10 @@
 #include<glm/gtc/type_ptr.hpp>
 
 #include "Mesh.h"
+#include "Transform.h"
 
 const int screenWidth = 1000;
 const int screenHeight = 800;
-
-
-// Pyramid
-/*GLfloat pyramidVertices[] =
-{
-	-0.5f, 0.0f, 0.5f,	0.8f, 0.7f, 0.4f, // Lower left corner
-	-0.5f, 0.0f, -0.5f,	0.8f, 0.7f, 0.4f, // Upper left corner
-	0.5f, 0.0f, -0.5f,	0.8f, 0.7f, 0.4f, // Upper right corner
-	0.5f, 0.0f, 0.5f,	0.8f, 0.7f, 0.4f, // Lower right corner
-	0.0f, 0.8f, 0.0f,	0.95f, 0.85f, 0.7f, // Lower left corner
-};*/
 
 Vertex pyramidVertices[] =
 {
@@ -83,12 +73,16 @@ GLint cubeIndices[] = {
 };
 
 // TODO: refactor later for initalize, update, and teardown
-int initialize() {
+int Initialize() {
 	return 0;
 }
 
-void teardown() {
+void Teardown() {
 	
+}
+
+void HandleInputs() {
+
 }
 
 int main() {
@@ -130,15 +124,17 @@ int main() {
 	Mesh pyramidMesh(vertices, indices);
 	Mesh cubeMesh(cVerts, cInds);
 
-	// Set up model matrixes
+	// Set up model matrixes for each new object
 	glm::mat4 pyrModel = glm::mat4(1.0f);
 
 	glm::vec3 cubePosition(1.0f, 0.5, 0.0f);
-
 	glm::mat4 cubeModel = glm::mat4(1.0f);
 	cubeModel = glm::translate(glm::vec3(cubePosition));
 
-	// Tell OpenGL what Shader program we want to use
+	// Transform for the cube
+	Transform transform(cubePosition, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+
+	// Tell OpenGL what shader programs we want to use
 	shaderProgram.Activate();
 	GLint modelLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(pyrModel));
@@ -146,7 +142,6 @@ int main() {
 	cubeShader.Activate();
 	GLint cubeLoc = glGetUniformLocation(cubeShader.GetID(), "model");
 	glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(cubeModel));
-
 
 
 	// Specify the color of the background (silver)
@@ -176,7 +171,7 @@ int main() {
 		pyramidMesh.Draw(shaderProgram, camera); 
 		cubeMesh.Draw(cubeShader, camera);
 
-		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+		/*if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 			cubePosition.x -= 0.1f;
 			
 		}
@@ -186,9 +181,9 @@ int main() {
 		cubeModel = glm::translate(glm::vec3(cubePosition));
 
 		GLint cubeLoc = glGetUniformLocation(cubeShader.GetID(), "model");
-		glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(cubeModel));
+		glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(cubeModel));*/
 
-
+		
 
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
