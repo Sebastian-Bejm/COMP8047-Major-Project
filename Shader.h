@@ -9,7 +9,7 @@
 class Shader {
 public:
 
-	Shader() { std::cout << "Test"; }
+	Shader() { }
 
 	Shader(const char* vertexFile, const char* fragmentFile) {
 		std::string vertexCode = GetFileContents(vertexFile);

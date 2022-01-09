@@ -3,9 +3,7 @@
 GameObject::GameObject(std::string tag, Shader& shader, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) {
 
 	objectTag = tag;
-	std::cout << shader.GetID() << std::endl;
 	shaderProgram = shader;
-	std::cout << shaderProgram.GetID() << std::endl;
 
 	// Cube
 	Vertex cubeVerts[] = {
@@ -76,5 +74,6 @@ void GameObject::Update(Camera& camera) {
 }
 
 void GameObject::Delete() {
+	mesh.Delete();
 	shaderProgram.Delete();
 }

@@ -24,5 +24,6 @@ private:
 	// vector for textures / normals as well
 
 	VAO vao;
-	
+	VBO vbo;
+	EBO ebo;
 };
