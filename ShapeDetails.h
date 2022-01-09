@@ -13,7 +13,7 @@ struct Shape {
 class ShapeDetails {
 public:
 
-	static Shape GetSquare() {
+	static Shape GetCube() {
 		Vertex cubeVerts[] = {
 			//		Coordinates				 ,		Colors
 			glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
@@ -57,9 +57,26 @@ public:
 			20, 22, 21
 		};
 
+		std::vector<Vertex> vertices(cubeVerts, cubeVerts + sizeof(cubeVerts) / sizeof(Vertex));
+		std::vector<GLuint> indices(cubeInds, cubeInds + sizeof(cubeInds) / sizeof(GLuint));
+
+		Shape shape = { vertices, indices };
+		return shape;
 	}
 
-	static std::pair<Vertex, GLuint> GetCube() {
+	static Shape GetSquare() {
+		Vertex vertices[] =
+		{ //     COORDINATES     /        COLORS      
+			glm::vec3(-0.5f, -0.5f, 0.0f),     glm::vec3(1.0f, 0.0f, 0.0f),
+			glm::vec3(-0.5f,  0.5f, 0.0f),     glm::vec3(0.0f, 1.0f, 0.0f),
+			glm::vec3(0.5f,  0.5f, 0.0f),      glm::vec3(0.0f, 0.0f, 1.0f),
+			glm::vec3(0.5f, -0.5f, 0.0f),      glm::vec3(1.0f, 1.0f, 1.0f),
+		};
 
+		GLuint indices[] =
+		{
+			0, 2, 1, // Upper triangle
+			0, 3, 2 // Lower triangle
+		};
 	}
 };

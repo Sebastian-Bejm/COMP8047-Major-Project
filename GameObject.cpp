@@ -6,7 +6,7 @@ GameObject::GameObject(std::string tag, Shader& shader, glm::vec3 position, glm:
 	shaderProgram = shader;
 
 	// Cube
-	Vertex shapeVertices[] = {
+	/*Vertex shapeVertices[] = {
 		//		Coordinates				 ,		Colors
 		glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
 		glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
@@ -47,10 +47,14 @@ GameObject::GameObject(std::string tag, Shader& shader, glm::vec3 position, glm:
 		16, 18, 19,
 		20, 23, 22,
 		20, 22, 21
-	};
+	};*/
 
-	std::vector<Vertex> vertices(shapeVertices, shapeVertices + sizeof(shapeVertices) / sizeof(Vertex));
-	std::vector<GLuint> indices(shapeIndices, shapeIndices + sizeof(shapeIndices) / sizeof(GLuint));
+	Shape shape = ShapeDetails::GetCube(); // temporary, will make dynamic choice in game object
+	std::vector<Vertex> vertices = shape.vertices;
+	std::vector<GLuint> indices = shape.indices;
+
+	//std::vector<Vertex> vertices(shapeVertices, shapeVertices + sizeof(shapeVertices) / sizeof(Vertex));
+	//std::vector<GLuint> indices(shapeIndices, shapeIndices + sizeof(shapeIndices) / sizeof(GLuint));
 
 	mesh = Mesh(vertices, indices);
 	transform = Transform(position, rotation, scale);
