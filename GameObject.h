@@ -2,6 +2,7 @@
 
 #include "Mesh.h"
 #include "Transform.h"
+//#include "ShapeDetails.h"
 
 class GameObject
 {
