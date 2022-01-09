@@ -7,7 +7,7 @@
 
 #include "Mesh.h"
 #include "Transform.h"
-#include "GameObject.h"
+//#include "GameObject.h"
 
 const int screenWidth = 1000;
 const int screenHeight = 800;
@@ -127,6 +127,7 @@ int main() {
 
 	// Create new mesh with vertices and indices
 	Mesh pyramidMesh(vertices, indices);
+
 	Mesh cubeMesh(cVerts, cInds);
 
 	// Set up model matrixes for each new object
@@ -146,6 +147,9 @@ int main() {
 	GLint cubeLoc = glGetUniformLocation(cubeShader.GetID(), "model");
 	glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(cubeModel));
 
+	// testing cube object
+	//GameObject cubeObject("CUBE", cubeShader, cubePosition, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+
 
 	// Specify the color of the background (silver)
 	glClearColor(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
@@ -159,7 +163,6 @@ int main() {
 
 	// Set up the camera
 	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 0.5f, 2.0f));
-
 
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {
@@ -178,20 +181,20 @@ int main() {
 
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 			transform.Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
+			//cubeObject.GetTransform().Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
 		}
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
 			transform.Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
-
+			//cubeObject.GetTransform().Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
 		}
 
-		/*cubeModel = transform.GetModelMatrix();
-
 		GLint cubeLoc = glGetUniformLocation(cubeShader.GetID(), "model");
-		glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(cubeModel));
+		glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(transform.GetModelMatrix()));
 
 		pyramidMesh.Draw(shaderProgram, camera); 
-		cubeMesh.Draw(cubeShader, camera);*/
-		
+		cubeMesh.Draw(cubeShader, camera);
+
+		//cubeObject.Update(camera);
 
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
@@ -203,6 +206,8 @@ int main() {
 	// Cleanup objects we have created
 	shaderProgram.Delete();
 	cubeShader.Delete();
+
+	//cubeObject.Delete();
 
 	// Destroy window when done and exit
 	glfwDestroyWindow(window);
