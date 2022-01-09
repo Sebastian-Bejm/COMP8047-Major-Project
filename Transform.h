@@ -9,6 +9,7 @@ public:
 	Transform();
 	Transform(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
 
+	void SetPosition(glm::vec3 newPosition);
 	void Translate(glm::vec3 translate, float speed);
 	void Rotate(glm::vec3 rotate);
 

@@ -8,13 +8,13 @@ Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices) {
 	this->vertices = vertices;
 	this->indices = indices;
 
-	// Create the VAO, VBO, and EBO
 	vao.Bind();
-
+	// Generates Vertex Buffer object and links it to vertices
 	VBO vbo(vertices);
+	// Generates Element Buffer object and links it to indices
 	EBO ebo(indices);
 
-	// Links the attributes to the shader based on layout
+	// Links the attributes to the shader based on the layout
 	vao.LinkAttrib(vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void*)0); // vertex
 	vao.LinkAttrib(vbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void*)(3*sizeof(float))); // color
 
@@ -22,12 +22,12 @@ Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices) {
 	vao.Unbind();
 	vbo.Unbind();
 	ebo.Unbind();
+
 }
 
 void Mesh::Draw(Shader& shader, Camera& camera) {
 	// Activate the shader program
 	shader.Activate();
-	// Bind the VAO so OpenGL knows to use it
 	vao.Bind();
 
 	// Handle texture drawing here later

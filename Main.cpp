@@ -7,6 +7,7 @@
 
 #include "Mesh.h"
 #include "Transform.h"
+#include "GameObject.h"
 
 const int screenWidth = 1000;
 const int screenHeight = 800;
@@ -34,6 +35,7 @@ GLuint pyramidIndices[] = {
 
 // Cube
 Vertex cubeVertices[] = {
+	//	Vertex info				 ,  Colors
 	glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
 	glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
 	glm::vec3(0.5f, -0.5f,  0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
@@ -175,22 +177,20 @@ int main() {
 		camera.SetMatrix(45.0f, 0.1f, 100.0f);
 
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-			//cubePosition.x -= 0.1f;
 			transform.Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
 		}
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-			//cubePosition.x += 0.1f;
 			transform.Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
 
 		}
 
-		cubeModel = transform.GetModelMatrix();
+		/*cubeModel = transform.GetModelMatrix();
 
 		GLint cubeLoc = glGetUniformLocation(cubeShader.GetID(), "model");
 		glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(cubeModel));
 
 		pyramidMesh.Draw(shaderProgram, camera); 
-		cubeMesh.Draw(cubeShader, camera);
+		cubeMesh.Draw(cubeShader, camera);*/
 		
 
 		// Swap the back buffer with the front buffer

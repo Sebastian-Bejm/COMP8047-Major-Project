@@ -1,7 +1,5 @@
 #pragma once
 
-// NOTE: May have to use #ifndef for each of the recent classes
-
 #include <glad/glad.h>
 #include <string>
 #include <fstream>
@@ -10,6 +8,8 @@
 
 class Shader {
 public:
+
+	Shader() { std::cout << "Test"; }
 
 	Shader(const char* vertexFile, const char* fragmentFile) {
 		std::string vertexCode = GetFileContents(vertexFile);
