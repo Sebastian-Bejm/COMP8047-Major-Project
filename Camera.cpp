@@ -31,11 +31,7 @@ void Camera::SetMatrix(float fovDeg, float nearPlane, float farPlane) {
 /*
 * Processes inputs to move the camera. This will primarily be used for debugging.
 */
-void Camera::ProcessInput(GLFWwindow* window) {
-
-	float currentFrame = glfwGetTime();
-	deltaTime = currentFrame - lastFrame;
-	lastFrame = currentFrame;
+void Camera::ProcessInput(GLFWwindow* window, float deltaTime) {
 
 	float speed = 0.5f * deltaTime;
 

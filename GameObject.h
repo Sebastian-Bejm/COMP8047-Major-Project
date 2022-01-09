@@ -9,7 +9,7 @@ public:
 
 	GameObject(std::string tag, Shader& shader, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
 	
-	Transform GetTransform();
+	Transform& GetTransform();
 
 	void Update(Camera& camera);
 	void Delete();

@@ -5,9 +5,9 @@
 #include<glm/gtc/matrix_transform.hpp>
 #include<glm/gtc/type_ptr.hpp>
 
-#include "Mesh.h"
-#include "Transform.h"
-//#include "GameObject.h"
+//#include "Mesh.h"
+//#include "Transform.h"
+#include "GameObject.h"
 
 const int screenWidth = 1000;
 const int screenHeight = 800;
@@ -119,6 +119,8 @@ int main() {
 	Shader shaderProgram("DefaultVertShader.vs", "DefaultFragShader.fs");
 	Shader cubeShader("DefaultVertShader.vs", "DefaultFragShader.fs");
 
+	Shader gameobjectShader("DefaultVertShader.vs", "DefaultFragShader.fs");
+
 	std::vector<Vertex> vertices(pyramidVertices, pyramidVertices + sizeof(pyramidVertices) / sizeof(Vertex));
 	std::vector<GLuint> indices(pyramidIndices, pyramidIndices + sizeof(pyramidIndices) / sizeof(GLuint));
 
@@ -127,7 +129,6 @@ int main() {
 
 	// Create new mesh with vertices and indices
 	Mesh pyramidMesh(vertices, indices);
-
 	Mesh cubeMesh(cVerts, cInds);
 
 	// Set up model matrixes for each new object
@@ -147,8 +148,9 @@ int main() {
 	GLint cubeLoc = glGetUniformLocation(cubeShader.GetID(), "model");
 	glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(cubeModel));
 
-	// testing cube object
-	//GameObject cubeObject("CUBE", cubeShader, cubePosition, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	// testing new cube object
+	gameobjectShader.Activate();
+	GameObject cubeObject("CUBE", gameobjectShader, glm::vec3(-1.0f, 0.5, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
 
 	// Specify the color of the background (silver)
@@ -176,25 +178,25 @@ int main() {
 		// Clean the back buffer and assign the new color to it
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		camera.ProcessInput(window);
+		camera.ProcessInput(window, deltaTime);
 		camera.SetMatrix(45.0f, 0.1f, 100.0f);
 
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-			transform.Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
-			//cubeObject.GetTransform().Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
+			//transform.Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
+			cubeObject.GetTransform().Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
 		}
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-			transform.Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
-			//cubeObject.GetTransform().Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
+			//transform.Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
+			cubeObject.GetTransform().Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
 		}
+
+		cubeObject.Update(camera);
 
 		GLint cubeLoc = glGetUniformLocation(cubeShader.GetID(), "model");
 		glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(transform.GetModelMatrix()));
 
 		pyramidMesh.Draw(shaderProgram, camera); 
 		cubeMesh.Draw(cubeShader, camera);
-
-		//cubeObject.Update(camera);
 
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
@@ -207,7 +209,7 @@ int main() {
 	shaderProgram.Delete();
 	cubeShader.Delete();
 
-	//cubeObject.Delete();
+	cubeObject.Delete();
 
 	// Destroy window when done and exit
 	glfwDestroyWindow(window);

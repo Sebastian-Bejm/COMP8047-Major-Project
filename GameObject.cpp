@@ -3,7 +3,9 @@
 GameObject::GameObject(std::string tag, Shader& shader, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) {
 
 	objectTag = tag;
+	std::cout << shader.GetID() << std::endl;
 	shaderProgram = shader;
+	std::cout << shaderProgram.GetID() << std::endl;
 
 	// Cube
 	Vertex cubeVerts[] = {
@@ -55,12 +57,11 @@ GameObject::GameObject(std::string tag, Shader& shader, glm::vec3 position, glm:
 	mesh = Mesh(vertices, indices);
 	transform = Transform(position, rotation, scale);
 
-	shaderProgram.Activate();
 	GLint cubeLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
 	glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(transform.GetModelMatrix()));
 }
 
-Transform GameObject::GetTransform() {
+Transform& GameObject::GetTransform() {
 	return transform;
 }
 

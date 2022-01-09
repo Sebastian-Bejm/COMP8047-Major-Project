@@ -11,7 +11,7 @@ public:
 	Camera(int viewWidth, int viewHeight, glm::vec3 position);
 
 	void SetMatrix(float fovDeg, float nearPlane, float farPlane);
-	void ProcessInput(GLFWwindow *window);
+	void ProcessInput(GLFWwindow *window, float deltaTime);
 
 	glm::mat4 GetCameraMatrix();
 	glm::vec3 GetPosition();
