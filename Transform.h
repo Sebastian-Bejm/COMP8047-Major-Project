@@ -10,6 +10,7 @@ public:
 	Transform(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
 
 	void Translate(glm::vec3 translate, float speed);
+	void Rotate(glm::vec3 rotate);
 
 	glm::mat4 GetModelMatrix();
 

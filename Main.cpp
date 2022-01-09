@@ -131,7 +131,7 @@ int main() {
 	glm::mat4 pyrModel = glm::mat4(1.0f);
 
 	glm::mat4 cubeModel = glm::mat4(1.0f);
-	glm::vec3 cubePosition(1.0f, 0.5, 0.0f);
+	glm::vec3 cubePosition(1.0f, 0.5f, 0.0f);
 	// Transform for the cube - temp here
 	Transform transform(cubePosition, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
@@ -161,6 +161,11 @@ int main() {
 
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {
+		// This fixes the fast movement for now
+		currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
 		// Specify the color of the background (silver)
 		glClearColor(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
 		// Clean the back buffer and assign the new color to it
@@ -168,11 +173,6 @@ int main() {
 
 		camera.ProcessInput(window);
 		camera.SetMatrix(45.0f, 0.1f, 100.0f);
-
-		// This fixes the fast movement for now
-		currentFrame = glfwGetTime();
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
 
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 			//cubePosition.x -= 0.1f;
