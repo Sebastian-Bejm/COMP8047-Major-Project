@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 #include <stb/stb_image.h>
 
+#include "Texture.h"
 #include "GameObject.h"
 
 const int screenWidth = 1000;
@@ -193,7 +194,10 @@ int main() {
 	VBO1.Unbind();
 	EBO1.Unbind();
 
-	int widthImg, heightImg, numColCh;
+	Texture crate("crate.jpg", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
+	crate.TexUnit(textureShader, "tex0", 0);
+
+	/*int widthImg, heightImg, numColCh;
 	stbi_set_flip_vertically_on_load(true); // Puts the image rightside up
 	unsigned char* bytes = stbi_load("crate.jpg", &widthImg, &heightImg, &numColCh, 0);
 
@@ -217,7 +221,7 @@ int main() {
 
 	GLuint texUni = glGetUniformLocation(textureShader.GetID(), "tex0");
 	textureShader.Activate();
-	glUniform1i(texUni, 0);
+	glUniform1i(texUni, 0);*/
 
 
 	// Specify the color of the background (silver)
@@ -271,7 +275,8 @@ int main() {
 
 		textureShader.Activate();
 
-		glBindTexture(GL_TEXTURE_2D, texture);
+		//glBindTexture(GL_TEXTURE_2D, texture);
+		crate.Bind();
 
 		VAO1.Bind();
 
@@ -296,7 +301,8 @@ int main() {
 	VAO1.Delete();
 	VBO1.Delete();
 	EBO1.Delete();
-	glDeleteTextures(1, &texture);
+	crate.Delete();
+	//glDeleteTextures(1, &texture);
 	textureShader.Delete();
 
 	// Destroy window when done and exit
