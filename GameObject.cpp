@@ -24,11 +24,10 @@ Transform& GameObject::GetTransform() {
 
 void GameObject::Update(Camera& camera) {
 	// Update the object model matrix first
-
 	GLint cubeLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
 	glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(transform.GetModelMatrix()));
 
-	// Draw the mesh afterwards
+	// Draw the mesh afterwards (updates the projection and view matrices from the camera)
 	mesh.Draw(shaderProgram, camera);
 }
 
