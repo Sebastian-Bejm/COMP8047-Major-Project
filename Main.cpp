@@ -194,6 +194,7 @@ int main() {
 	EBO1.Unbind();
 
 	int widthImg, heightImg, numColCh;
+	stbi_set_flip_vertically_on_load(true); // Puts the image rightside up
 	unsigned char* bytes = stbi_load("crate.jpg", &widthImg, &heightImg, &numColCh, 0);
 
 	GLuint texture;
@@ -230,7 +231,7 @@ int main() {
 	glEnable(GL_DEPTH_TEST);
 
 	// Set up the camera
-	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 0.5f, 2.0f));
+	//Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 0.5f, 2.0f));
 
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {
@@ -245,7 +246,7 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//camera.ProcessInput(window, deltaTime);
-		camera.SetMatrix(45.0f, 0.1f, 100.0f);
+		//camera.SetMatrix(45.0f, 0.1f, 100.0f);
 
 		//if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 			//transform.Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);

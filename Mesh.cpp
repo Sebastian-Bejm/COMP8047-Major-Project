@@ -1,8 +1,6 @@
 #include "Mesh.h"
 
-Mesh::Mesh() {
-
-}
+Mesh::Mesh() {}
 
 Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices) {
 	this->vertices = vertices;
