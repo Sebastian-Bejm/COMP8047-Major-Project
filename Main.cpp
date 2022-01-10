@@ -22,7 +22,7 @@ float currentFrame, lastFrame;
 };*/
 
 Vertex vertices[] =
-{ //     COORDINATES     /        COLORS      
+{ //     COORDINATES				/        COLORS      
 	glm::vec3(-0.5f, -0.5f, 0.0f),     glm::vec3(1.0f, 0.0f, 0.0f),	// Lower left corner
 	glm::vec3(-0.5f,  0.5f, 0.0f),     glm::vec3(0.0f, 1.0f, 0.0f),	// Upper left corner
 	glm::vec3(0.5f,  0.5f, 0.0f),      glm::vec3(0.0f, 0.0f, 1.0f),	// Upper right corner
@@ -139,11 +139,11 @@ int main() {
 
 	Shader gameobjectShader("DefaultVertShader.vs", "DefaultFragShader.fs");
 
-	std::vector<Vertex> vertices(pyramidVertices, pyramidVertices + sizeof(pyramidVertices) / sizeof(Vertex));
-	std::vector<GLuint> indices(pyramidIndices, pyramidIndices + sizeof(pyramidIndices) / sizeof(GLuint));
+	//std::vector<Vertex> vertices(pyramidVertices, pyramidVertices + sizeof(pyramidVertices) / sizeof(Vertex));
+	//std::vector<GLuint> indices(pyramidIndices, pyramidIndices + sizeof(pyramidIndices) / sizeof(GLuint));
 
-	std::vector<Vertex> cVerts(cubeVertices, cubeVertices + sizeof(cubeVertices) / sizeof(Vertex));
-	std::vector<GLuint> cInds(cubeIndices, cubeIndices + sizeof(cubeIndices) / sizeof(GLuint));
+	//std::vector<Vertex> cVerts(cubeVertices, cubeVertices + sizeof(cubeVertices) / sizeof(Vertex));
+	//std::vector<GLuint> cInds(cubeIndices, cubeIndices + sizeof(cubeIndices) / sizeof(GLuint));
 
 	// Create new mesh with vertices and indices
 	//Mesh pyramidMesh(vertices, indices);
@@ -158,18 +158,18 @@ int main() {
 	//Transform transform(cubePosition, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
 	// Tell OpenGL what shader programs we want to use
-	shaderProgram.Activate();
+	//shaderProgram.Activate();
 	//GLint modelLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
 	//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(pyrModel));
 	GameObject middleCube("MIDDLE_CUBE", shaderProgram, glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
-	cubeShader.Activate();
+	//cubeShader.Activate();
 	//GLint cubeLoc = glGetUniformLocation(cubeShader.GetID(), "model");
 	//glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(cubeModel));
-	GameObject firstCube("FCUBE", cubeShader, cubePosition, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	GameObject firstCube("FCUBE", cubeShader, glm::vec3(1.0f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
 	// testing new cube object
-	gameobjectShader.Activate();
+	//gameobjectShader.Activate();
 	GameObject cubeObject("CUBE", gameobjectShader, glm::vec3(-1.0f, 0.5, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
 
@@ -185,6 +185,8 @@ int main() {
 
 	// Set up the camera
 	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 0.5f, 5.0f));
+
+	int i = 0;
 
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {
@@ -210,9 +212,13 @@ int main() {
 			cubeObject.GetTransform().Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
 		}
 
-		middleCube.Update(camera);
 		firstCube.Update(camera);
 		cubeObject.Update(camera);
+		middleCube.Update(camera);
+
+		if (i == 0) {
+			i = 1;
+		}
 
 		//std::cout << transform.GetPosition().x << std::endl;
 		//GLint cubeLoc = glGetUniformLocation(cubeShader.GetID(), "model");

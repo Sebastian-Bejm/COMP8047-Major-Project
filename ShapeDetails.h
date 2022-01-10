@@ -10,10 +10,34 @@ struct Shape {
 	std::vector<GLuint> indices;
 };
 
+enum ShapeType {
+	SQUARE,
+	CUBE,
+	PYRAMID,
+};
+
 class ShapeDetails {
 public:
 
-	static Shape GetCube() {
+	ShapeDetails() {}
+	
+	Shape GetShape(ShapeType shapeType) {
+		switch (shapeType) {
+		case SQUARE:
+			return GetSquare();
+		case CUBE:
+			return GetCube();
+		case PYRAMID:
+			return GetPyramid();
+		default:
+			break;
+		}
+	}
+
+
+private:
+
+	Shape GetCube() {
 		Vertex cubeVerts[] = {
 			//		Coordinates				 ,		Colors
 			glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
@@ -64,8 +88,8 @@ public:
 		return shape;
 	}
 
-	static Shape GetSquare() {
-		Vertex vertices[] =
+	Shape GetSquare() {
+		Vertex squareVerts[] =
 		{ //     COORDINATES     /        COLORS      
 			glm::vec3(-0.5f, -0.5f, 0.0f),     glm::vec3(1.0f, 0.0f, 0.0f),
 			glm::vec3(-0.5f,  0.5f, 0.0f),     glm::vec3(0.0f, 1.0f, 0.0f),
@@ -73,10 +97,42 @@ public:
 			glm::vec3(0.5f, -0.5f, 0.0f),      glm::vec3(1.0f, 1.0f, 1.0f),
 		};
 
-		GLuint indices[] =
+		GLuint squareInds[] =
 		{
 			0, 2, 1, // Upper triangle
 			0, 3, 2 // Lower triangle
 		};
+
+		std::vector<Vertex> vertices(squareVerts, squareVerts + sizeof(squareVerts) / sizeof(Vertex));
+		std::vector<GLuint> indices(squareInds, squareInds + sizeof(squareInds) / sizeof(GLuint));
+
+		Shape shape = { vertices, indices };
+		return shape;
+	}
+
+	Shape GetPyramid() {
+		Vertex pyramidVerts[] =
+		{
+			glm::vec3(-0.5f, 0.0f, 0.5f),	glm::vec3(0.8f, 0.7f, 0.4f), // Lower left corner
+			glm::vec3(-0.5f, 0.0f, -0.5f),	glm::vec3(0.8f, 0.7f, 0.4f), // Upper left corner
+			glm::vec3(0.5f, 0.0f, -0.5f),	glm::vec3(0.8f, 0.7f, 0.4f), // Upper right corner
+			glm::vec3(0.5f, 0.0f, 0.5f),	glm::vec3(0.8f, 0.7f, 0.4f), // Lower right corner
+			glm::vec3(0.0f, 0.8f, 0.0f),	glm::vec3(0.95f, 0.85f, 0.7f), // Lower left corner
+		};
+
+		GLuint pyramidInds[] = {
+			0, 1, 2,
+			0, 2, 3,
+			0, 1, 4,
+			1, 2, 4,
+			2, 3, 4,
+			3, 0, 4
+		};
+
+		std::vector<Vertex> vertices(pyramidVerts, pyramidVerts + sizeof(pyramidVerts) / sizeof(Vertex));
+		std::vector<GLuint> indices(pyramidInds, pyramidInds + sizeof(pyramidInds) / sizeof(GLuint));
+
+		Shape shape = { vertices, indices };
+		return shape;
 	}
 };
