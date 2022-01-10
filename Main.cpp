@@ -3,8 +3,6 @@
 #include <GLFW/glfw3.h>
 #include <stb/stb_image.h>
 
-//#include "Mesh.h"
-//#include "Transform.h"
 #include "GameObject.h"
 
 const int screenWidth = 1000;
@@ -13,21 +11,21 @@ const int screenHeight = 800;
 float deltaTime;
 float currentFrame, lastFrame;
 
-/*GLfloat vertices[] =
+GLfloat vertices[] =
 { //     COORDINATES     /        COLORS      /   TexCoord  //
-	-0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f,	0.0f, 0.0f, // Lower left corner
-	-0.5f,  0.5f, 0.0f,     0.0f, 1.0f, 0.0f,	0.0f, 1.0f, // Upper left corner
-	 0.5f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f,	1.0f, 1.0f, // Upper right corner
-	 0.5f, -0.5f, 0.0f,     1.0f, 1.0f, 1.0f,	1.0f, 0.0f  // Lower right corner
-};*/
+	-0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f,	//0.0f, 0.0f, // Lower left corner
+	-0.5f,  0.5f, 0.0f,     0.0f, 1.0f, 0.0f,	//0.0f, 1.0f, // Upper left corner
+	 0.5f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f,	//1.0f, 1.0f, // Upper right corner
+	 0.5f, -0.5f, 0.0f,     1.0f, 1.0f, 1.0f,	//1.0f, 0.0f  // Lower right corner
+};
 
-Vertex vertices[] =
+/*Vertex vertices[] =
 { //     COORDINATES				/        COLORS      
 	glm::vec3(-0.5f, -0.5f, 0.0f),     glm::vec3(1.0f, 0.0f, 0.0f),	// Lower left corner
 	glm::vec3(-0.5f,  0.5f, 0.0f),     glm::vec3(0.0f, 1.0f, 0.0f),	// Upper left corner
 	glm::vec3(0.5f,  0.5f, 0.0f),      glm::vec3(0.0f, 0.0f, 1.0f),	// Upper right corner
 	glm::vec3(0.5f, -0.5f, 0.0f),      glm::vec3(1.0f, 1.0f, 1.0f), // Lower right corner
-};
+};*/
 
 GLuint indices[] =
 {
@@ -134,10 +132,10 @@ int main() {
 	// Specify the viewport of OpenGL in the window
 	glViewport(0, 0, screenWidth, screenHeight);
 
-	Shader shaderProgram("DefaultVertShader.vs", "DefaultFragShader.fs");
-	Shader cubeShader("DefaultVertShader.vs", "DefaultFragShader.fs");
+	//Shader shaderProgram("DefaultVertShader.vs", "DefaultFragShader.fs");
+	//Shader cubeShader("DefaultVertShader.vs", "DefaultFragShader.fs");
 
-	Shader gameobjectShader("DefaultVertShader.vs", "DefaultFragShader.fs");
+	//Shader gameobjectShader("DefaultVertShader.vs", "DefaultFragShader.fs");
 
 	//std::vector<Vertex> vertices(pyramidVertices, pyramidVertices + sizeof(pyramidVertices) / sizeof(Vertex));
 	//std::vector<GLuint> indices(pyramidIndices, pyramidIndices + sizeof(pyramidIndices) / sizeof(GLuint));
@@ -153,7 +151,7 @@ int main() {
 	//glm::mat4 pyrModel = glm::mat4(1.0f);
 
 	//glm::mat4 cubeModel = glm::mat4(1.0f);
-	glm::vec3 cubePosition(1.0f, 0.5f, 0.0f);
+	//glm::vec3 cubePosition(1.0f, 0.5f, 0.0f);
 	// Transform for the cube - temp here
 	//Transform transform(cubePosition, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
@@ -161,16 +159,45 @@ int main() {
 	//shaderProgram.Activate();
 	//GLint modelLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
 	//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(pyrModel));
-	GameObject middleCube("MIDDLE_CUBE", shaderProgram, glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	//GameObject middleCube("MIDDLE_CUBE", CUBE, shaderProgram, glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
 	//cubeShader.Activate();
 	//GLint cubeLoc = glGetUniformLocation(cubeShader.GetID(), "model");
 	//glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(cubeModel));
-	GameObject firstCube("FCUBE", cubeShader, glm::vec3(1.0f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	//GameObject firstCube("FCUBE", CUBE, cubeShader, glm::vec3(1.0f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
 	// testing new cube object
 	//gameobjectShader.Activate();
-	GameObject cubeObject("CUBE", gameobjectShader, glm::vec3(-1.0f, 0.5, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	//GameObject cubeObject("CUBE", CUBE, gameobjectShader, glm::vec3(-1.0f, 0.5, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+
+	Shader textureShader("TextureVertShader.vs", "TextureFragShader.fs");
+
+	//GameObject texSquare("TexTutorial", SQUARE, textureShader, 
+		//glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+
+	// Generates Vertex Array Object and binds it
+	VAO VAO1;
+	VAO1.Bind();
+
+	// Generates Vertex Buffer Object and links it to vertices
+	VBO VBO1(vertices, sizeof(vertices));
+	// Generates Element Buffer Object and links it to indices
+	EBO EBO1(indices, sizeof(indices));
+
+	// Links VBO attributes such as coordinates and colors to VAO
+	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
+	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	//VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	// Unbind all to prevent accidentally modifying them
+	VAO1.Unbind();
+	VBO1.Unbind();
+	EBO1.Unbind();
+
+	//int widthImg, heightImg, numColCh;
+	//unsigned char* bytes = stbi_load("crate.jpg", &widthImg, &heightImg, &numColCh, 0);
+
+	//GLuint texture;
+	//glGenTextures(1, &texture);
 
 
 	// Specify the color of the background (silver)
@@ -184,9 +211,7 @@ int main() {
 	glEnable(GL_DEPTH_TEST);
 
 	// Set up the camera
-	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 0.5f, 5.0f));
-
-	int i = 0;
+	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 0.5f, 2.0f));
 
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {
@@ -203,29 +228,32 @@ int main() {
 		camera.ProcessInput(window, deltaTime);
 		camera.SetMatrix(45.0f, 0.1f, 100.0f);
 
-		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+		//if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 			//transform.Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
-			cubeObject.GetTransform().Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
-		}
-		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+			//cubeObject.GetTransform().Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
+		//}
+		//if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
 			//transform.Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
-			cubeObject.GetTransform().Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
-		}
+			//cubeObject.GetTransform().Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
+		//}
 
-		firstCube.Update(camera);
-		cubeObject.Update(camera);
-		middleCube.Update(camera);
+		//texSquare.Update(camera);
 
-		if (i == 0) {
-			i = 1;
-		}
+		//cubeObject.Update(camera); // the leftmost
+		//middleCube.Update(camera); 
+		//firstCube.Update(camera); // the right
 
-		//std::cout << transform.GetPosition().x << std::endl;
 		//GLint cubeLoc = glGetUniformLocation(cubeShader.GetID(), "model");
 		//glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(transform.GetModelMatrix()));
 
 		//pyramidMesh.Draw(shaderProgram, camera); 
 		//cubeMesh.Draw(cubeShader, camera);
+
+		textureShader.Activate();
+
+		VAO1.Bind();
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
@@ -237,9 +265,17 @@ int main() {
 	// Cleanup objects we have created
 	//shaderProgram.Delete();
 	//cubeShader.Delete();
-	middleCube.Delete();
-	firstCube.Delete();
-	cubeObject.Delete();
+
+	//middleCube.Delete();
+	//firstCube.Delete();
+	//cubeObject.Delete();
+
+	//texSquare.Delete();
+	VAO1.Delete();
+	VBO1.Delete();
+	EBO1.Delete();
+	//glDeleteTextures(1, &texture);
+	textureShader.Delete();
 
 	// Destroy window when done and exit
 	glfwDestroyWindow(window);

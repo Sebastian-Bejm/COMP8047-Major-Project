@@ -22,6 +22,9 @@
     <Filter Include="Header Files\GameObject">
       <UniqueIdentifier>{bdac05af-d954-4ba2-80e8-652cb02af232}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Textures">
+      <UniqueIdentifier>{70eae8b3-e542-4545-9e38-32a642ddeffe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
@@ -100,5 +103,10 @@
     <ClInclude Include="Vertex.h">
       <Filter>Header Files\GameObject</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="crate.jpg">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>

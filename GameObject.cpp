@@ -1,12 +1,12 @@
 #include "GameObject.h"
 
-GameObject::GameObject(std::string tag, Shader& shader, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) {
+GameObject::GameObject(std::string tag, ShapeType shapeType, Shader& shader, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) {
 
 	objectTag = tag;
 	shaderProgram = shader;
 
 	ShapeDetails shapeDetails;
-	Shape shape = shapeDetails.GetShape(ShapeType::CUBE);
+	Shape shape = shapeDetails.GetShape(shapeType);
 	
 	std::vector<Vertex> vertices = shape.vertices;
 	std::vector<GLuint> indices = shape.indices;

@@ -23,10 +23,16 @@ Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices) {
 	vbo.Unbind();
 	ebo.Unbind();
 
+	// Add texture to the mesh
+	//int widthImg, heightImg, numColCh;
+	//unsigned char* bytes = stbi_load("crate.jpg", &widthImg, &heightImg, &numColCh, 0);
+
+	//GLuint texture;
+	//glGenTextures(1, &texture);
 }
 
 void Mesh::Draw(Shader& shader, Camera& camera) {
-	// Activate the shader program
+	// Activate the shader program for this mesh
 	shader.Activate();
 	vao.Bind();
 
@@ -44,5 +50,6 @@ void Mesh::Delete() {
 	vao.Delete();
 	vbo.Delete();
 	ebo.Delete();
+	//glDeleteTextures(1, &texture);
 }
 
