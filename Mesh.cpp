@@ -21,12 +21,8 @@ Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices) {
 	vbo.Unbind();
 	ebo.Unbind();
 
-	// Add texture to the mesh
-	//int widthImg, heightImg, numColCh;
-	//unsigned char* bytes = stbi_load("crate.jpg", &widthImg, &heightImg, &numColCh, 0);
+	// Add texture to the mesh...
 
-	//GLuint texture;
-	//glGenTextures(1, &texture);
 }
 
 void Mesh::Draw(Shader& shader, Camera& camera) {

@@ -21,11 +21,11 @@ GLfloat vertices[] =
 };
 
 /*Vertex vertices[] =
-{ //     COORDINATES				/        COLORS      
-	glm::vec3(-0.5f, -0.5f, 0.0f),     glm::vec3(1.0f, 0.0f, 0.0f),	// Lower left corner
-	glm::vec3(-0.5f,  0.5f, 0.0f),     glm::vec3(0.0f, 1.0f, 0.0f),	// Upper left corner
-	glm::vec3(0.5f,  0.5f, 0.0f),      glm::vec3(0.0f, 0.0f, 1.0f),	// Upper right corner
-	glm::vec3(0.5f, -0.5f, 0.0f),      glm::vec3(1.0f, 1.0f, 1.0f), // Lower right corner
+{ //     COORDINATES					/        COLORS           /		TexCoord
+	glm::vec3(-0.5f, -0.5f, 0.0f),    glm::vec3(1.0f, 0.0f, 0.0f),	glm::vec2(0.0f, 0.0f) // Lower left corner
+	glm::vec3(-0.5f,  0.5f, 0.0f),    glm::vec3(0.0f, 1.0f, 0.0f),	glm::vec2(0.0f, 1.0f)// Upper left corner
+	glm::vec3(0.5f,  0.5f, 0.0f),     glm::vec3(0.0f, 0.0f, 1.0f),	glm::vec2(1.0f, 1.0f)// Upper right corner
+	glm::vec3(0.5f, -0.5f, 0.0f),     glm::vec3(1.0f, 1.0f, 1.0f),  glm::vec2(1.0f, 0.0f)// Lower right corner
 };*/
 
 GLuint indices[] =
@@ -197,33 +197,6 @@ int main() {
 	Texture crate("crate.jpg", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
 	crate.TexUnit(textureShader, "tex0", 0);
 
-	/*int widthImg, heightImg, numColCh;
-	stbi_set_flip_vertically_on_load(true); // Puts the image rightside up
-	unsigned char* bytes = stbi_load("crate.jpg", &widthImg, &heightImg, &numColCh, 0);
-
-	GLuint texture;
-	glGenTextures(1, &texture);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	// RGB because we are using a jpg for now
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, widthImg, heightImg, 0, GL_RGB, GL_UNSIGNED_BYTE, bytes);
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	stbi_image_free(bytes);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	GLuint texUni = glGetUniformLocation(textureShader.GetID(), "tex0");
-	textureShader.Activate();
-	glUniform1i(texUni, 0);*/
-
-
 	// Specify the color of the background (silver)
 	glClearColor(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
 	// Clean the back buffer and assign the new color to it
@@ -275,7 +248,6 @@ int main() {
 
 		textureShader.Activate();
 
-		//glBindTexture(GL_TEXTURE_2D, texture);
 		crate.Bind();
 
 		VAO1.Bind();
@@ -302,7 +274,6 @@ int main() {
 	VBO1.Delete();
 	EBO1.Delete();
 	crate.Delete();
-	//glDeleteTextures(1, &texture);
 	textureShader.Delete();
 
 	// Destroy window when done and exit

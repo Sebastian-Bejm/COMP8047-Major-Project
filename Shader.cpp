@@ -4,18 +4,21 @@ Shader::Shader() { }
 
 
 Shader::Shader(const char* vertexFile, const char* fragmentFile) {
+	// Read the shader files and store the strings
 	std::string vertexCode = GetFileContents(vertexFile);
 	std::string fragmentCode = GetFileContents(fragmentFile);
 
+	// Convert shader source string to character arrays
 	const char* vertexSource = vertexCode.c_str();
 	const char* fragmentSource = fragmentCode.c_str();
 
-	// Create basic shaders for a new object
+	// Generate vertex shader
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &vertexSource, NULL);
 	glCompileShader(vertexShader);
 	CompileErrors(vertexShader, "VERTEX");
 
+	// Generate fragment shader
 	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
 	glCompileShader(fragmentShader);
@@ -47,6 +50,7 @@ void Shader::Delete() {
 	glDeleteProgram(ID);
 }
 
+// Reads a file and outputs a string with everything in it
 std::string Shader::GetFileContents(const char* filename) {
 	std::ifstream in(filename, std::ios::binary);
 
