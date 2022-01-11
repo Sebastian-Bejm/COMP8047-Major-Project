@@ -3,10 +3,9 @@
 #include <string>
 
 #include "VAO.h"
-#include "VBO.h"
 #include "EBO.h"
 #include "Camera.h"
-// include textures later
+#include "Texture.h"
 
 class Mesh {
 public:
@@ -21,7 +20,7 @@ private:
 
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
-	// vector for textures / normals as well
+	std::vector<Texture> textures;
 
 	VAO vao;
 	VBO vbo;

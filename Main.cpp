@@ -36,13 +36,13 @@ GLuint indices[] =
 
 
 // Pyramid
-/*Vertex pyramidVertices[] =
+/*Vertex pyramidVerts[] =
 {
-	glm::vec3(-0.5f, 0.0f, 0.5f),	glm::vec3(0.8f, 0.7f, 0.4f), // Lower left corner
-	glm::vec3(-0.5f, 0.0f, -0.5f),	glm::vec3(0.8f, 0.7f, 0.4f), // Upper left corner
-	glm::vec3(0.5f, 0.0f, -0.5f),	glm::vec3(0.8f, 0.7f, 0.4f), // Upper right corner
-	glm::vec3(0.5f, 0.0f, 0.5f),	glm::vec3(0.8f, 0.7f, 0.4f), // Lower right corner
-	glm::vec3(0.0f, 0.8f, 0.0f),	glm::vec3(0.95f, 0.85f, 0.7f), // Lower left corner
+	glm::vec3(-0.5f, 0.0f, 0.5f),	glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(0.0f, 0.0f), // Lower left corner
+	glm::vec3(-0.5f, 0.0f, -0.5f),	glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(5.0f, 0.0f), // Upper left corner
+	glm::vec3(0.5f, 0.0f, -0.5f),	glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(0.0f, 0.0f), // Upper right corner
+	glm::vec3(0.5f, 0.0f, 0.5f),	glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(5.0f, 0.0f),// Lower right corner
+	glm::vec3(0.0f, 0.8f, 0.0f),	glm::vec3(0.95f, 0.85f, 0.7f),	glm::vec2(2.5f, 5.0f),// Lower left corner
 };*/
 
 GLfloat pyramidVertices[] =
@@ -217,11 +217,12 @@ int main() {
 	glEnable(GL_DEPTH_TEST);
 
 	// Set up the camera
-	//Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 0.5f, 2.0f));
+	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 0.5f, 2.0f));
 
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {
 		// This fixes objects/entities moving too fast
+		{};
 		currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
@@ -234,21 +235,15 @@ int main() {
 		textureShader.Activate();
 
 		//camera.ProcessInput(window, deltaTime);
-		//camera.SetMatrix(45.0f, 0.1f, 100.0f);
+		camera.SetMatrix(45.0f, 0.1f, 100.0f);
 
 		glm::mat4 model = glm::mat4(1.0f);
-		glm::mat4 view = glm::mat4(1.0f);
-		glm::mat4 proj = glm::mat4(1.0f);
-
-		view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
-		proj = glm::perspective(glm::radians(45.0f), (float)screenWidth / screenHeight, 0.1f, 100.0f);
+		glm::mat4 cam = camera.GetCameraMatrix();
 
 		GLint modelLoc = glGetUniformLocation(textureShader.GetID(), "model");
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		GLint viewLoc = glGetUniformLocation(textureShader.GetID(), "view");
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		GLint projLoc = glGetUniformLocation(textureShader.GetID(), "proj");
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
+		GLint camLoc = glGetUniformLocation(textureShader.GetID(), "camMatrix");
+		glUniformMatrix4fv(camLoc, 1, GL_FALSE, glm::value_ptr(cam));
 
 
 		//if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {

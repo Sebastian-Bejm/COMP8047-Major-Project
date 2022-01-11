@@ -22,16 +22,23 @@ public:
 	ShapeDetails() {}
 	
 	Shape GetShape(ShapeType shapeType) {
+		Shape shape;
+
 		switch (shapeType) {
 		case SQUARE:
-			return GetSquare();
+			shape = GetSquare();
+			break;
 		case CUBE:
-			return GetCube();
+			shape = GetCube();
+			break;
 		case PYRAMID:
-			return GetPyramid();
+			shape = GetPyramid();
+			break;
 		default:
 			break;
 		}
+
+		return shape;
 	}
 
 
@@ -42,28 +49,28 @@ private:
 			//		Coordinates				 ,		Colors
 			glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
 			glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-			glm::vec3(0.5f, -0.5f,  0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-			glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
+			glm::vec3(0.5f, -0.5f,  0.5f),  glm::vec3(0.8f, 0.7f, 0.4f),
+			glm::vec3(0.5f, -0.5f, -0.5f),  glm::vec3(0.95f, 0.85f, 0.7f),
 			glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
 			glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-			glm::vec3(0.5f,  0.5f,  0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-			glm::vec3(0.5f,  0.5f, -0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
+			glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec3(0.8f, 0.7f, 0.4f),
+			glm::vec3(0.5f,  0.5f, -0.5f),  glm::vec3(0.95f, 0.85f, 0.7f),
 			glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
 			glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-			glm::vec3(0.5f,  0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-			glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-			glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-			glm::vec3(-0.5f,  0.5f, 0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-			glm::vec3(0.5f,  0.5f, 0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-			glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
+			glm::vec3(0.5f,  0.5f, -0.5f),  glm::vec3(0.8f, 0.7f, 0.4f),
+			glm::vec3(0.5f, -0.5f, -0.5f),  glm::vec3(0.95f, 0.85f, 0.7f),
+			glm::vec3(-0.5f, -0.5f, 0.5f),  glm::vec3(0.8f, 0.7f, 0.4f),
+			glm::vec3(-0.5f,  0.5f, 0.5f),  glm::vec3(0.95f, 0.85f, 0.7f),
+			glm::vec3(0.5f,  0.5f, 0.5f),   glm::vec3(0.8f, 0.7f, 0.4f),
+			glm::vec3(0.5f, -0.5f, 0.5f),   glm::vec3(0.95f, 0.85f, 0.7f),
 			glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
 			glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
 			glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
 			glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-			glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-			glm::vec3(0.5f, -0.5f,  0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-			glm::vec3(0.5f,  0.5f,  0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-			glm::vec3(0.5f,  0.5f, -0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
+			glm::vec3(0.5f, -0.5f, -0.5f),  glm::vec3(0.8f, 0.7f, 0.4f),
+			glm::vec3(0.5f, -0.5f,  0.5f),  glm::vec3(0.95f, 0.85f, 0.7f),
+			glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec3(0.8f, 0.7f, 0.4f),
+			glm::vec3(0.5f,  0.5f, -0.5f),  glm::vec3(0.95f, 0.85f, 0.7f),
 		};
 
 		GLint cubeInds[] = {
@@ -90,11 +97,11 @@ private:
 
 	Shape GetSquare() {
 		Vertex squareVerts[] =
-		{ //     COORDINATES     /        COLORS      
-			glm::vec3(-0.5f, -0.5f, 0.0f),     glm::vec3(1.0f, 0.0f, 0.0f),
-			glm::vec3(-0.5f,  0.5f, 0.0f),     glm::vec3(0.0f, 1.0f, 0.0f),
-			glm::vec3(0.5f,  0.5f, 0.0f),      glm::vec3(0.0f, 0.0f, 1.0f),
-			glm::vec3(0.5f, -0.5f, 0.0f),      glm::vec3(1.0f, 1.0f, 1.0f),
+		{ //     COORDINATES				/			COLORS      
+			glm::vec3(-0.5f, -0.5f, 0.0f),     glm::vec3(1.0f, 0.0f, 0.0f),		glm::vec2(0.0f, 0.0f),
+			glm::vec3(-0.5f,  0.5f, 0.0f),     glm::vec3(0.0f, 1.0f, 0.0f),		glm::vec2(0.0f, 1.0f),
+			glm::vec3(0.5f,  0.5f, 0.0f),      glm::vec3(0.0f, 0.0f, 1.0f),		glm::vec2(1.0f, 1.0f),
+			glm::vec3(0.5f, -0.5f, 0.0f),      glm::vec3(1.0f, 1.0f, 1.0f),		glm::vec2(1.0f, 0.0f)
 		};
 
 		GLuint squareInds[] =
@@ -113,11 +120,11 @@ private:
 	Shape GetPyramid() {
 		Vertex pyramidVerts[] =
 		{
-			glm::vec3(-0.5f, 0.0f, 0.5f),	glm::vec3(0.8f, 0.7f, 0.4f), // Lower left corner
-			glm::vec3(-0.5f, 0.0f, -0.5f),	glm::vec3(0.8f, 0.7f, 0.4f), // Upper left corner
-			glm::vec3(0.5f, 0.0f, -0.5f),	glm::vec3(0.8f, 0.7f, 0.4f), // Upper right corner
-			glm::vec3(0.5f, 0.0f, 0.5f),	glm::vec3(0.8f, 0.7f, 0.4f), // Lower right corner
-			glm::vec3(0.0f, 0.8f, 0.0f),	glm::vec3(0.95f, 0.85f, 0.7f), // Lower left corner
+			glm::vec3(-0.5f, 0.0f, 0.5f),	glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(0.0f, 0.0f), // Lower left corner
+			glm::vec3(-0.5f, 0.0f, -0.5f),	glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(5.0f, 0.0f), // Upper left corner
+			glm::vec3(0.5f, 0.0f, -0.5f),	glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(0.0f, 0.0f), // Upper right corner
+			glm::vec3(0.5f, 0.0f, 0.5f),	glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(5.0f, 0.0f),// Lower right corner
+			glm::vec3(0.0f, 0.8f, 0.0f),	glm::vec3(0.95f, 0.85f, 0.7f),	glm::vec2(2.5f, 5.0f),// Lower left corner
 		};
 
 		GLuint pyramidInds[] = {
