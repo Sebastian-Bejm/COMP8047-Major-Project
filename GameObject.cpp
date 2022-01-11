@@ -16,7 +16,9 @@ GameObject::GameObject(std::string tag, std::string textureName, ShapeType shape
 	std::vector<GLuint> indices = shape.indices;
 
 	// Create a mesh with the vertices, indices, and transform
-	mesh = Mesh(vertices, indices);
+	Texture texture(textureName.c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+
+	mesh = Mesh(vertices, indices, texture);
 	transform = Transform(position, rotation, scale);
 
 	// Texturing stuff will go here...

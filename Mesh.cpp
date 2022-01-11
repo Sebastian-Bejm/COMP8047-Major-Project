@@ -2,10 +2,10 @@
 
 Mesh::Mesh() {}
 
-Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, std::vector<Texture>& textures) {
+Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, Texture& textures) {
 	this->vertices = vertices;
 	this->indices = indices;
-	this->textures = textures;
+	this->texture = texture;
 
 	vao.Bind();
 	// Generates Vertex Buffer object and links it to vertices
@@ -22,9 +22,6 @@ Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, std::vec
 	vao.Unbind();
 	vbo.Unbind();
 	ebo.Unbind();
-
-	// Add texture to the mesh...
-
 }
 
 void Mesh::Draw(Shader& shader, Camera& camera) {
@@ -33,24 +30,10 @@ void Mesh::Draw(Shader& shader, Camera& camera) {
 	vao.Bind();
 
 	// Handle the texture
-	unsigned int numDiffuse = 0;
-	unsigned int numSpecular = 0;
-
-	for (unsigned int i = 0; i < textures.size(); i++) {
-		std::string num;
-		std::string type = textures[i].GetType();
-
-		// Using diffuse and specular in case I use lighting later
-		if (type == "diffuse") {
-			num = std::to_string(numDiffuse++);
-		}
-		else if (type == "specular") {
-			num = std::to_string(numSpecular++);
-		}
-		textures[i].TexUnit(shader, (type + num).c_str(), i);
-		textures[i].Bind();
-	}
+	texture.TexUnit(shader, "tex0", 0);
+	texture.Bind();
 	
+
 	glm::mat4 cam = camera.GetCameraMatrix();
 	GLint cameraLoc = glGetUniformLocation(shader.GetID(), "camMatrix");
 	glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(cam));

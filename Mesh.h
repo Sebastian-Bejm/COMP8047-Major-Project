@@ -11,7 +11,7 @@ class Mesh {
 public:
 
 	Mesh();
-	Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, std::vector<Texture>& textures);
+	Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, Texture& texture);
 
 	void Draw(Shader& shader, Camera& camera);
 	void Delete();
@@ -20,7 +20,7 @@ private:
 
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
-	std::vector<Texture> textures;
+	Texture texture;
 
 	VAO vao;
 	VBO vbo;
