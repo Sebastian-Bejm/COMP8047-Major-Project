@@ -2,7 +2,7 @@
 
 Texture::Texture() {}
 
-Texture::Texture(const char* image, GLenum texType, GLenum slot, GLenum format, GLenum pixelType) {
+Texture::Texture(const char* image, const char* texType, GLenum slot, GLenum format, GLenum pixelType) {
 	type = texType;
 
 	// Stores the width, height, and number of color channels in the image
@@ -12,31 +12,37 @@ Texture::Texture(const char* image, GLenum texType, GLenum slot, GLenum format, 
 
 	// Generate the texture object
 	glGenTextures(1, &ID);
-	glActiveTexture(slot);
-	glBindTexture(texType, ID);
+	glActiveTexture(GL_TEXTURE0 + slot);
+	unit = slot;
+	glBindTexture(GL_TEXTURE_2D, ID);
 
 	// Configures the type of algorithm used to make image smaller or bigger
-	glTexParameteri(texType, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(texType, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	// Configure how the texture repeats
-	glTexParameteri(texType, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(texType, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	// In case I need to use GL_CLAMP_TO_BORDER
 	// float flatColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
 	// glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, flatColor);
 
 	// Assigns the image to the texture object
-	glTexImage2D(texType, 0, GL_RGBA, widthImg, heightImg, 0, format, pixelType, bytes);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, widthImg, heightImg, 0, format, pixelType, bytes);
 	// Generate the mipmaps
-	glGenerateMipmap(texType); 
+	glGenerateMipmap(GL_TEXTURE_2D);
 
 	// Delete the image data since it's already in a texture object
 	stbi_image_free(bytes);
 	// Unbind the texture object so it can't be modified
-	glBindTexture(texType, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
+
+std::string Texture::GetType() {
+	return type;
+}
+
 
 void Texture::TexUnit(Shader shader, const char* uniform, GLuint unit) {
 	GLuint texUni = glGetUniformLocation(shader.GetID(), uniform);
@@ -47,11 +53,11 @@ void Texture::TexUnit(Shader shader, const char* uniform, GLuint unit) {
 }
 
 void Texture::Bind() {
-	glBindTexture(type, ID);
+	glBindTexture(GL_TEXTURE_2D, ID);
 }
 
 void Texture::Unbind() {
-	glBindTexture(type, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Texture::Delete() {

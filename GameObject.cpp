@@ -2,7 +2,8 @@
 
 // Constructor to create a new GameObject
 // A GameObject requires a tag, shape, shader, and transform
-GameObject::GameObject(std::string tag, ShapeType shapeType, Shader& shader, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) {
+GameObject::GameObject(std::string tag, std::string textureName, ShapeType shapeType, Shader& shader,
+	glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) {
 
 	objectTag = tag;
 	shaderProgram = shader;

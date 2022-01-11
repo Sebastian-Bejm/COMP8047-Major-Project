@@ -8,7 +8,7 @@ layout (location = 1) in vec3 aColor;
 layout (location = 2) in vec2 aTex;
 
 // Outputs the current position for the fragment shader
-//out vec3 currentPos;
+out vec3 currentPos;
 // Outputs the color for the fragment shader
 out vec3 color;
 // Outputs the texture coordinates to the fragment shader
@@ -20,10 +20,11 @@ uniform mat4 model;
 
 void main()
 {
-	//gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
-	gl_Position = camMatrix * model * vec4(aPos, 1.0);
+	currentPos = vec3(model * vec4(aPos, 1.0f));
 
 	color = aColor;
 
 	texCoord = aTex;
+
+	gl_Position = camMatrix * vec4(currentPos, 1.0);
 }

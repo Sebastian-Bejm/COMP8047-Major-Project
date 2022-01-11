@@ -10,7 +10,9 @@ class Texture
 public:
 
 	Texture();
-	Texture(const char* image, GLenum texType, GLenum slot, GLenum format, GLenum pixelType);
+	Texture(const char* image, const char* texType, GLenum slot, GLenum format, GLenum pixelType);
+
+	std::string GetType();
 
 	void TexUnit(Shader shader, const char* uniform, GLuint unit);
 	void Bind();
@@ -20,7 +22,8 @@ public:
 private:
 
 	GLuint ID;
-	GLenum type;
+	GLuint unit;
+	const char* type;
 
 };
 

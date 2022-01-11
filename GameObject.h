@@ -8,7 +8,8 @@ class GameObject
 {
 public:
 
-	GameObject(std::string tag, ShapeType shapeType, Shader& shader, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
+	GameObject(std::string tag, std::string textureName, ShapeType shapeType, Shader& shader, 
+		glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
 	
 	Transform& GetTransform();
 

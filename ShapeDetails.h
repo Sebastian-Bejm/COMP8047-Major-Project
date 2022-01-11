@@ -41,7 +41,6 @@ public:
 		return shape;
 	}
 
-
 private:
 
 	Shape GetCube() {
