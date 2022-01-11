@@ -12,38 +12,15 @@ const int screenHeight = 800;
 float deltaTime;
 float currentFrame, lastFrame;
 
-/*GLfloat vertices[] =
-{ //     COORDINATES     /        COLORS      /   TexCoord  //
-	-0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f,	0.0f, 0.0f, // Lower left corner
-	-0.5f,  0.5f, 0.0f,     0.0f, 1.0f, 0.0f,	0.0f, 1.0f, // Upper left corner
-	 0.5f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f,	1.0f, 1.0f, // Upper right corner
-	 0.5f, -0.5f, 0.0f,     1.0f, 1.0f, 1.0f,	1.0f, 0.0f  // Lower right corner
-};*/
-
-/*Vertex vertices[] =
-{ //     COORDINATES					/        COLORS           /		TexCoord
-	glm::vec3(-0.5f, -0.5f, 0.0f),    glm::vec3(1.0f, 0.0f, 0.0f),	glm::vec2(0.0f, 0.0f) // Lower left corner
-	glm::vec3(-0.5f,  0.5f, 0.0f),    glm::vec3(0.0f, 1.0f, 0.0f),	glm::vec2(0.0f, 1.0f)// Upper left corner
-	glm::vec3(0.5f,  0.5f, 0.0f),     glm::vec3(0.0f, 0.0f, 1.0f),	glm::vec2(1.0f, 1.0f)// Upper right corner
-	glm::vec3(0.5f, -0.5f, 0.0f),     glm::vec3(1.0f, 1.0f, 1.0f),  glm::vec2(1.0f, 0.0f)// Lower right corner
-};
-
-GLuint indices[] =
-{
-	0, 2, 1, // Upper triangle
-	0, 3, 2 // Lower triangle
-};*/
-
-
 // Pyramid
-/*Vertex pyramidVerts[] =
+Vertex pyramidVerts[] =
 {
 	glm::vec3(-0.5f, 0.0f, 0.5f),	glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(0.0f, 0.0f), // Lower left corner
 	glm::vec3(-0.5f, 0.0f, -0.5f),	glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(5.0f, 0.0f), // Upper left corner
 	glm::vec3(0.5f, 0.0f, -0.5f),	glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(0.0f, 0.0f), // Upper right corner
 	glm::vec3(0.5f, 0.0f, 0.5f),	glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(5.0f, 0.0f),// Lower right corner
 	glm::vec3(0.0f, 0.8f, 0.0f),	glm::vec3(0.95f, 0.85f, 0.7f),	glm::vec2(2.5f, 5.0f),// Lower left corner
-};*/
+};
 
 GLfloat pyramidVertices[] =
 { //     COORDINATES     /        COLORS      /   TexCoord  //
@@ -61,50 +38,6 @@ GLuint pyramidIndices[] = {
 	1, 2, 4,
 	2, 3, 4,
 	3, 0, 4
-};
-
-// Cube
-Vertex cubeVertices[] = {
-	//	Vertex info				 ,  Colors
-	glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-	glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-	glm::vec3(0.5f, -0.5f,  0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-	glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-	glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-	glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-	glm::vec3(0.5f,  0.5f,  0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-	glm::vec3(0.5f,  0.5f, -0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-	glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-	glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-	glm::vec3(0.5f,  0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-	glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-	glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-	glm::vec3(-0.5f,  0.5f, 0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-	glm::vec3(0.5f,  0.5f, 0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-	glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-	glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-	glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-	glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-	glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-	glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-	glm::vec3(0.5f, -0.5f,  0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-	glm::vec3(0.5f,  0.5f,  0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-	glm::vec3(0.5f,  0.5f, -0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-};
-
-GLint cubeIndices[] = {
-	0, 2, 1,
-	0, 3, 2,
-	4, 5, 6,
-	4, 6, 7,
-	8, 9, 10,
-	8, 10, 11,
-	12, 15, 14,
-	12, 14, 13,
-	16, 17, 18,
-	16, 18, 19,
-	20, 23, 22,
-	20, 22, 21
 };
 
 // TODO: refactor later for initalize, update, and teardown
@@ -150,12 +83,8 @@ int main() {
 	//std::vector<Vertex> vertices(pyramidVertices, pyramidVertices + sizeof(pyramidVertices) / sizeof(Vertex));
 	//std::vector<GLuint> indices(pyramidIndices, pyramidIndices + sizeof(pyramidIndices) / sizeof(GLuint));
 
-	//std::vector<Vertex> cVerts(cubeVertices, cubeVertices + sizeof(cubeVertices) / sizeof(Vertex));
-	//std::vector<GLuint> cInds(cubeIndices, cubeIndices + sizeof(cubeIndices) / sizeof(GLuint));
-
 	// Create new mesh with vertices and indices
 	//Mesh pyramidMesh(vertices, indices);
-	//Mesh cubeMesh(cVerts, cInds);
 
 	// Set up model matrixes for each new object
 	//glm::mat4 pyrModel = glm::mat4(1.0f);
@@ -182,11 +111,27 @@ int main() {
 
 	Shader textureShader("TextureVertShader.vs", "TextureFragShader.fs");
 
-	//GameObject texSquare("TexTutorial", SQUARE, textureShader, 
-		//glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	ShapeDetails shapeDetails;
+	Shape pyramid = shapeDetails.GetShape(PYRAMID);
+
+	// already sized
+	std::vector<Vertex> verts = pyramid.vertices;
+	std::vector<GLuint> inds = pyramid.indices;
+
+	Texture texture("brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	texture.TexUnit(textureShader, "tex0", 0);
+
+	Mesh mesh(verts, inds, texture);
+
+	textureShader.Activate();
+	//GLint cubeLoc = glGetUniformLocation(textureShader.GetID(), "model");
+	//glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(cubeModel));
+
+	//GameObject texPyramid("TexPyrm", "brick.png", PYRAMID, textureShader,
+	//	glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
 	// Generates Vertex Array Object and binds it
-	VAO VAO1;
+	/*VAO VAO1;
 	VAO1.Bind();
 
 	// Generates Vertex Buffer Object and links it to vertices
@@ -204,7 +149,7 @@ int main() {
 	EBO1.Unbind();
 
 	Texture texture("brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-	texture.TexUnit(textureShader, "tex0", 0);
+	texture.TexUnit(textureShader, "tex0", 0);*/
 
 	// Specify the color of the background (silver)
 	glClearColor(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
@@ -222,7 +167,6 @@ int main() {
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {
 		// This fixes objects/entities moving too fast
-		{};
 		currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
@@ -232,28 +176,29 @@ int main() {
 		// Clean the back buffer and assign the new color to it
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		textureShader.Activate();
-
-		//camera.ProcessInput(window, deltaTime);
+		camera.ProcessInput(window, deltaTime);
 		camera.SetMatrix(45.0f, 0.1f, 100.0f);
 
 		glm::mat4 model = glm::mat4(1.0f);
-		glm::mat4 cam = camera.GetCameraMatrix();
+		//glm::mat4 cam = camera.GetCameraMatrix();
 
 		GLint modelLoc = glGetUniformLocation(textureShader.GetID(), "model");
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		GLint camLoc = glGetUniformLocation(textureShader.GetID(), "camMatrix");
-		glUniformMatrix4fv(camLoc, 1, GL_FALSE, glm::value_ptr(cam));
+		//GLint camLoc = glGetUniformLocation(textureShader.GetID(), "camMatrix");
+		//glUniformMatrix4fv(camLoc, 1, GL_FALSE, glm::value_ptr(cam));
 
+		mesh.Draw(textureShader, camera);
 
-		//if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+		/*if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 			//transform.Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
-			//cubeObject.GetTransform().Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
-		//}
-		//if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+			//texPyramid.GetTransform().Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
+		}
+		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
 			//transform.Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
-			//cubeObject.GetTransform().Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
-		//}
+			//texPyramid.GetTransform().Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
+		}*/
+
+		//texPyramid.Update(camera);
 
 		//texSquare.Update(camera);
 
@@ -267,13 +212,13 @@ int main() {
 		//pyramidMesh.Draw(shaderProgram, camera); 
 		//cubeMesh.Draw(cubeShader, camera);
 
-		textureShader.Activate();
+		//textureShader.Activate();
 
-		texture.Bind();
+		//texture.Bind();
 
-		VAO1.Bind();
+		//VAO1.Bind();
 
-		glDrawElements(GL_TRIANGLES, sizeof(pyramidIndices)/sizeof(int), GL_UNSIGNED_INT, 0);
+		//glDrawElements(GL_TRIANGLES, sizeof(pyramidIndices)/sizeof(int), GL_UNSIGNED_INT, 0);
 
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
@@ -290,12 +235,16 @@ int main() {
 	//firstCube.Delete();
 	//cubeObject.Delete();
 
-	//texSquare.Delete();
-	VAO1.Delete();
+	//texPyramid.Delete();
+
+	mesh.Delete();
+	textureShader.Delete();
+
+	/*VAO1.Delete();
 	VBO1.Delete();
 	EBO1.Delete();
 	texture.Delete();
-	textureShader.Delete();
+	textureShader.Delete();*/
 
 	// Destroy window when done and exit
 	glfwDestroyWindow(window);

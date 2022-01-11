@@ -15,13 +15,12 @@ GameObject::GameObject(std::string tag, std::string textureName, ShapeType shape
 	std::vector<Vertex> vertices = shape.vertices;
 	std::vector<GLuint> indices = shape.indices;
 
-	// Create a mesh with the vertices, indices, and transform
+	// Initialize the texture for this object
 	Texture texture(textureName.c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 
+	// Create a mesh with the vertices, indices, and transform
 	mesh = Mesh(vertices, indices, texture);
 	transform = Transform(position, rotation, scale);
-
-	// Texturing stuff will go here...
 
 	// Set the model matrix 
 	GLint cubeLoc = glGetUniformLocation(shaderProgram.GetID(), "model");

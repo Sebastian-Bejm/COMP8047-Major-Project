@@ -2,7 +2,7 @@
 
 Mesh::Mesh() {}
 
-Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, Texture& textures) {
+Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, Texture& texture) {
 	this->vertices = vertices;
 	this->indices = indices;
 	this->texture = texture;
@@ -32,7 +32,6 @@ void Mesh::Draw(Shader& shader, Camera& camera) {
 	// Handle the texture
 	texture.TexUnit(shader, "tex0", 0);
 	texture.Bind();
-	
 
 	glm::mat4 cam = camera.GetCameraMatrix();
 	GLint cameraLoc = glGetUniformLocation(shader.GetID(), "camMatrix");
@@ -46,6 +45,6 @@ void Mesh::Delete() {
 	vao.Delete();
 	vbo.Delete();
 	ebo.Delete();
-	//glDeleteTextures(1, &texture);
+	texture.Delete();
 }
 
