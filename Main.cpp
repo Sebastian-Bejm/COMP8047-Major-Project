@@ -12,13 +12,13 @@ const int screenHeight = 800;
 float deltaTime;
 float currentFrame, lastFrame;
 
-GLfloat vertices[] =
+/*GLfloat vertices[] =
 { //     COORDINATES     /        COLORS      /   TexCoord  //
 	-0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f,	0.0f, 0.0f, // Lower left corner
 	-0.5f,  0.5f, 0.0f,     0.0f, 1.0f, 0.0f,	0.0f, 1.0f, // Upper left corner
 	 0.5f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f,	1.0f, 1.0f, // Upper right corner
 	 0.5f, -0.5f, 0.0f,     1.0f, 1.0f, 1.0f,	1.0f, 0.0f  // Lower right corner
-};
+};*/
 
 /*Vertex vertices[] =
 { //     COORDINATES					/        COLORS           /		TexCoord
@@ -26,23 +26,32 @@ GLfloat vertices[] =
 	glm::vec3(-0.5f,  0.5f, 0.0f),    glm::vec3(0.0f, 1.0f, 0.0f),	glm::vec2(0.0f, 1.0f)// Upper left corner
 	glm::vec3(0.5f,  0.5f, 0.0f),     glm::vec3(0.0f, 0.0f, 1.0f),	glm::vec2(1.0f, 1.0f)// Upper right corner
 	glm::vec3(0.5f, -0.5f, 0.0f),     glm::vec3(1.0f, 1.0f, 1.0f),  glm::vec2(1.0f, 0.0f)// Lower right corner
-};*/
+};
 
 GLuint indices[] =
 {
 	0, 2, 1, // Upper triangle
 	0, 3, 2 // Lower triangle
-};
+};*/
 
 
 // Pyramid
-Vertex pyramidVertices[] =
+/*Vertex pyramidVertices[] =
 {
 	glm::vec3(-0.5f, 0.0f, 0.5f),	glm::vec3(0.8f, 0.7f, 0.4f), // Lower left corner
 	glm::vec3(-0.5f, 0.0f, -0.5f),	glm::vec3(0.8f, 0.7f, 0.4f), // Upper left corner
 	glm::vec3(0.5f, 0.0f, -0.5f),	glm::vec3(0.8f, 0.7f, 0.4f), // Upper right corner
 	glm::vec3(0.5f, 0.0f, 0.5f),	glm::vec3(0.8f, 0.7f, 0.4f), // Lower right corner
 	glm::vec3(0.0f, 0.8f, 0.0f),	glm::vec3(0.95f, 0.85f, 0.7f), // Lower left corner
+};*/
+
+GLfloat pyramidVertices[] =
+{ //     COORDINATES     /        COLORS      /   TexCoord  //
+	-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+	 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+	 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+	 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	2.5f, 5.0f
 };
 
 GLuint pyramidIndices[] = {
@@ -181,9 +190,9 @@ int main() {
 	VAO1.Bind();
 
 	// Generates Vertex Buffer Object and links it to vertices
-	VBO VBO1(vertices, sizeof(vertices));
+	VBO VBO1(pyramidVertices, sizeof(pyramidVertices));
 	// Generates Element Buffer Object and links it to indices
-	EBO EBO1(indices, sizeof(indices));
+	EBO EBO1(pyramidIndices, sizeof(pyramidIndices));
 
 	// Links VBO attributes such as coordinates and colors to VAO
 	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
@@ -194,8 +203,8 @@ int main() {
 	VBO1.Unbind();
 	EBO1.Unbind();
 
-	Texture crate("crate.jpg", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
-	crate.TexUnit(textureShader, "tex0", 0);
+	Texture texture("brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	texture.TexUnit(textureShader, "tex0", 0);
 
 	// Specify the color of the background (silver)
 	glClearColor(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
@@ -222,8 +231,25 @@ int main() {
 		// Clean the back buffer and assign the new color to it
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		textureShader.Activate();
+
 		//camera.ProcessInput(window, deltaTime);
 		//camera.SetMatrix(45.0f, 0.1f, 100.0f);
+
+		glm::mat4 model = glm::mat4(1.0f);
+		glm::mat4 view = glm::mat4(1.0f);
+		glm::mat4 proj = glm::mat4(1.0f);
+
+		view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
+		proj = glm::perspective(glm::radians(45.0f), (float)screenWidth / screenHeight, 0.1f, 100.0f);
+
+		GLint modelLoc = glGetUniformLocation(textureShader.GetID(), "model");
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		GLint viewLoc = glGetUniformLocation(textureShader.GetID(), "view");
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+		GLint projLoc = glGetUniformLocation(textureShader.GetID(), "proj");
+		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
+
 
 		//if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 			//transform.Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
@@ -248,11 +274,11 @@ int main() {
 
 		textureShader.Activate();
 
-		crate.Bind();
+		texture.Bind();
 
 		VAO1.Bind();
 
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, sizeof(pyramidIndices)/sizeof(int), GL_UNSIGNED_INT, 0);
 
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
@@ -273,7 +299,7 @@ int main() {
 	VAO1.Delete();
 	VBO1.Delete();
 	EBO1.Delete();
-	crate.Delete();
+	texture.Delete();
 	textureShader.Delete();
 
 	// Destroy window when done and exit

@@ -8,7 +8,7 @@ Texture::Texture(const char* image, GLenum texType, GLenum slot, GLenum format, 
 	// Stores the width, height, and number of color channels in the image
 	int widthImg, heightImg, numColCh;
 	stbi_set_flip_vertically_on_load(true); // Puts the image rightside up
-	unsigned char* bytes = stbi_load("crate.jpg", &widthImg, &heightImg, &numColCh, 0);
+	unsigned char* bytes = stbi_load(image, &widthImg, &heightImg, &numColCh, 0);
 
 	// Generate the texture object
 	glGenTextures(1, &ID);
@@ -28,7 +28,7 @@ Texture::Texture(const char* image, GLenum texType, GLenum slot, GLenum format, 
 	// glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, flatColor);
 
 	// Assigns the image to the texture object
-	glTexImage2D(texType, 0, GL_RGB, widthImg, heightImg, 0, format, pixelType, bytes);
+	glTexImage2D(texType, 0, GL_RGBA, widthImg, heightImg, 0, format, pixelType, bytes);
 	// Generate the mipmaps
 	glGenerateMipmap(texType); 
 
@@ -40,7 +40,9 @@ Texture::Texture(const char* image, GLenum texType, GLenum slot, GLenum format, 
 
 void Texture::TexUnit(Shader shader, const char* uniform, GLuint unit) {
 	GLuint texUni = glGetUniformLocation(shader.GetID(), uniform);
+
 	shader.Activate();
+
 	glUniform1i(texUni, unit);
 }
 
