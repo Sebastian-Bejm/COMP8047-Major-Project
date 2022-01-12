@@ -15,7 +15,7 @@ public:
 	
 	Transform& GetTransform();
 
-	void Update(Camera& camera);
+	void Draw(Camera& camera);
 	void Delete();
 
 private:

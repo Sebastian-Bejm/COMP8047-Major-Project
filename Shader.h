@@ -22,6 +22,5 @@ private:
 	GLuint ID;
 
 	std::string GetFileContents(const char* filename);
-
 	void CompileErrors(unsigned int shader, const char* type);
 };

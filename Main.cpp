@@ -1,9 +1,7 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <stb/stb_image.h>
 
-#include "Texture.h"
 #include "GameObject.h"
 
 const int screenWidth = 1000;
@@ -82,7 +80,7 @@ int main() {
 	glEnable(GL_DEPTH_TEST);
 
 	// Set up the camera
-	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 0.5f, 2.0f));
+	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 0.5f, 5.0f));
 
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {
@@ -101,10 +99,10 @@ int main() {
 
 		// Order of transforms once the matrices are set does not matter in the update
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-			//texPyramid.GetTransform().Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
+			testCube.GetTransform().Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
 		}
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-			//texPyramid.GetTransform().Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
+			testCube.GetTransform().Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
 		}
 
 		//texPyramid.Update(camera);

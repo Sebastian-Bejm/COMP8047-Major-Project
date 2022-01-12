@@ -1,12 +1,24 @@
 #pragma once
 
+#include <GLFW/glfw3.h>
+#include <glad/glad.h>
+#include "GLMHeader.h"
+
 class Renderer {
 public:
-	Renderer();
-	~Renderer();
 
-	void Initalize();
-	void RenderingUpdate();
-	void Teardown();
+	int Init(int viewWidth, int viewHeight, glm::vec4 backgroundColor);
+	int Update(); // ObjectTracker will be added here
+	int Teardown();
+
+
 private:
+
+	static Renderer* renderer;
+	int windowWidth, windowHeight;
+
+	glm::vec4 backgroundColor;
+
+	void SetWindow(int height, int width);
+	void DrawObjects();
 };

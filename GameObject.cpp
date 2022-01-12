@@ -34,8 +34,8 @@ Transform& GameObject::GetTransform() {
 }
 
 // Update this GameObject's matrices. 
-// Uses the camera's view and projection matrices to update everything accordingly
-void GameObject::Update(Camera& camera) {
+// Uses the camera's view and projection matrices to update the object's positions accordingly
+void GameObject::Draw(Camera& camera) {
 	// Update the object model matrix first
 	GLint cubeLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
 	glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(transform.GetModelMatrix()));
