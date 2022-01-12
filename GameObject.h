@@ -1,5 +1,7 @@
 #pragma once
 
+#include <filesystem>
+
 #include "Mesh.h"
 #include "Transform.h"
 #include "ShapeDetails.h"
@@ -8,7 +10,7 @@ class GameObject
 {
 public:
 
-	GameObject(std::string tag, std::string textureName, ShapeType shapeType, Shader& shader, 
+	GameObject(std::string tag, std::string textureFile, ShapeType shapeType, Shader& shader, 
 		glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
 	
 	Transform& GetTransform();
@@ -22,5 +24,7 @@ private:
 	Shader shaderProgram;
 	Mesh mesh;
 	Transform transform;
+
+	bool CheckTexFileExtension(const std::string& textureFile, std::string ext); // temp
 };
 

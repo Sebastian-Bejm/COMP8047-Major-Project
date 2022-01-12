@@ -12,9 +12,7 @@ Texture::Texture(const char* image, GLenum texType, GLenum slot, GLenum format, 
 
 	// Generate the texture object
 	glGenTextures(1, &ID);
-	//glActiveTexture(GL_TEXTURE0 + slot);
 	glActiveTexture(slot);
-	//unit = slot;
 	glBindTexture(texType, ID);
 
 	// Configures the type of algorithm used to make image smaller or bigger
@@ -27,10 +25,10 @@ Texture::Texture(const char* image, GLenum texType, GLenum slot, GLenum format, 
 
 	// In case I need to use GL_CLAMP_TO_BORDER
 	// float flatColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
-	// glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, flatColor);
+	// glTexParameterfv(texType GL_TEXTURE_BORDER_COLOR, flatColor);
 
 	// Assigns the image to the texture object
-	glTexImage2D(texType, 0, GL_RGBA, widthImg, heightImg, 0, format, pixelType, bytes);
+	glTexImage2D(texType, 0, format, widthImg, heightImg, 0, format, pixelType, bytes);
 	// Generate the mipmaps
 	glGenerateMipmap(texType);
 

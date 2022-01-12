@@ -2,7 +2,7 @@
 
 // Constructor to create a new GameObject
 // A GameObject requires a tag, shape, shader, and transform
-GameObject::GameObject(std::string tag, std::string textureName, ShapeType shapeType, Shader& shader,
+GameObject::GameObject(std::string tag, std::string textureFile, ShapeType shapeType, Shader& shader,
 	glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) {
 
 	objectTag = tag;
@@ -16,7 +16,9 @@ GameObject::GameObject(std::string tag, std::string textureName, ShapeType shape
 	std::vector<GLuint> indices = shape.indices;
 
 	// Initialize the texture for this object
-	Texture texture(textureName.c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	// GL_RGBA for png
+	// GL_RGB for jpg
+	Texture texture(textureFile.c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 
 	// Create a mesh with the vertices, indices, and transform
 	mesh = Mesh(vertices, indices, texture);
@@ -46,4 +48,19 @@ void GameObject::Update(Camera& camera) {
 void GameObject::Delete() {
 	mesh.Delete();
 	shaderProgram.Delete();
+}
+
+bool GameObject::CheckTexFileExtension(const std::string& textureFile, std::string ext) {
+	// Handles without path
+	std::string::size_type idx;
+	idx = textureFile.rfind(".");
+
+	if (idx != std::string::npos) {
+		std::string extension = textureFile.substr(idx + 1);
+		if (extension == ext) return true;
+	}
+	else {
+		// no extension found
+		return false;
+	}
 }

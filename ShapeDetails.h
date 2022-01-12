@@ -43,36 +43,85 @@ public:
 
 private:
 
+	// https://learnopengl.com/Advanced-OpenGL/Cubemaps
+
 	Shape GetCube() {
+		// 24
 		Vertex cubeVerts[] = {
-			//		Coordinates				 ,		Colors
-			glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-			glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-			glm::vec3(0.5f, -0.5f,  0.5f),  glm::vec3(0.8f, 0.7f, 0.4f),
-			glm::vec3(0.5f, -0.5f, -0.5f),  glm::vec3(0.95f, 0.85f, 0.7f),
-			glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-			glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-			glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec3(0.8f, 0.7f, 0.4f),
-			glm::vec3(0.5f,  0.5f, -0.5f),  glm::vec3(0.95f, 0.85f, 0.7f),
-			glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-			glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-			glm::vec3(0.5f,  0.5f, -0.5f),  glm::vec3(0.8f, 0.7f, 0.4f),
-			glm::vec3(0.5f, -0.5f, -0.5f),  glm::vec3(0.95f, 0.85f, 0.7f),
-			glm::vec3(-0.5f, -0.5f, 0.5f),  glm::vec3(0.8f, 0.7f, 0.4f),
-			glm::vec3(-0.5f,  0.5f, 0.5f),  glm::vec3(0.95f, 0.85f, 0.7f),
-			glm::vec3(0.5f,  0.5f, 0.5f),   glm::vec3(0.8f, 0.7f, 0.4f),
-			glm::vec3(0.5f, -0.5f, 0.5f),   glm::vec3(0.95f, 0.85f, 0.7f),
-			glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-			glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-			glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3(0.8f, 0.7f, 0.4f),
-			glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3(0.95f, 0.85f, 0.7f),
-			glm::vec3(0.5f, -0.5f, -0.5f),  glm::vec3(0.8f, 0.7f, 0.4f),
-			glm::vec3(0.5f, -0.5f,  0.5f),  glm::vec3(0.95f, 0.85f, 0.7f),
-			glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec3(0.8f, 0.7f, 0.4f),
-			glm::vec3(0.5f,  0.5f, -0.5f),  glm::vec3(0.95f, 0.85f, 0.7f),
+			//		COORDINATES					,			COLORS			,
+			glm::vec3(-0.5f, -0.5f, -0.5f),		glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(0.0f, 0.0f),
+			glm::vec3(-0.5f, -0.5f,  0.5f),		glm::vec3(0.95f, 0.85f, 0.7f),	glm::vec2(0.0f, 1.0f),
+			glm::vec3(0.5f, -0.5f,  0.5f),		glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(1.0f, 1.0f),
+			glm::vec3(0.5f, -0.5f, -0.5f),		glm::vec3(0.95f, 0.85f, 0.7f),	glm::vec2(1.0f, 0.0f),
+
+			glm::vec3(-0.5f,  0.5f, -0.5f),		glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(0.0f, 0.0f),
+			glm::vec3(-0.5f,  0.5f,  0.5f),		glm::vec3(0.95f, 0.85f, 0.7f),	glm::vec2(0.0f, 1.0f),
+			glm::vec3(0.5f,  0.5f,  0.5f),		glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(1.0f, 1.0f),
+			glm::vec3(0.5f,  0.5f, -0.5f),		glm::vec3(0.95f, 0.85f, 0.7f),	glm::vec2(1.0f, 0.0f),
+
+			glm::vec3(-0.5f, -0.5f, -0.5f),		glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(0.0f, 0.0f),
+			glm::vec3(-0.5f,  0.5f, -0.5f),		glm::vec3(0.95f, 0.85f, 0.7f),	glm::vec2(0.0f, 1.0f),
+			glm::vec3(0.5f,  0.5f, -0.5f),		glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(1.0f, 1.0f),
+			glm::vec3(0.5f, -0.5f, -0.5f),		glm::vec3(0.95f, 0.85f, 0.7f),	glm::vec2(1.0f, 0.0f),
+
+			glm::vec3(-0.5f, -0.5f, 0.5f),		glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(0.0f, 0.0f),
+			glm::vec3(-0.5f,  0.5f, 0.5f),		glm::vec3(0.95f, 0.85f, 0.7f),	glm::vec2(0.0f, 1.0f),
+			glm::vec3(0.5f,  0.5f, 0.5f),		glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(1.0f, 1.0f),
+			glm::vec3(0.5f, -0.5f, 0.5f),		glm::vec3(0.95f, 0.85f, 0.7f),	glm::vec2(1.0f, 0.0f),
+
+			glm::vec3(-0.5f, -0.5f, -0.5f),		glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(0.0f, 0.0f),
+			glm::vec3(-0.5f, -0.5f,  0.5f),		glm::vec3(0.95f, 0.85f, 0.7f),	glm::vec2(0.0f, 1.0f),
+			glm::vec3(-0.5f,  0.5f,  0.5f),		glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(1.0f, 1.0f),
+			glm::vec3(-0.5f,  0.5f, -0.5f),		glm::vec3(0.95f, 0.85f, 0.7f),	glm::vec2(1.0f, 0.0f),
+
+			glm::vec3(0.5f, -0.5f, -0.5f),		glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(0.0f, 0.0f),
+			glm::vec3(0.5f, -0.5f,  0.5f),		glm::vec3(0.95f, 0.85f, 0.7f),	glm::vec2(0.0f, 1.0f),
+			glm::vec3(0.5f,  0.5f,  0.5f),		glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(1.0f, 1.0f),
+			glm::vec3(0.5f,  0.5f, -0.5f),		glm::vec3(0.95f, 0.85f, 0.7f),	glm::vec2(1.0f, 0.0f)
 		};
 
-		GLint cubeInds[] = {
+		/*glm::vec3 vertices[] =
+		{
+			glm::vec3(-1, -1, -1),
+			glm::vec3(1, -1, -1),
+			glm::vec3(1, 1, -1),
+			glm::vec3(-1, 1, -1),
+
+			glm::vec3(-1, -1, 1),
+			glm::vec3(1, -1, 1),
+			glm::vec3(1, 1, 1),
+			glm::vec3(-1, 1, 1)
+		};
+
+		glm::vec2 texCoords[] =
+		{
+			glm::vec2(0, 0),
+			glm::vec2(1, 0),
+			glm::vec2(1, 1),
+			glm::vec2(0, 1)
+		};
+
+		Vector3f normals[6] =
+		{
+			Vector3f(0, 0, 1),
+			Vector3f(1, 0, 0),
+			Vector3f(0, 0, -1),
+			Vector3f(-1, 0, 0),
+			Vector3f(0, 1, 0),
+			Vector3f(0, -1, 0)
+		};
+
+		GLint indices[6 * 6] =
+		{
+			0, 1, 3, 3, 1, 2,
+			1, 5, 2, 2, 5, 6,
+			5, 4, 6, 6, 4, 7,
+			4, 0, 7, 7, 0, 3,
+			3, 2, 7, 7, 2, 6,
+			4, 5, 0, 0, 5, 1
+		};*/
+
+		int cubeInds[] = {
 			0, 2, 1,
 			0, 3, 2,
 			4, 5, 6,
@@ -96,7 +145,7 @@ private:
 
 	Shape GetSquare() {
 		Vertex squareVerts[] =
-		{ //     COORDINATES				/			COLORS      
+		{	//     COORDINATES				/			COLORS				/		TEXTURES
 			glm::vec3(-0.5f, -0.5f, 0.0f),     glm::vec3(1.0f, 0.0f, 0.0f),		glm::vec2(0.0f, 0.0f),
 			glm::vec3(-0.5f,  0.5f, 0.0f),     glm::vec3(0.0f, 1.0f, 0.0f),		glm::vec2(0.0f, 1.0f),
 			glm::vec3(0.5f,  0.5f, 0.0f),      glm::vec3(0.0f, 0.0f, 1.0f),		glm::vec2(1.0f, 1.0f),
@@ -120,10 +169,9 @@ private:
 		Vertex pyramidVerts[] =
 		{
 			glm::vec3(-0.5f, 0.0f, 0.5f),	glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(0.0f, 0.0f), // Lower left corner
-			glm::vec3(-0.5f, 0.0f, -0.5f),	glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(5.0f, 0.0f), // Upper left corner
-			glm::vec3(0.5f, 0.0f, -0.5f),	glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(0.0f, 0.0f), // Upper right corner
-			glm::vec3(0.5f, 0.0f, 0.5f),	glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(5.0f, 0.0f),// Lower right corner
-			glm::vec3(0.0f, 0.8f, 0.0f),	glm::vec3(0.95f, 0.85f, 0.7f),	glm::vec2(2.5f, 5.0f),// Lower left corner
+			glm::vec3(-0.5f, 0.0f, -0.5f),	glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(1.0f, 0.0f), // Upper left corner
+			glm::vec3(0.5f, 0.0f, 0.5f),	glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(1.0f, 0.0f),// Lower right corner
+			glm::vec3(0.0f, 0.8f, 0.0f),	glm::vec3(0.95f, 0.85f, 0.7f),	glm::vec2(0.5f, 1.0f),// Lower left corner
 		};
 
 		GLuint pyramidInds[] = {
