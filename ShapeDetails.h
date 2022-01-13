@@ -10,7 +10,7 @@ struct Shape {
 	std::vector<GLuint> indices;
 };
 
-enum ShapeType {
+enum class ShapeType {
 	SQUARE,
 	CUBE,
 	PYRAMID,
@@ -25,13 +25,13 @@ public:
 		Shape shape;
 
 		switch (shapeType) {
-		case SQUARE:
+		case ShapeType::SQUARE:
 			shape = GetSquare();
 			break;
-		case CUBE:
+		case ShapeType::CUBE:
 			shape = GetCube();
 			break;
-		case PYRAMID:
+		case ShapeType::PYRAMID:
 			shape = GetPyramid();
 			break;
 		default:

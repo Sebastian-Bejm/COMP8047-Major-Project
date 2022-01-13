@@ -1,9 +1,10 @@
-#include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <iostream>
 
 #include "GameObject.h"
 #include "ObjectTracker.h"
+#include "Renderer.h"
 
 const int screenWidth = 1000;
 const int screenHeight = 800;
@@ -12,12 +13,13 @@ float deltaTime;
 float currentFrame, lastFrame;
 
 ObjectTracker* objectTracker;
+Renderer* renderer = Renderer::GetInstance();
 
 // TODO: refactor later for initalize, update, and teardown
 int Initialize() {
 
 	glm::fvec4 backgroundColour(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
-
+	renderer->Init(screenWidth, screenHeight, backgroundColour);
 
 	return 0;
 }
@@ -27,10 +29,17 @@ void GraphicsUpdate() {
 }
 
 void PhysicsUpdate() {
-
+	// run physics here
+	// physics->update(tracker)
 }
 
-int Run() {
+int RunEngine() {
+
+	// physics update first
+	// will have to use a fixed step
+	PhysicsUpdate();
+
+	GraphicsUpdate();
 
 	return 0;
 }
@@ -38,6 +47,8 @@ int Run() {
 int Teardown() {
 
 	// renderer teardown later
+	renderer->Teardown();
+
 	objectTracker->DeleteAllObjects();
 
 	delete objectTracker;
@@ -76,13 +87,13 @@ int main() {
 
 
 	// Test adding
-	int pos = -2.0f;
-	for (int i = 0; i < 4; i++) {
+	int pos = -1.0f;
+	for (int i = 0; i < 3; i++) {
 		Shader cubeShader("TextureVertShader.vs", "TextureFragShader.fs");
 
 		cubeShader.Activate();
 
-		GameObject testCube("New", "brick.png", CUBE, cubeShader,
+		GameObject testCube("New", "brick.png", ShapeType::CUBE, cubeShader,
 			glm::vec3(pos, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 		//std::cout << pos << std::endl;
 

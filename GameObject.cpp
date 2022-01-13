@@ -1,7 +1,7 @@
 #include "GameObject.h"
 
 // Constructor to create a new GameObject
-// A GameObject requires a tag, shape, shader, and transform
+// A GameObject requires a tag, texture file, shape, shader, and transform
 GameObject::GameObject(std::string tag, std::string textureFile, ShapeType shapeType, Shader& shader,
 	glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) {
 
@@ -29,10 +29,13 @@ GameObject::GameObject(std::string tag, std::string textureFile, ShapeType shape
 	glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(transform.GetModelMatrix()));
 }
 
+// Get the transform of this object
+// Used to help manipulate the position of object when necessary
 Transform& GameObject::GetTransform() {
 	return transform;
 }
 
+// Get the tag of this game object
 std::string GameObject::GetTag() {
 	return objectTag;
 }
