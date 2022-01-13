@@ -1,7 +1,5 @@
 #pragma once
 
-#include <filesystem>
-
 #include "Mesh.h"
 #include "Transform.h"
 #include "ShapeDetails.h"
@@ -14,6 +12,8 @@ public:
 		glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
 	
 	Transform& GetTransform();
+
+	std::string GetTag();
 
 	void Draw(Camera& camera);
 	void Delete();

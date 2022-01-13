@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 
 #include "GameObject.h"
+#include "ObjectTracker.h"
 
 const int screenWidth = 1000;
 const int screenHeight = 800;
@@ -15,8 +16,8 @@ int Initialize() {
 	return 0;
 }
 
-void Teardown() {
-	
+int Teardown() {
+	return 0;
 }
 
 int main() {
@@ -105,8 +106,7 @@ int main() {
 			testCube.GetTransform().Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
 		}
 
-		//texPyramid.Update(camera);
-		testCube.Update(camera);
+		testCube.Draw(camera);
 
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
@@ -116,7 +116,6 @@ int main() {
 	}
 
 	// Cleanup objects we have created
-	//texPyramid.Delete();
 	testCube.Delete();
 
 	// Destroy window when done and exit

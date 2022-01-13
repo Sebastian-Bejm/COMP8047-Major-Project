@@ -33,6 +33,10 @@ Transform& GameObject::GetTransform() {
 	return transform;
 }
 
+std::string GameObject::GetTag() {
+	return objectTag;
+}
+
 // Update this GameObject's matrices. 
 // Uses the camera's view and projection matrices to update the object's positions accordingly
 void GameObject::Draw(Camera& camera) {
