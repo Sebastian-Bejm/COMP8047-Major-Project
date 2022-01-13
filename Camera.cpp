@@ -4,8 +4,6 @@ Camera::Camera() {
 	position = glm::vec3(0.0f, 0.0f, 0.0f);
 	viewWidth = 1;
 	viewHeight = 1;
-	projectionMatrix = glm::mat4(1.0f);
-	viewMatrix = glm::mat4(1.0f);
 }
 
 Camera::Camera(int viewWidth, int viewHeight, glm::vec3 position) {
@@ -13,28 +11,27 @@ Camera::Camera(int viewWidth, int viewHeight, glm::vec3 position) {
 
 	this->viewWidth = viewWidth;
 	this->viewHeight = viewHeight;
+
 	projectionMatrix = glm::mat4(1.0f);
 	viewMatrix = glm::mat4(1.0f);
-}
-
-Camera::~Camera() {
-
+	cameraMatrix = glm::mat4(1.0f);
 }
 
 // Currently made for perspective, change to orthographic later on
 void Camera::SetMatrix(float fovDeg, float nearPlane, float farPlane) {
+	//viewMatrix = glm::mat4(1.0f);
+	//projectionMatrix = glm::mat4(1.0f);
+
 	viewMatrix = glm::lookAt(position, position + front, up);
 	projectionMatrix = glm::perspective(glm::radians(fovDeg), (float)(viewWidth / viewHeight), nearPlane, farPlane);
+
+	cameraMatrix = projectionMatrix * viewMatrix;
 }
 
 /*
-* Processes inputs to move the camera. This will primarily be used for debugging the scene.
+* Processes inputs to move the camera. This will primarily be used for debugging.
 */
-void Camera::ProcessInput(GLFWwindow* window) {
-
-	float currentFrame = glfwGetTime();
-	deltaTime = currentFrame - lastFrame;
-	lastFrame = currentFrame;
+void Camera::ProcessInput(GLFWwindow* window, float deltaTime) {
 
 	float speed = 0.5f * deltaTime;
 
@@ -90,10 +87,11 @@ void Camera::ProcessInput(GLFWwindow* window) {
 	}
 }
 
-glm::mat4 Camera::GetViewMatrix() {
-	return viewMatrix;
+glm::mat4 Camera::GetCameraMatrix() {
+	return cameraMatrix;
 }
 
-glm::mat4 Camera::GetProjectionMatrix() {
-	return projectionMatrix;
+glm::vec3 Camera::GetPosition() {
+	return position;
 }
+

@@ -1,63 +1,23 @@
-#include<iostream>
-#include<glad/glad.h>
-#include<GLFW/glfw3.h>
-#include<glm/glm.hpp>
-#include<glm/gtc/matrix_transform.hpp>
-#include<glm/gtc/type_ptr.hpp>
+#include <iostream>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
-#include "Shader.h"
-#include "VAO.h"
-#include "VBO.h"
-#include "EBO.h"
-#include "Camera.h"
+#include "GameObject.h"
+#include "ObjectTracker.h"
 
 const int screenWidth = 1000;
 const int screenHeight = 800;
 
-// Moving these up here - temporary until i learn about colour buffer
-// first 3 are x y z, next 3 are r g b
-/*GLfloat vertices[] =
-{
-	-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,	0.8f, 0.3f, 0.02f, // Lower left corner
-	0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,		0.8f, 0.3f, 0.02f, // Lower right corner
-	0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f,	0.8f, 0.3f, 0.02f, // Upper corner
-	-0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, 0.8f, 0.3f, 0.02f,
-	0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,	0.8f, 0.3f, 0.02f,
-	0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f,		0.8f, 0.3f, 0.02f,
-};
+float deltaTime;
+float currentFrame, lastFrame;
 
-GLuint indices[] = {
-	0, 3, 5,
-	3, 2, 4,
-	5, 4, 1
-};*/
-
-// Pyramid
-GLfloat vertices[] =
-{
-	-0.5f, 0.0f, 0.5f,	0.8f, 0.7f, 0.4f, // Lower left corner
-	-0.5f, 0.0f, -0.5f,	0.8f, 0.7f, 0.4f, // Upper left corner
-	0.5f, 0.0f, -0.5f,	0.8f, 0.7f, 0.4f, // Upper right corner
-	0.5f, 0.0f, 0.5f,	0.8f, 0.7f, 0.4f, // Lower right corner
-	0.0f, 0.8f, 0.0f,	0.95f, 0.85f, 0.7f, // Lower left corner
-};
-
-GLuint indices[] = {
-	0, 1, 2,
-	0, 2, 3,
-	0, 1, 4,
-	1, 2, 4,
-	2, 3, 4,
-	3, 0, 4
-};
-
-// TODO: refactor later fot initalize, update, and teardown
-int initialize() {
+// TODO: refactor later for initalize, update, and teardown
+int Initialize() {
 	return 0;
 }
 
-void teardown() {
-	
+int Teardown() {
+	return 0;
 }
 
 int main() {
@@ -86,24 +46,29 @@ int main() {
 	// Specify the viewport of OpenGL in the window
 	glViewport(0, 0, screenWidth, screenHeight);
 
-	Shader shaderProgram("DefaultVertShader.vs", "DefaultFragShader.fs");
+	Shader textureShader("TextureVertShader.vs", "TextureFragShader.fs");
+	Shader cubeShader("TextureVertShader.vs", "TextureFragShader.fs");
 
-	// Create the VAO, VBO, and EBO for the current rendered object (must be in this order)
-	VAO vao;
-	vao.Bind();
+	/*ShapeDetails shapeDetails;
+	Shape pyramid = shapeDetails.GetShape(PYRAMID);
 
-	VBO vbo(vertices, sizeof(vertices));
-	EBO ebo(indices, sizeof(indices));
+	// vectors are already sized correctly
+	std::vector<Vertex> verts = pyramid.vertices;
+	std::vector<GLuint> inds = pyramid.indices;
 
-	// temporary until I learn to set these params dynamically based on object info
-	// Links the attributes to the shader based on layout
-	vao.LinkAttrib(vbo, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
-	vao.LinkAttrib(vbo, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3*sizeof(float)));
+	Texture texture("brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	texture.TexUnit(textureShader, "tex0", 0);
 
-	// Unbind to prevent modification
-	vao.Unbind();
-	vbo.Unbind();
-	ebo.Unbind();
+	Mesh mesh(verts, inds, texture);*/
+
+	//textureShader.Activate();
+	//GameObject texPyramid("Test", "brick.png", PYRAMID, textureShader,
+	//	glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+
+	cubeShader.Activate();
+	GameObject testCube("TestCube", "brick.png", CUBE, cubeShader, 
+		glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+
 
 	// Specify the color of the background (silver)
 	glClearColor(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
@@ -116,37 +81,33 @@ int main() {
 	glEnable(GL_DEPTH_TEST);
 
 	// Set up the camera
-	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 0.5f, 2.0f));
+	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 0.5f, 5.0f));
 
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {
+		// This fixes objects/entities moving too fast
+		currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
 		// Specify the color of the background (silver)
 		glClearColor(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
 		// Clean the back buffer and assign the new color to it
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		// Tell OpenGL what Shader program we want to use
-		shaderProgram.Activate();
 
-		camera.ProcessInput(window);
+		camera.ProcessInput(window, deltaTime);
 		camera.SetMatrix(45.0f, 0.1f, 100.0f);
 
-		// Get the model, view, and projection matrices
-		glm::mat4 model = glm::mat4(1.0f);
-		glm::mat4 view = camera.GetViewMatrix();
-		glm::mat4 proj = camera.GetProjectionMatrix();
+		// Order of transforms once the matrices are set does not matter in the update
+		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+			testCube.GetTransform().Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
+		}
+		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+			testCube.GetTransform().Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
+		}
 
-		// Set the uniforms in the shader
-		GLint modelLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		GLint viewLoc = glGetUniformLocation(shaderProgram.GetID(), "view");
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		GLint projLoc = glGetUniformLocation(shaderProgram.GetID(), "proj");
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
+		testCube.Draw(camera);
 
-		// Bind the VAO so OpenGL knows to use it
-		vao.Bind();
-		// Draw primitives, number of indices, datatype of indices, index of indices (this would be when looping to render multiple objects)
-		glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 
@@ -155,10 +116,7 @@ int main() {
 	}
 
 	// Cleanup objects we have created
-	vao.Delete();
-	vbo.Delete();
-	ebo.Delete();
-	shaderProgram.Delete();
+	testCube.Delete();
 
 	// Destroy window when done and exit
 	glfwDestroyWindow(window);
