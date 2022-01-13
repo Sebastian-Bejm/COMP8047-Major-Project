@@ -11,10 +11,12 @@ public:
 	int Update(); // ObjectTracker will be added here
 	int Teardown();
 
+	static Renderer* GetInstance();
 
 private:
 
 	static Renderer* renderer;
+
 	int windowWidth, windowHeight;
 
 	glm::vec4 backgroundColor;

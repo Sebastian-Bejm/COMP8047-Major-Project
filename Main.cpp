@@ -22,10 +22,28 @@ int Initialize() {
 	return 0;
 }
 
-int Teardown() {
+void GraphicsUpdate() {
+
+}
+
+void PhysicsUpdate() {
+
+}
+
+int Run() {
+
 	return 0;
 }
 
+int Teardown() {
+
+	// renderer teardown later
+	objectTracker->DeleteAllObjects();
+
+	delete objectTracker;
+
+	return 0;
+}
 
 
 int main() {
@@ -66,7 +84,7 @@ int main() {
 
 		GameObject testCube("New", "brick.png", CUBE, cubeShader,
 			glm::vec3(pos, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-		std::cout << pos << std::endl;
+		//std::cout << pos << std::endl;
 
 		objectTracker->Add(testCube);
 		pos += 1.0f;
@@ -103,12 +121,12 @@ int main() {
 		camera.SetMatrix(45.0f, 0.1f, 100.0f);
 
 		// Order of transforms once the matrices are set does not matter in the update
-		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+		/*if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 			objects[1].GetTransform().Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
 		}
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
 			objects[1].GetTransform().Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
-		}
+		}*/
 
 		for (int i = 0; i < objects.size(); i++) {
 			objects[i].Draw(camera);
