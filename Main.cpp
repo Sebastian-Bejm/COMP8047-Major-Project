@@ -11,14 +11,22 @@ const int screenHeight = 800;
 float deltaTime;
 float currentFrame, lastFrame;
 
+ObjectTracker* objectTracker;
+
 // TODO: refactor later for initalize, update, and teardown
 int Initialize() {
+
+	glm::fvec4 backgroundColour(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
+
+
 	return 0;
 }
 
 int Teardown() {
 	return 0;
 }
+
+
 
 int main() {
 
@@ -46,29 +54,23 @@ int main() {
 	// Specify the viewport of OpenGL in the window
 	glViewport(0, 0, screenWidth, screenHeight);
 
-	Shader textureShader("TextureVertShader.vs", "TextureFragShader.fs");
-	Shader cubeShader("TextureVertShader.vs", "TextureFragShader.fs");
+	objectTracker = ObjectTracker::GetInstance();
 
-	/*ShapeDetails shapeDetails;
-	Shape pyramid = shapeDetails.GetShape(PYRAMID);
 
-	// vectors are already sized correctly
-	std::vector<Vertex> verts = pyramid.vertices;
-	std::vector<GLuint> inds = pyramid.indices;
+	// Test adding
+	int pos = -2.0f;
+	for (int i = 0; i < 4; i++) {
+		Shader cubeShader("TextureVertShader.vs", "TextureFragShader.fs");
 
-	Texture texture("brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-	texture.TexUnit(textureShader, "tex0", 0);
+		cubeShader.Activate();
 
-	Mesh mesh(verts, inds, texture);*/
+		GameObject testCube("New", "brick.png", CUBE, cubeShader,
+			glm::vec3(pos, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+		std::cout << pos << std::endl;
 
-	//textureShader.Activate();
-	//GameObject texPyramid("Test", "brick.png", PYRAMID, textureShader,
-	//	glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-
-	cubeShader.Activate();
-	GameObject testCube("TestCube", "brick.png", CUBE, cubeShader, 
-		glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-
+		objectTracker->Add(testCube);
+		pos += 1.0f;
+	}
 
 	// Specify the color of the background (silver)
 	glClearColor(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
@@ -82,6 +84,8 @@ int main() {
 
 	// Set up the camera
 	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 0.5f, 5.0f));
+
+	std::vector<GameObject> objects = objectTracker->GetAllObjects();
 
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {
@@ -100,13 +104,15 @@ int main() {
 
 		// Order of transforms once the matrices are set does not matter in the update
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-			testCube.GetTransform().Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
+			objects[1].GetTransform().Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
 		}
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-			testCube.GetTransform().Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
+			objects[1].GetTransform().Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
 		}
 
-		testCube.Draw(camera);
+		for (int i = 0; i < objects.size(); i++) {
+			objects[i].Draw(camera);
+		}
 
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
@@ -116,7 +122,8 @@ int main() {
 	}
 
 	// Cleanup objects we have created
-	testCube.Delete();
+
+	objectTracker->DeleteAllObjects();
 
 	// Destroy window when done and exit
 	glfwDestroyWindow(window);
