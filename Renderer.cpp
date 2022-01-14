@@ -23,9 +23,7 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Setup our window for OpenGL
-	window = SetupGLFW();
-
-	GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "COMP8047 Major Project", NULL, NULL);
+	window = glfwCreateWindow(windowWidth, windowHeight, "COMP8047 Major Project", NULL, NULL);
 	if (window == NULL) {
 		std::cerr << "Failed to create window" << std::endl;
 		glfwTerminate();
@@ -45,7 +43,7 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	return 0;
 }
 
-int Renderer::Update(ObjectTracker* tracker) {
+int Renderer::Update(ObjectTracker* tracker, float deltaTime) {
 
 	// Specify the color of the background (silver)
 	glClearColor(backgroundColour.r, backgroundColour.g, backgroundColour.b, backgroundColour.a);
@@ -53,6 +51,7 @@ int Renderer::Update(ObjectTracker* tracker) {
 	// Clean the back buffer and assign the new color to it, and depth buffer for correct 3D rendering
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	camera.ProcessInput(window, deltaTime);
 	camera.SetMatrix(45.0f, 0.1f, 100.0f);
 
 	// draw the game objects here with a reference to the camera

@@ -33,12 +33,21 @@ int Initialize() {
 }
 
 void GraphicsUpdate() {
-	renderer->Update(objectTracker);
+	//renderer->Update(objectTracker);
 }
 
 void PhysicsUpdate() {
 	// run physics here
-	// physics->update(tracker)
+	// this update uses a fixed step
+}
+
+void HandleInputs() {
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+		//objects[1].GetTransform().Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
+	}
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+		//objects[1].GetTransform().Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
+	}
 }
 
 int RunEngine() {
@@ -112,22 +121,22 @@ int main() {
 	}
 
 	// Enable the depth buffer for 3D objects
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 
 	// Set up the camera
-	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 0.5f, 5.0f));
+	//Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 0.5f, 5.0f));
 
-	std::vector<GameObject> objects = objectTracker->GetAllObjects();
+	//std::vector<GameObject> objects = objectTracker->GetAllObjects();
 
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {
 		// This fixes objects/entities moving too fast
-		/*currentFrame = glfwGetTime();
+		currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
 		// Specify the color of the background (silver)
-		glClearColor(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
+		/*glClearColor(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
 		// Clean the back buffer and assign the new color to it
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -152,17 +161,11 @@ int main() {
 		// Tell GLFW to keep track of input events
 		glfwPollEvents();
 
-		RunEngine();
+		renderer->Update(objectTracker, deltaTime);
 	}
 
+	// Cleanup objects and destroy/exit window when done
 	Teardown();
-
-	// Cleanup objects we have created
-	//objectTracker->DeleteAllObjects();
-
-	// Destroy window when done and exit
-	//glfwDestroyWindow(window);
-	//glfwTerminate();
 
 	return 0;
 }
