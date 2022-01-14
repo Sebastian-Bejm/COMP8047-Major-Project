@@ -25,6 +25,6 @@ private:
 	Mesh mesh;
 	Transform transform;
 
-	bool CheckTexFileExtension(const std::string& textureFile, std::string ext); // temp
+	std::string GetTextureFileExtension(const std::string& textureFile); // temp
 };
 
