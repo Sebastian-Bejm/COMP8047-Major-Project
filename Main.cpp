@@ -6,8 +6,8 @@
 #include "ObjectTracker.h"
 #include "Renderer.h"
 
-const int screenWidth = 1000;
-const int screenHeight = 800;
+const int screenWidth = 1400;
+const int screenHeight = 900;
 
 const float timeStep = 1.0f / 60.0f;
 
@@ -15,21 +15,25 @@ float deltaTime;
 float currentFrame, lastFrame;
 
 ObjectTracker* objectTracker;
-Renderer* renderer = Renderer::GetInstance();
+Renderer* renderer;
 
 // TODO: refactor later for initalize, update, and teardown
 int Initialize() {
+	renderer = Renderer::GetInstance();
 
 	glm::fvec4 backgroundColour(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
-	renderer->Init(backgroundColour);
+	renderer->Init(backgroundColour, screenWidth, screenHeight);
 
 	objectTracker = ObjectTracker::GetInstance();
+
+	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 0.5f, 5.0f));
+	renderer->SetCamera(camera);
 
 	return 0;
 }
 
 void GraphicsUpdate() {
-
+	renderer->Update(objectTracker);
 }
 
 void PhysicsUpdate() {
@@ -43,21 +47,20 @@ int RunEngine() {
 	deltaTime = currentFrame - lastFrame;
 	lastFrame = currentFrame;
 
-	// physics update first
-	// will have to use a fixed step
+	// physics update comes first
 	PhysicsUpdate();
-
+	// graphics comes after physics
 	GraphicsUpdate();
 
 	return 0;
 }
 
 int Teardown() {
-
-	// renderer teardown later
-	renderer->Teardown();
-
+	// Deletes allocated memory stored in game objects
 	objectTracker->DeleteAllObjects();
+
+	// Destroys the window on exit
+	renderer->Teardown();
 
 	return 0;
 }
@@ -66,7 +69,7 @@ int Teardown() {
 int main() {
 
 	// Init GLFW
-	glfwInit();
+	/*glfwInit();
 
 	// Tell GLFW what version we are using (OpenGL 3.3)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -89,7 +92,9 @@ int main() {
 	// Specify the viewport of OpenGL in the window
 	glViewport(0, 0, screenWidth, screenHeight);
 
-	objectTracker = ObjectTracker::GetInstance();
+	objectTracker = ObjectTracker::GetInstance();*/
+
+	Initialize();
 
 	// Test adding
 	int pos = -1.0f;
@@ -106,13 +111,6 @@ int main() {
 		pos += 1.0f;
 	}
 
-	// Specify the color of the background (silver)
-	//glClearColor(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
-	// Clean the back buffer and assign the new color to it
-	//glClear(GL_COLOR_BUFFER_BIT);
-	// Swap the back buffer with the front buffer
-	//glfwSwapBuffers(window);
-
 	// Enable the depth buffer for 3D objects
 	glEnable(GL_DEPTH_TEST);
 
@@ -124,7 +122,7 @@ int main() {
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {
 		// This fixes objects/entities moving too fast
-		currentFrame = glfwGetTime();
+		/*currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
@@ -137,32 +135,34 @@ int main() {
 		camera.SetMatrix(45.0f, 0.1f, 100.0f);
 
 		// Order of transforms once the matrices are set does not matter in the update
-		/*if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 			objects[1].GetTransform().Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
 		}
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
 			objects[1].GetTransform().Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
-		}*/
+		}
 
 		for (int i = 0; i < objects.size(); i++) {
 			objects[i].Draw(camera);
 		}
 
 		// Swap the back buffer with the front buffer
-		glfwSwapBuffers(window);
+		glfwSwapBuffers(window);*/
 
-		// todo create Update functions for rendering, physics, manager, etc.
+		// Tell GLFW to keep track of input events
 		glfwPollEvents();
+
+		RunEngine();
 	}
 
-	//Teardown();
+	Teardown();
 
 	// Cleanup objects we have created
-	objectTracker->DeleteAllObjects();
+	//objectTracker->DeleteAllObjects();
 
 	// Destroy window when done and exit
-	glfwDestroyWindow(window);
-	glfwTerminate();
+	//glfwDestroyWindow(window);
+	//glfwTerminate();
 
 	return 0;
 }

@@ -7,13 +7,14 @@
 #include "Camera.h"
 #include "ObjectTracker.h"
 
+extern GLFWwindow* window;
 
 class Renderer {
 public:
 
 	static Renderer* GetInstance();
 
-	int Init(glm::vec4 backgroundColor);
+	int Init(glm::vec4 backgroundColor, int windowWidth, int windowHeight);
 	int Update(ObjectTracker* tracker); // ObjectTracker will be added here
 	int Teardown();
 
@@ -23,13 +24,11 @@ private:
 
 	static Renderer* renderer;
 
-	GLFWwindow* window;
 	int windowWidth, windowHeight;
 	glm::vec4 backgroundColour;
 
 	Camera camera;
 
 	GLFWwindow* SetupGLFW();
-
-	void SetWindow(int height, int width);
+	void SetWindow(int width, int height);
 };

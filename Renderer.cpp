@@ -2,6 +2,8 @@
 
 Renderer* Renderer::renderer = nullptr;
 
+GLFWwindow* window;
+
 Renderer* Renderer::GetInstance() {
 	if (renderer == nullptr) {
 		renderer = new Renderer();
@@ -9,7 +11,7 @@ Renderer* Renderer::GetInstance() {
 	return renderer;
 }
 
-int Renderer::Init(glm::vec4 backgroundColour) {
+int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight) {
 	this->backgroundColour = backgroundColour;
 
 	// Init GLFW
@@ -22,10 +24,14 @@ int Renderer::Init(glm::vec4 backgroundColour) {
 
 	// Setup our window for OpenGL
 	window = SetupGLFW();
+
+	GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "COMP8047 Major Project", NULL, NULL);
 	if (window == NULL) {
+		std::cerr << "Failed to create window" << std::endl;
 		glfwTerminate();
 		return -1;
 	}
+	glfwMakeContextCurrent(window);
 
 	// Load GLAD so it configures OpenGL
 	gladLoadGL();
@@ -46,6 +52,8 @@ int Renderer::Update(ObjectTracker* tracker) {
 
 	// Clean the back buffer and assign the new color to it, and depth buffer for correct 3D rendering
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	camera.SetMatrix(45.0f, 0.1f, 100.0f);
 
 	// draw the game objects here with a reference to the camera
 	std::vector<GameObject> objects = tracker->GetAllObjects();
@@ -99,9 +107,9 @@ GLFWwindow* Renderer::SetupGLFW() {
 
 	delete monitor;
 	delete monitorInfo;
+
 	return window;
 }
-
 
 void Renderer::SetWindow(int width, int height) {
 	if (width < 0 || height < 0) {
