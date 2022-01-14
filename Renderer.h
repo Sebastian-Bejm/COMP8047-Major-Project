@@ -17,6 +17,8 @@ public:
 	int Update(ObjectTracker* tracker); // ObjectTracker will be added here
 	int Teardown();
 
+	void SetCamera(Camera& camera);
+
 private:
 
 	static Renderer* renderer;
@@ -25,10 +27,9 @@ private:
 	int windowWidth, windowHeight;
 	glm::vec4 backgroundColour;
 
-	Camera* camera;
+	Camera camera;
 
 	GLFWwindow* SetupGLFW();
 
 	void SetWindow(int height, int width);
-	void DrawObjects();
 };

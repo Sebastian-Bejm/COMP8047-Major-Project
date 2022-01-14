@@ -44,8 +44,7 @@ void Mesh::Draw(Shader& shader, Camera& camera) {
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 }
 
-// Cleanup our VAO, VBO, and EBO of this mesh
-// Also delete the texture connected to this mesh
+// Cleanup our VAO, VBO, EBO and texture in this mesh
 void Mesh::Delete() {
 	vao.Delete();
 	vbo.Delete();

@@ -17,7 +17,6 @@ public:
 
 	GameObject& FindByTag(std::string objectTag);
 
-
 private:
 
 	static ObjectTracker* instance;

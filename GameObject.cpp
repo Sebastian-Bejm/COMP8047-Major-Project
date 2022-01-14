@@ -54,7 +54,7 @@ void GameObject::Draw(Camera& camera) {
 // Delete the contents of this GameObject
 void GameObject::Delete() {
 	mesh.Delete();
-	std::cout << "Shader ID: " << shaderProgram.GetID() << std::endl;
+	//std::cout << "Shader ID: " << shaderProgram.GetID() << std::endl;
 	shaderProgram.Delete();
 }
 

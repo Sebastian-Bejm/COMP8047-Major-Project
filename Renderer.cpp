@@ -44,13 +44,14 @@ int Renderer::Update(ObjectTracker* tracker) {
 	// Specify the color of the background (silver)
 	glClearColor(backgroundColour.r, backgroundColour.g, backgroundColour.b, backgroundColour.a);
 
-	// Clean the back buffer and assign the new color to it
-	glClear(GL_COLOR_BUFFER_BIT);
+	// Clean the back buffer and assign the new color to it, and depth buffer for correct 3D rendering
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// draw the game objects here
-	// will need a reference to the camera in order to the update the matrices correctly
-	// otherwise change the camera matrix back to view and projection
-	// and change the shader file
+	// draw the game objects here with a reference to the camera
+	std::vector<GameObject> objects = tracker->GetAllObjects();
+	for (int i = 0; i < objects.size(); i++) {
+		objects[i].Draw(camera);
+	}
 
 	glfwSwapBuffers(window);
 
@@ -63,6 +64,10 @@ int Renderer::Teardown() {
 	glfwTerminate();
 
 	return 0;
+}
+
+void Renderer::SetCamera(Camera& camera) {
+	this->camera = camera;
 }
 
 GLFWwindow* Renderer::SetupGLFW() {
@@ -104,8 +109,4 @@ void Renderer::SetWindow(int width, int height) {
 	}
 	windowWidth = width;
 	windowHeight = height;
-}
-
-void Renderer::DrawObjects() {
-
 }

@@ -9,6 +9,8 @@
 const int screenWidth = 1000;
 const int screenHeight = 800;
 
+const float timeStep = 1.0f / 60.0f;
+
 float deltaTime;
 float currentFrame, lastFrame;
 
@@ -19,7 +21,9 @@ Renderer* renderer = Renderer::GetInstance();
 int Initialize() {
 
 	glm::fvec4 backgroundColour(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
-	renderer->Init(screenWidth, screenHeight, backgroundColour);
+	renderer->Init(backgroundColour);
+
+	objectTracker = ObjectTracker::GetInstance();
 
 	return 0;
 }
@@ -34,6 +38,10 @@ void PhysicsUpdate() {
 }
 
 int RunEngine() {
+
+	currentFrame = glfwGetTime();
+	deltaTime = currentFrame - lastFrame;
+	lastFrame = currentFrame;
 
 	// physics update first
 	// will have to use a fixed step
@@ -50,8 +58,6 @@ int Teardown() {
 	renderer->Teardown();
 
 	objectTracker->DeleteAllObjects();
-
-	delete objectTracker;
 
 	return 0;
 }
@@ -85,10 +91,9 @@ int main() {
 
 	objectTracker = ObjectTracker::GetInstance();
 
-
 	// Test adding
 	int pos = -1.0f;
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 4; i++) {
 		Shader cubeShader("TextureVertShader.vs", "TextureFragShader.fs");
 
 		cubeShader.Activate();
@@ -102,11 +107,11 @@ int main() {
 	}
 
 	// Specify the color of the background (silver)
-	glClearColor(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
+	//glClearColor(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
 	// Clean the back buffer and assign the new color to it
-	glClear(GL_COLOR_BUFFER_BIT);
+	//glClear(GL_COLOR_BUFFER_BIT);
 	// Swap the back buffer with the front buffer
-	glfwSwapBuffers(window);
+	//glfwSwapBuffers(window);
 
 	// Enable the depth buffer for 3D objects
 	glEnable(GL_DEPTH_TEST);
@@ -150,8 +155,9 @@ int main() {
 		glfwPollEvents();
 	}
 
-	// Cleanup objects we have created
+	//Teardown();
 
+	// Cleanup objects we have created
 	objectTracker->DeleteAllObjects();
 
 	// Destroy window when done and exit
