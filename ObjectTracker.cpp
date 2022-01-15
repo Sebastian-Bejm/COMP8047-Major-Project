@@ -1,12 +1,8 @@
 #include "ObjectTracker.h"
 
-ObjectTracker* ObjectTracker::instance = nullptr;
-
-ObjectTracker* ObjectTracker::GetInstance() {
-	if (instance == nullptr) {
-		instance = new ObjectTracker();
-	}
-	return instance;
+ObjectTracker& ObjectTracker::GetInstance() {
+	static ObjectTracker trackerInstance;
+	return trackerInstance;
 }
 
 void ObjectTracker::Add(GameObject& gameObject) {

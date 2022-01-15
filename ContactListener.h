@@ -4,6 +4,7 @@
 
 class ContactListener : public b2ContactListener
 {
+public:
 	ContactListener();
 	~ContactListener();
 

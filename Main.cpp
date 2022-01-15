@@ -14,6 +14,7 @@ const float timeStep = 1.0f / 60.0f;
 
 ObjectTracker* objectTracker;
 Renderer* renderer;
+PhysicsWorld* physicsWorld;
 
 // TODO: refactor later for initalize, update, and teardown
 int Initialize() {
@@ -22,9 +23,10 @@ int Initialize() {
 	glm::fvec4 backgroundColour(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
 	renderer->Init(backgroundColour, screenWidth, screenHeight);
 
-	objectTracker = ObjectTracker::GetInstance();
+	objectTracker = &(ObjectTracker::GetInstance());
+	physicsWorld = &(PhysicsWorld::GetInstance());
 
-	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 0.5f, 5.0f));
+	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 2.5f, 7.0f));
 	renderer->SetCamera(camera);
 
 	return 0;
@@ -32,24 +34,40 @@ int Initialize() {
 
 void CreateScene() {
 
-	Shader floorShader("TextureVertShader.vs", "TextureFragShader.fs");
+	Shader cubeShader("TextureVertShader.vs", "TextureFragShader.fs");
 
-	floorShader.Activate();
-	GameObject floor("Floor", "brick.png", ShapeType::CUBE, floorShader,
-		glm::vec3(0.0f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(5.0f, 1.0f, 5.0f));
-	objectTracker->Add(floor);
+	cubeShader.Activate();
+	GameObject testCube("TestCube", "brick.png", ShapeType::CUBE, cubeShader,
+		glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	testCube.SetBodyType(b2_dynamicBody);
+	objectTracker->Add(testCube);
+	physicsWorld->AddObject(&testCube);
 
+	// set up boxes to test collisions
 	int pos = -1.0f;
 	for (int i = 0; i < 4; i++) {
 		Shader cubeShader("TextureVertShader.vs", "TextureFragShader.fs");
 
 		cubeShader.Activate();
 
-		GameObject testCube("WallCube", "crate.jpg", ShapeType::CUBE, cubeShader,
+		GameObject box("WallCube", "crate.jpg", ShapeType::CUBE, cubeShader,
 			glm::vec3(pos, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-		//std::cout << pos << std::endl;
-		objectTracker->Add(testCube);
+		objectTracker->Add(box);
+		physicsWorld->AddObject(&box);
 		pos += 1.0f;
+	}
+
+	int z = 1.0f;
+	for (int i = 0; i < 3; i++) {
+		Shader cubeShader("TextureVertShader.vs", "TextureFragShader.fs");
+
+		cubeShader.Activate();
+
+		GameObject box("WallCube", "crate.jpg", ShapeType::CUBE, cubeShader,
+			glm::vec3(pos - 1.0f, z + 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+		objectTracker->Add(box);
+		physicsWorld->AddObject(&box);
+		z += 1.0f;
 	}
 }
 
@@ -58,9 +76,7 @@ void GraphicsUpdate() {
 }
 
 void PhysicsUpdate() {
-	// run physics here
-	// this update uses a fixed step
-	// physics->Update
+	physicsWorld->Update(objectTracker);
 }
 
 void HandleInputs() {
@@ -76,6 +92,7 @@ int RunEngine() {
 
 	// physics update comes first
 	PhysicsUpdate();
+
 	// graphics comes after physics
 	GraphicsUpdate();
 

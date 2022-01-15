@@ -1,9 +1,10 @@
 #pragma once
 
-#include "RigidBody.h"
-#include "ContactListener.h"
+#include <iostream>
+
 #include "GameObject.h"
 #include "ObjectTracker.h"
+#include "ContactListener.h"
 
 class PhysicsWorld
 {
@@ -11,7 +12,8 @@ public:
 	PhysicsWorld();
 	~PhysicsWorld();
 
-	void AddPhysics(GameObject* gameObject);
+	static PhysicsWorld& GetInstance();
+	void AddObject(GameObject* gameObject);
 	void Update(ObjectTracker* tracker);
 
 private:
@@ -19,7 +21,6 @@ private:
 	const int velocityIterations = 6;
 	const int positionIterations = 2;
 
-	b2Vec2* gravity;
 	b2World* world;
 	ContactListener* contactListener;
 

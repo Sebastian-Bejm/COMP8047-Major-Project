@@ -7,8 +7,7 @@ struct RigidBody {
 	b2BodyType bodyType;
 
 	float halfWidth, halfHeight;
-
-	float x, y, z;
+	float x, y;
 
 	float density;
 	float friction;
