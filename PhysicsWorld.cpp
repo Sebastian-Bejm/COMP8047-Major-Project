@@ -2,7 +2,7 @@
 
 PhysicsWorld::PhysicsWorld() {
 	// Gravity is set to 0 because it will not be used here
-	world = new b2World(b2Vec2(0.0f, -5.0f));
+	world = new b2World(b2Vec2(0.1f, -0.1f));
 	world->SetAllowSleeping(false);
 
 	contactListener = new ContactListener();

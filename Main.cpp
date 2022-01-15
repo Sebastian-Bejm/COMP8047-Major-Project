@@ -37,20 +37,38 @@ void CreateScene() {
 	Shader cubeShader("TextureVertShader.vs", "TextureFragShader.fs");
 
 	cubeShader.Activate();
-	GameObject testCube("TestCube", "brick.png", ShapeType::CUBE, cubeShader,
+	GameObject testCube("TestCube", "crate.jpg", ShapeType::CUBE, cubeShader,
 		glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 	testCube.SetBodyType(b2_dynamicBody);
 	objectTracker->Add(testCube);
 	physicsWorld->AddObject(&testCube);
 
+
+	Shader cubeShader2("TextureVertShader.vs", "TextureFragShader.fs");
+
+	cubeShader2.Activate();
+	GameObject box("WallCube", "brick.png", ShapeType::CUBE, cubeShader2,
+		glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(4.0f, 1.0f, 1.0f));
+	objectTracker->Add(box);
+	physicsWorld->AddObject(&box);
+
+	Shader cubeShader3("TextureVertShader.vs", "TextureFragShader.fs");
+
+	cubeShader3.Activate();
+
+	GameObject box2("WallCube", "brick.png", ShapeType::CUBE, cubeShader3,
+		glm::vec3(2.5f, 3.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 4.0f, 1.0f));
+	objectTracker->Add(box2);
+	physicsWorld->AddObject(&box2);
+
 	// set up boxes to test collisions
-	int pos = -1.0f;
+	/*int pos = -1.0f;
 	for (int i = 0; i < 4; i++) {
 		Shader cubeShader("TextureVertShader.vs", "TextureFragShader.fs");
 
 		cubeShader.Activate();
 
-		GameObject box("WallCube", "crate.jpg", ShapeType::CUBE, cubeShader,
+		GameObject box("WallCube", "brick.png", ShapeType::CUBE, cubeShader,
 			glm::vec3(pos, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 		objectTracker->Add(box);
 		physicsWorld->AddObject(&box);
@@ -63,12 +81,12 @@ void CreateScene() {
 
 		cubeShader.Activate();
 
-		GameObject box("WallCube", "crate.jpg", ShapeType::CUBE, cubeShader,
+		GameObject box("WallCube", "brick.png", ShapeType::CUBE, cubeShader,
 			glm::vec3(pos - 1.0f, z + 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 		objectTracker->Add(box);
 		physicsWorld->AddObject(&box);
 		z += 1.0f;
-	}
+	}*/
 }
 
 void GraphicsUpdate() {
