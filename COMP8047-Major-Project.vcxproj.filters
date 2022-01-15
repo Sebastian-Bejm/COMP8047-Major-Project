@@ -66,6 +66,12 @@
     <ClCompile Include="ObjectTracker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PhysicsWorld.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="ContactListener.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="DefaultFragShader.fs">
@@ -78,6 +84,12 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="TextureVertShader.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="FloorFragShader.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="FloorVertShader.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>
@@ -123,6 +135,15 @@
     </ClInclude>
     <ClInclude Include="ObjectTracker.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsWorld.h">
+      <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="ContactListener.h">
+      <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBody.h">
+      <Filter>Header Files\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

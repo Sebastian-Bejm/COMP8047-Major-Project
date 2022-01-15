@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "ObjectTracker.h"
 #include "Renderer.h"
+#include "PhysicsWorld.h"
 
 const int screenWidth = 1200;
 const int screenHeight = 900;
@@ -30,27 +31,43 @@ int Initialize() {
 }
 
 void CreateScene() {
-	int pos = -1.0f;
+
+	Shader cubeShader("TextureVertShader.vs", "TextureFragShader.fs");
+
+	cubeShader.Activate();
+	GameObject testCube("WallCube", "crate.jpg", ShapeType::CUBE, cubeShader,
+		glm::vec3(-1.0f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	objectTracker->Add(testCube);
+
+	Shader floorShader("FloorVertShader.vs", "FloorFragShader.fs");
+
+	floorShader.Activate();
+	GameObject floor("Floor", "brick.png", ShapeType::CUBE, floorShader,
+		glm::vec3(0.0f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(5.0f, 1.0f, 5.0f));
+	objectTracker->Add(floor);
+
+	/*int pos = -1.0f;
 	for (int i = 0; i < 4; i++) {
 		Shader cubeShader("TextureVertShader.vs", "TextureFragShader.fs");
 
 		cubeShader.Activate();
 
-		GameObject testCube("New", "brick.png", ShapeType::CUBE, cubeShader,
+		GameObject testCube("WallCube", "crate.jpg", ShapeType::CUBE, cubeShader,
 			glm::vec3(pos, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 		//std::cout << pos << std::endl;
 		objectTracker->Add(testCube);
 		pos += 1.0f;
-	}
+	}*/
 }
 
 void GraphicsUpdate() {
-	//renderer->Update(objectTracker);
+	renderer->Update(objectTracker);
 }
 
 void PhysicsUpdate() {
 	// run physics here
 	// this update uses a fixed step
+	// physics->Update
 }
 
 void HandleInputs() {
@@ -88,6 +105,7 @@ int main() {
 	// Initalize everything required for engine
 	Initialize();
 
+	// Create a scene for the purposes of testing
 	CreateScene();
 
 	// Main loop
@@ -96,7 +114,7 @@ int main() {
 		// Tell GLFW to keep track of input events
 		glfwPollEvents();
 
-		renderer->Update(objectTracker);
+		RunEngine();
 	}
 
 	// Cleanup objects and destroy/exit window when done
