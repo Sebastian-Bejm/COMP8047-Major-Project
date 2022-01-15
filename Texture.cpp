@@ -16,12 +16,12 @@ Texture::Texture(const char* image, GLenum texType, GLenum slot, GLenum format, 
 	glBindTexture(texType, ID);
 
 	// Configures the type of algorithm used to make image smaller or bigger
-	glTexParameteri(texType, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); // GL_NEAREST
-	glTexParameteri(texType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(texType, GL_TEXTURE_MIN_FILTER, GL_NEAREST); // GL_NEAREST
+	glTexParameteri(texType, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	// Configure how the texture repeats
-	glTexParameteri(texType, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // GL_REPEAT
-	glTexParameteri(texType, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(texType, GL_TEXTURE_WRAP_S, GL_REPEAT); // GL_REPEAT
+	glTexParameteri(texType, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	// In case I need to use GL_CLAMP_TO_BORDER
 	// float flatColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -34,6 +34,7 @@ Texture::Texture(const char* image, GLenum texType, GLenum slot, GLenum format, 
 
 	// Delete the image data since it's already in a texture object
 	stbi_image_free(bytes);
+
 	// Unbind the texture object so it can't be modified
 	glBindTexture(texType, 0);
 }

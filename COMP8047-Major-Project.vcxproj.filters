@@ -86,12 +86,6 @@
     <None Include="TextureVertShader.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="FloorFragShader.fs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="FloorVertShader.vs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">

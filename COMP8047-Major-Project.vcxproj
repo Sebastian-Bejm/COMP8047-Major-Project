@@ -160,8 +160,6 @@
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="FloorFragShader.fs" />
-    <None Include="FloorVertShader.vs" />
     <None Include="TextureFragShader.fs" />
     <None Include="TextureVertShader.vs" />
     <None Include="DefaultFragShader.fs" />

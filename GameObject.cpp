@@ -52,12 +52,12 @@ std::string GameObject::GetTag() {
 // Update this GameObject's matrices. 
 // Uses the camera's view and projection matrices to update the object's positions accordingly
 void GameObject::Draw(Camera& camera) {
+	// Draw the mesh first
+	mesh.Draw(shaderProgram, camera);
+
 	// Update the object model matrix first
 	GLint cubeLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
 	glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(transform.GetModelMatrix()));
-
-	// Draw the mesh afterwards (updates the projection and view matrices from the camera)
-	mesh.Draw(shaderProgram, camera);
 }
 
 // Delete the contents of this GameObject

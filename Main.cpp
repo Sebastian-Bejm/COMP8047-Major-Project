@@ -32,21 +32,14 @@ int Initialize() {
 
 void CreateScene() {
 
-	Shader cubeShader("TextureVertShader.vs", "TextureFragShader.fs");
-
-	cubeShader.Activate();
-	GameObject testCube("WallCube", "crate.jpg", ShapeType::CUBE, cubeShader,
-		glm::vec3(-1.0f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-	objectTracker->Add(testCube);
-
-	Shader floorShader("FloorVertShader.vs", "FloorFragShader.fs");
+	Shader floorShader("TextureVertShader.vs", "TextureFragShader.fs");
 
 	floorShader.Activate();
 	GameObject floor("Floor", "brick.png", ShapeType::CUBE, floorShader,
 		glm::vec3(0.0f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(5.0f, 1.0f, 5.0f));
 	objectTracker->Add(floor);
 
-	/*int pos = -1.0f;
+	int pos = -1.0f;
 	for (int i = 0; i < 4; i++) {
 		Shader cubeShader("TextureVertShader.vs", "TextureFragShader.fs");
 
@@ -57,7 +50,7 @@ void CreateScene() {
 		//std::cout << pos << std::endl;
 		objectTracker->Add(testCube);
 		pos += 1.0f;
-	}*/
+	}
 }
 
 void GraphicsUpdate() {
