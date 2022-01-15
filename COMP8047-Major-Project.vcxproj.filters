@@ -25,6 +25,12 @@
     <Filter Include="Resource Files\Textures">
       <UniqueIdentifier>{70eae8b3-e542-4545-9e38-32a642ddeffe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Physics">
+      <UniqueIdentifier>{59b83ea2-b8e4-4c2d-88b7-8369b790f5cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Physics">
+      <UniqueIdentifier>{f0f654e6-bcaf-44a6-8d4b-be9ff4125637}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">

@@ -43,7 +43,11 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	return 0;
 }
 
-int Renderer::Update(ObjectTracker* tracker, float deltaTime) {
+int Renderer::Update(ObjectTracker* tracker) {
+	// This fixes the fast movement over time on the machine
+	currentFrame = glfwGetTime();
+	deltaTime = currentFrame - lastFrame;
+	lastFrame = currentFrame;
 
 	// Specify the color of the background (silver)
 	glClearColor(backgroundColour.r, backgroundColour.g, backgroundColour.b, backgroundColour.a);

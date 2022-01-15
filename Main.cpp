@@ -11,9 +11,6 @@ const int screenHeight = 900;
 
 const float timeStep = 1.0f / 60.0f;
 
-float deltaTime;
-float currentFrame, lastFrame;
-
 ObjectTracker* objectTracker;
 Renderer* renderer;
 
@@ -67,10 +64,6 @@ void HandleInputs() {
 
 int RunEngine() {
 
-	currentFrame = glfwGetTime();
-	deltaTime = currentFrame - lastFrame;
-	lastFrame = currentFrame;
-
 	// physics update comes first
 	PhysicsUpdate();
 	// graphics comes after physics
@@ -99,15 +92,11 @@ int main() {
 
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {
-		// This fixes objects/entities moving too fast
-		currentFrame = glfwGetTime();
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
 
 		// Tell GLFW to keep track of input events
 		glfwPollEvents();
 
-		renderer->Update(objectTracker, deltaTime);
+		renderer->Update(objectTracker);
 	}
 
 	// Cleanup objects and destroy/exit window when done

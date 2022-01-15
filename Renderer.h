@@ -15,7 +15,7 @@ public:
 	static Renderer* GetInstance();
 
 	int Init(glm::vec4 backgroundColor, int windowWidth, int windowHeight);
-	int Update(ObjectTracker* tracker, float deltaTime); // ObjectTracker will be added here
+	int Update(ObjectTracker* tracker); // ObjectTracker will be added here
 	int Teardown();
 
 	void SetCamera(Camera& camera);
@@ -23,6 +23,9 @@ public:
 private:
 
 	static Renderer* renderer;
+
+	float deltaTime;
+	float currentFrame, lastFrame;
 
 	int windowWidth, windowHeight;
 	glm::vec4 backgroundColour;
