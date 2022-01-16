@@ -37,7 +37,7 @@ GameObject::GameObject(std::string tag, std::string textureFile, ShapeType shape
 	rigidBody = new RigidBody();
 	rigidBody->bodyType = b2_staticBody;
 	rigidBody->density = 1;
-	rigidBody->friction = 0.35f;
+	rigidBody->friction = 0;
 
 	rigidBody->x = transform->GetPosition().x;
 	rigidBody->y = transform->GetPosition().y;

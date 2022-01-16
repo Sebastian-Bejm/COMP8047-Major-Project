@@ -62,11 +62,11 @@ void CreateScene() {
 	// set up boxes to test collisions
 	int pos = -1.0f;
 	for (int i = 0; i < 4; i++) {
-		Shader cubeShader("TextureVertShader.vs", "TextureFragShader.fs");
+		Shader cubeShader2("TextureVertShader.vs", "TextureFragShader.fs");
 
-		cubeShader.Activate();
+		cubeShader2.Activate();
 
-		GameObject box("WallCube", "brick.png", ShapeType::CUBE, cubeShader,
+		GameObject box("WallCube", "brick.png", ShapeType::CUBE, cubeShader2,
 			glm::vec3(pos, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 		objectTracker->Add(box);
 		physicsWorld->AddObject(&box);
@@ -75,11 +75,11 @@ void CreateScene() {
 
 	int z = 1.0f;
 	for (int i = 0; i < 3; i++) {
-		Shader cubeShader("TextureVertShader.vs", "TextureFragShader.fs");
+		Shader cubeShader3("TextureVertShader.vs", "TextureFragShader.fs");
 
-		cubeShader.Activate();
+		cubeShader3.Activate();
 
-		GameObject box("WallCube", "brick.png", ShapeType::CUBE, cubeShader,
+		GameObject box("WallCube", "brick.png", ShapeType::CUBE, cubeShader3,
 			glm::vec3(pos - 1.0f, z + 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 		objectTracker->Add(box);
 		physicsWorld->AddObject(&box);

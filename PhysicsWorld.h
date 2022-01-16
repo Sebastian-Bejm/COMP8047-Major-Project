@@ -15,6 +15,7 @@ public:
 	static PhysicsWorld& GetInstance();
 	void AddObject(GameObject* gameObject);
 	void Update(ObjectTracker* tracker);
+	void CreateChainLoop(b2Vec2* vertices);
 
 private:
 	const float timeStep = 1.0f / 60.0f;

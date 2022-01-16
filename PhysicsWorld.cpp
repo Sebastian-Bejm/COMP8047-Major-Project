@@ -31,21 +31,44 @@ void PhysicsWorld::AddObject(GameObject* gameObject) {
 
 	b2World* world = PhysicsWorld::GetInstance().world;
 	rigidBody->box2dBody = world->CreateBody(&bodyDef);
-	rigidBody->box2dBody->SetFixedRotation(true);
 
 	if (rigidBody->box2dBody) {
-		b2PolygonShape dynamicBox;
-		dynamicBox.SetAsBox(rigidBody->halfWidth, rigidBody->halfHeight);
+		// The dynamic moving body will remain a 1x1 cube but use a circle fixture
+		if (rigidBody->bodyType == b2_dynamicBody) {
+			std::cout << "Creating " << std::endl;
+			b2CircleShape bodyShape;
+			bodyShape.m_radius = rigidBody->halfWidth;
 
-		b2FixtureDef fixtureDef;
-		fixtureDef.shape = &dynamicBox;
-		fixtureDef.density = rigidBody->density;
-		fixtureDef.friction = rigidBody->friction;
-		fixtureDef.restitution = 0;
+			b2FixtureDef fixtureDef;
+			fixtureDef.shape = &bodyShape;
+			fixtureDef.density = rigidBody->density;
+			fixtureDef.friction = rigidBody->friction;
+			fixtureDef.restitution = 0;
 
-		rigidBody->box2dBody->CreateFixture(&fixtureDef);
-		gameObject->SetRigidBody(rigidBody);
+			rigidBody->box2dBody->CreateFixture(&fixtureDef);
+			gameObject->SetRigidBody(rigidBody);
+		}
+		// For all other bodies they are made with box polygon shape
+		else if (rigidBody->bodyType == b2_staticBody) {
+			std::cout << "Creating box" << std::endl;
+			b2PolygonShape staticBox;
+			staticBox.SetAsBox(rigidBody->halfWidth, rigidBody->halfHeight);
+
+			b2FixtureDef fixtureDef;
+			fixtureDef.shape = &staticBox;
+			fixtureDef.density = rigidBody->density;
+			fixtureDef.friction = rigidBody->friction;
+			fixtureDef.restitution = 0;
+
+			rigidBody->box2dBody->CreateFixture(&fixtureDef);
+			gameObject->SetRigidBody(rigidBody);
+		}
+
 	}
+}
+
+void PhysicsWorld::CreateChainLoop(b2Vec2* vertices) {
+
 }
 
 void PhysicsWorld::Update(ObjectTracker* tracker) {
