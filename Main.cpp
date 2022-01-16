@@ -43,8 +43,7 @@ void CreateScene() {
 	objectTracker->Add(testCube);
 	physicsWorld->AddObject(&testCube);
 
-
-	Shader cubeShader2("TextureVertShader.vs", "TextureFragShader.fs");
+	/*Shader cubeShader2("TextureVertShader.vs", "TextureFragShader.fs");
 
 	cubeShader2.Activate();
 	GameObject box("WallCube", "brick.png", ShapeType::CUBE, cubeShader2,
@@ -55,14 +54,13 @@ void CreateScene() {
 	Shader cubeShader3("TextureVertShader.vs", "TextureFragShader.fs");
 
 	cubeShader3.Activate();
-
 	GameObject box2("WallCube", "brick.png", ShapeType::CUBE, cubeShader3,
 		glm::vec3(2.5f, 3.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 4.0f, 1.0f));
 	objectTracker->Add(box2);
-	physicsWorld->AddObject(&box2);
+	physicsWorld->AddObject(&box2);*/
 
 	// set up boxes to test collisions
-	/*int pos = -1.0f;
+	int pos = -1.0f;
 	for (int i = 0; i < 4; i++) {
 		Shader cubeShader("TextureVertShader.vs", "TextureFragShader.fs");
 
@@ -86,7 +84,28 @@ void CreateScene() {
 		objectTracker->Add(box);
 		physicsWorld->AddObject(&box);
 		z += 1.0f;
-	}*/
+	}
+}
+
+void HandleInputs() {
+	GameObject* go = &objectTracker->GetAllObjects()[0];
+
+	float velX = 0.0f, velY = 0.0f;
+
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+		velX = -0.5f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+		velX = 0.5f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+		velY = 0.5f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+		velY = -0.5f;
+	}
+
+	go->GetRigidBody()->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));
 }
 
 void GraphicsUpdate() {
@@ -94,16 +113,8 @@ void GraphicsUpdate() {
 }
 
 void PhysicsUpdate() {
+	HandleInputs();
 	physicsWorld->Update(objectTracker);
-}
-
-void HandleInputs() {
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-		//objects[1].GetTransform().Translate(glm::vec3(-0.5f, 0.0f, 0.0f), deltaTime);
-	}
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-		//objects[1].GetTransform().Translate(glm::vec3(0.5f, 0.0f, 0.0f), deltaTime);
-	}
 }
 
 int RunEngine() {
@@ -118,7 +129,8 @@ int RunEngine() {
 }
 
 int Teardown() {
-	// Deletes allocated memory stored in game objects
+
+	// Deletes memory allocated by OpenGL that is stored in game objects
 	objectTracker->DeleteAllObjects();
 
 	// Destroys the window on exit

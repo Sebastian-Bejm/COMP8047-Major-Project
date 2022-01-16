@@ -2,7 +2,7 @@
 
 PhysicsWorld::PhysicsWorld() {
 	// Gravity is set to 0 because it will not be used here
-	world = new b2World(b2Vec2(0.1f, -0.1f));
+	world = new b2World(b2Vec2(0.0f, 0.0f));
 	world->SetAllowSleeping(false);
 
 	contactListener = new ContactListener();
@@ -53,8 +53,8 @@ void PhysicsWorld::Update(ObjectTracker* tracker) {
 		world->Step(timeStep, velocityIterations, positionIterations);
 
 		std::vector<GameObject> objects = tracker->GetAllObjects();
-
-		std::cout << objects[0].GetRigidBody()->box2dBody->GetPosition().y << std::endl;
+		std::cout << objects[0].GetRigidBody()->box2dBody->GetPosition().x 
+			<< " " << objects[0].GetRigidBody()->box2dBody->GetPosition().y << std::endl;
 
 		for (int i = 0; i < objects.size(); i++) {
 			RigidBody* rigidBody = objects[i].GetRigidBody();

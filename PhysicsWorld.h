@@ -18,8 +18,8 @@ public:
 
 private:
 	const float timeStep = 1.0f / 60.0f;
-	const int velocityIterations = 6;
-	const int positionIterations = 2;
+	const int velocityIterations = 8; // 6
+	const int positionIterations = 3; // 2
 
 	b2World* world;
 	ContactListener* contactListener;
