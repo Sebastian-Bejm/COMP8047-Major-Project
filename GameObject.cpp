@@ -1,7 +1,7 @@
 #include "GameObject.h"
 
 // Constructor to create a new GameObject
-// A GameObject requires a tag, shape, shader, and transform
+// A GameObject requires a tag, texture file, shape, shader, and transform
 GameObject::GameObject(std::string tag, std::string textureFile, ShapeType shapeType, Shader& shader,
 	glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) {
 
@@ -18,21 +18,59 @@ GameObject::GameObject(std::string tag, std::string textureFile, ShapeType shape
 	// Initialize the texture for this object
 	// GL_RGBA for png
 	// GL_RGB for jpg
-	Texture texture(textureFile.c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	GLenum format = NULL;
+	std::string ext = GetTextureFileExtension(textureFile);
+
+	if (ext == "png") {
+		format = GL_RGBA;
+	}
+	else if (ext == "jpg") {
+		format = GL_RGB;
+	}
+	Texture texture(textureFile.c_str(), GL_TEXTURE_2D, GL_TEXTURE0, format, GL_UNSIGNED_BYTE);
 
 	// Create a mesh with the vertices, indices, and transform
 	mesh = Mesh(vertices, indices, texture);
-	transform = Transform(position, rotation, scale);
+	transform = new Transform(position, rotation, scale);
 
-	// Set the model matrix 
+	// Set initial rigidbody in game object
+	rigidBody = new RigidBody();
+	rigidBody->bodyType = b2_staticBody; // Each body is static by default
+	rigidBody->density = 1;
+	rigidBody->friction = 0;
+
+	rigidBody->x = transform->GetPosition().x;
+	rigidBody->y = transform->GetPosition().y;
+	rigidBody->halfWidth = transform->GetScale().x / 2;
+	rigidBody->halfHeight = transform->GetScale().y / 2;
+
+	// Set the initial model matrix 
 	GLint cubeLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
-	glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(transform.GetModelMatrix()));
+	glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(transform->GetModelMatrix()));
 }
 
-Transform& GameObject::GetTransform() {
+// Get the transform of this object
+// Used to help manipulate the position of object when necessary
+Transform* GameObject::GetTransform() {
 	return transform;
 }
 
+void GameObject::SetRigidBody(RigidBody* rigidBody) {
+	this->rigidBody = rigidBody;
+}
+
+// Set the rigidbody body type for this object
+void GameObject::SetBodyType(b2BodyType type) {
+	rigidBody->bodyType = type;
+}
+
+// Get the rigidbody of this object
+// Used to help manipulate the physics attached to this object
+RigidBody* GameObject::GetRigidBody() {
+	return rigidBody;
+}
+
+// Get the tag of this game object
 std::string GameObject::GetTag() {
 	return objectTag;
 }
@@ -40,31 +78,31 @@ std::string GameObject::GetTag() {
 // Update this GameObject's matrices. 
 // Uses the camera's view and projection matrices to update the object's positions accordingly
 void GameObject::Draw(Camera& camera) {
-	// Update the object model matrix first
-	GLint cubeLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
-	glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(transform.GetModelMatrix()));
-
-	// Draw the mesh afterwards (updates the projection and view matrices from the camera)
+	// Draw the mesh first to avoid wrong textures
 	mesh.Draw(shaderProgram, camera);
+
+	// Update the object model after drawing initial object
+	GLint cubeLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
+	glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(transform->GetModelMatrix()));
 }
 
 // Delete the contents of this GameObject
 void GameObject::Delete() {
+	// Delete everything in the mesh
 	mesh.Delete();
+
+	// Delete rigidbody
+	delete rigidBody;
+	delete transform;
+
+	//std::cout << "Shader ID: " << shaderProgram.GetID() << std::endl;
 	shaderProgram.Delete();
 }
 
-bool GameObject::CheckTexFileExtension(const std::string& textureFile, std::string ext) {
-	// Handles without path
-	std::string::size_type idx;
-	idx = textureFile.rfind(".");
-
-	if (idx != std::string::npos) {
-		std::string extension = textureFile.substr(idx + 1);
-		if (extension == ext) return true;
+std::string GameObject::GetTextureFileExtension(const std::string& textureFile) {
+	size_t i = textureFile.rfind('.', textureFile.length());
+	if (i != std::string::npos) {
+		return (textureFile.substr(i + 1, textureFile.length() - i));
 	}
-	else {
-		// no extension found
-		return false;
-	}
+	return "";
 }

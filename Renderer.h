@@ -2,23 +2,36 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "GLMHeader.h"
+#include <iostream>
+
+#include "Camera.h"
+#include "ObjectTracker.h"
+
+extern GLFWwindow* window;
 
 class Renderer {
 public:
 
-	int Init(int viewWidth, int viewHeight, glm::vec4 backgroundColor);
-	int Update(); // ObjectTracker will be added here
+	static Renderer* GetInstance();
+
+	int Init(glm::vec4 backgroundColor, int windowWidth, int windowHeight);
+	int Update(ObjectTracker* tracker); // ObjectTracker will be added here
 	int Teardown();
 
+	void SetCamera(Camera& camera);
 
 private:
 
 	static Renderer* renderer;
+
+	float deltaTime;
+	float currentFrame, lastFrame;
+
 	int windowWidth, windowHeight;
+	glm::vec4 backgroundColour;
 
-	glm::vec4 backgroundColor;
+	Camera camera;
 
-	void SetWindow(int height, int width);
-	void DrawObjects();
+	GLFWwindow* SetupGLFW();
+	void SetWindow(int width, int height);
 };

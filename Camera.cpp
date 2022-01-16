@@ -6,6 +6,7 @@ Camera::Camera() {
 	viewHeight = 1;
 }
 
+// Camera constructor: create a new camera that takes in our view width/height, and its new position
 Camera::Camera(int viewWidth, int viewHeight, glm::vec3 position) {
 	this->position = position;
 
@@ -17,10 +18,9 @@ Camera::Camera(int viewWidth, int viewHeight, glm::vec3 position) {
 	cameraMatrix = glm::mat4(1.0f);
 }
 
-// Currently made for perspective, change to orthographic later on
+// Set our view and projection matrices
+// 
 void Camera::SetMatrix(float fovDeg, float nearPlane, float farPlane) {
-	//viewMatrix = glm::mat4(1.0f);
-	//projectionMatrix = glm::mat4(1.0f);
 
 	viewMatrix = glm::lookAt(position, position + front, up);
 	projectionMatrix = glm::perspective(glm::radians(fovDeg), (float)(viewWidth / viewHeight), nearPlane, farPlane);
@@ -28,12 +28,11 @@ void Camera::SetMatrix(float fovDeg, float nearPlane, float farPlane) {
 	cameraMatrix = projectionMatrix * viewMatrix;
 }
 
-/*
-* Processes inputs to move the camera. This will primarily be used for debugging.
-*/
+// Processes key and mouse inputs
+// This is mainly used to look around our scene to ensure everything looks correct
 void Camera::ProcessInput(GLFWwindow* window, float deltaTime) {
 
-	float speed = 0.5f * deltaTime;
+	float speed = 1.0f * deltaTime;
 
 	// Key inputs
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
@@ -48,10 +47,10 @@ void Camera::ProcessInput(GLFWwindow* window, float deltaTime) {
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 		position += speed * glm::normalize(glm::cross(front, up));
 	}
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
 		position += speed * up;
 	}
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
 		position += speed * -up;
 	}
 
@@ -87,10 +86,12 @@ void Camera::ProcessInput(GLFWwindow* window, float deltaTime) {
 	}
 }
 
+// Get our camera matrix (projection * view matrices)
 glm::mat4 Camera::GetCameraMatrix() {
 	return cameraMatrix;
 }
 
+// Get the position of our camera
 glm::vec3 Camera::GetPosition() {
 	return position;
 }

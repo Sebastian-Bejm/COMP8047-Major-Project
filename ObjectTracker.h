@@ -8,17 +8,18 @@ class ObjectTracker
 {
 public:
 
-	ObjectTracker* GetInstance();
+	static ObjectTracker& GetInstance();
 
-	void Add(GameObject* gameObject);
-	GameObject* FindByTag(std::string objectTag);
+	void Add(GameObject& gameObject);
 	void DeleteAllObjects();
+
+	std::vector<GameObject>& GetAllObjects();
+
+	GameObject& FindByTag(std::string objectTag);
 
 private:
 
-	static ObjectTracker* instance;
-
-	std::vector<GameObject*> staticObjects;
+	std::vector<GameObject> staticObjects;
 
 };
 

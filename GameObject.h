@@ -2,6 +2,7 @@
 
 #include "Mesh.h"
 #include "Transform.h"
+#include "RigidBody.h"
 #include "ShapeDetails.h"
 
 class GameObject
@@ -11,7 +12,11 @@ public:
 	GameObject(std::string tag, std::string textureFile, ShapeType shapeType, Shader& shader, 
 		glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
 	
-	Transform& GetTransform();
+	Transform* GetTransform();
+
+	void SetRigidBody(RigidBody* rigidBody);
+	void SetBodyType(b2BodyType type);
+	RigidBody* GetRigidBody();
 
 	std::string GetTag();
 
@@ -23,8 +28,9 @@ private:
 
 	Shader shaderProgram;
 	Mesh mesh;
-	Transform transform;
+	Transform* transform;
+	RigidBody* rigidBody;
 
-	bool CheckTexFileExtension(const std::string& textureFile, std::string ext); // temp
+	std::string GetTextureFileExtension(const std::string& textureFile);
 };
 
