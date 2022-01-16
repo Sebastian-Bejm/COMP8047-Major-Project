@@ -33,9 +33,9 @@ GameObject::GameObject(std::string tag, std::string textureFile, ShapeType shape
 	mesh = Mesh(vertices, indices, texture);
 	transform = new Transform(position, rotation, scale);
 
-	// Set initial rigidbody
+	// Set initial rigidbody in game object
 	rigidBody = new RigidBody();
-	rigidBody->bodyType = b2_staticBody;
+	rigidBody->bodyType = b2_staticBody; // Each body is static by default
 	rigidBody->density = 1;
 	rigidBody->friction = 0;
 
@@ -44,7 +44,7 @@ GameObject::GameObject(std::string tag, std::string textureFile, ShapeType shape
 	rigidBody->halfWidth = transform->GetScale().x / 2;
 	rigidBody->halfHeight = transform->GetScale().y / 2;
 
-	// Set the model matrix 
+	// Set the initial model matrix 
 	GLint cubeLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
 	glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(transform->GetModelMatrix()));
 }
@@ -59,10 +59,13 @@ void GameObject::SetRigidBody(RigidBody* rigidBody) {
 	this->rigidBody = rigidBody;
 }
 
+// Set the rigidbody body type for this object
 void GameObject::SetBodyType(b2BodyType type) {
 	rigidBody->bodyType = type;
 }
 
+// Get the rigidbody of this object
+// Used to help manipulate the physics attached to this object
 RigidBody* GameObject::GetRigidBody() {
 	return rigidBody;
 }

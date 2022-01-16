@@ -93,16 +93,16 @@ void HandleInputs() {
 	float velX = 0.0f, velY = 0.0f;
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-		velX = -0.5f;
+		velX = -0.8f;
 	}
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-		velX = 0.5f;
+		velX = 0.8f;
 	}
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-		velY = 0.5f;
+		velY = 0.8f;
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-		velY = -0.5f;
+		velY = -0.8f;
 	}
 
 	go->GetRigidBody()->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));

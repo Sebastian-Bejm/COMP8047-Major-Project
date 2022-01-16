@@ -19,6 +19,7 @@ PhysicsWorld& PhysicsWorld::GetInstance() {
 	return physicsWorld;
 }
 
+// Adds a GameObject to the physics world by creating a new physics body
 void PhysicsWorld::AddObject(GameObject* gameObject) {
 	
 	Transform* transform = gameObject->GetTransform();
@@ -34,8 +35,8 @@ void PhysicsWorld::AddObject(GameObject* gameObject) {
 
 	if (rigidBody->box2dBody) {
 		// The dynamic moving body will remain a 1x1 cube but use a circle fixture
+		// This fixes the ghost collisions for now
 		if (rigidBody->bodyType == b2_dynamicBody) {
-			std::cout << "Creating " << std::endl;
 			b2CircleShape bodyShape;
 			bodyShape.m_radius = rigidBody->halfWidth;
 
@@ -46,11 +47,10 @@ void PhysicsWorld::AddObject(GameObject* gameObject) {
 			fixtureDef.restitution = 0;
 
 			rigidBody->box2dBody->CreateFixture(&fixtureDef);
-			gameObject->SetRigidBody(rigidBody);
+			//gameObject->SetRigidBody(rigidBody);
 		}
 		// For all other bodies they are made with box polygon shape
 		else if (rigidBody->bodyType == b2_staticBody) {
-			std::cout << "Creating box" << std::endl;
 			b2PolygonShape staticBox;
 			staticBox.SetAsBox(rigidBody->halfWidth, rigidBody->halfHeight);
 
@@ -61,23 +61,20 @@ void PhysicsWorld::AddObject(GameObject* gameObject) {
 			fixtureDef.restitution = 0;
 
 			rigidBody->box2dBody->CreateFixture(&fixtureDef);
-			gameObject->SetRigidBody(rigidBody);
+			//gameObject->SetRigidBody(rigidBody);
 		}
 
 	}
 }
 
-void PhysicsWorld::CreateChainLoop(b2Vec2* vertices) {
-
-}
-
+// Updates the physics bodies of all objects currently in the scene
 void PhysicsWorld::Update(ObjectTracker* tracker) {
 	if (world) {
 		world->Step(timeStep, velocityIterations, positionIterations);
 
 		std::vector<GameObject> objects = tracker->GetAllObjects();
-		std::cout << objects[0].GetRigidBody()->box2dBody->GetPosition().x 
-			<< " " << objects[0].GetRigidBody()->box2dBody->GetPosition().y << std::endl;
+		//std::cout << objects[0].GetRigidBody()->box2dBody->GetPosition().x 
+			//<< " " << objects[0].GetRigidBody()->box2dBody->GetPosition().y << std::endl;
 
 		for (int i = 0; i < objects.size(); i++) {
 			RigidBody* rigidBody = objects[i].GetRigidBody();
@@ -87,6 +84,7 @@ void PhysicsWorld::Update(ObjectTracker* tracker) {
 	}
 }
 
+// Updates the transform of the GameObject based on the rigidbody position and state
 void PhysicsWorld::UpdateTransform(Transform* transform, RigidBody* rigidBody) {
 	float x = rigidBody->box2dBody->GetPosition().x;
 	float y = rigidBody->box2dBody->GetPosition().y;
