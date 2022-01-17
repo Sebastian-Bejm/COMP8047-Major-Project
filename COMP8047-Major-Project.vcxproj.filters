@@ -31,6 +31,12 @@
     <Filter Include="Header Files\Physics">
       <UniqueIdentifier>{f0f654e6-bcaf-44a6-8d4b-be9ff4125637}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Maze">
+      <UniqueIdentifier>{3e0ba005-8e18-467e-a56f-2f622e78b6ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Maze">
+      <UniqueIdentifier>{1b5ea42d-6924-480c-86a7-091446e55ae0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
@@ -71,6 +77,12 @@
     </ClCompile>
     <ClCompile Include="ContactListener.cpp">
       <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="MazeCell.cpp">
+      <Filter>Source Files\Maze</Filter>
+    </ClCompile>
+    <ClCompile Include="MazeGenerator.cpp">
+      <Filter>Source Files\Maze</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -138,6 +150,12 @@
     </ClInclude>
     <ClInclude Include="RigidBody.h">
       <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="MazeCell.h">
+      <Filter>Header Files\Maze</Filter>
+    </ClInclude>
+    <ClInclude Include="MazeGenerator.h">
+      <Filter>Header Files\Maze</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

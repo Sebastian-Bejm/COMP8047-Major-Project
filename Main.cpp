@@ -6,6 +6,7 @@
 #include "ObjectTracker.h"
 #include "Renderer.h"
 #include "PhysicsWorld.h"
+#include "MazeGenerator.h"
 
 const int screenWidth = 1200;
 const int screenHeight = 900;
@@ -16,7 +17,6 @@ ObjectTracker* objectTracker;
 Renderer* renderer;
 PhysicsWorld* physicsWorld;
 
-// TODO: refactor later for initalize, update, and teardown
 int Initialize() {
 	renderer = Renderer::GetInstance();
 
@@ -25,6 +25,9 @@ int Initialize() {
 
 	objectTracker = &(ObjectTracker::GetInstance());
 	physicsWorld = &(PhysicsWorld::GetInstance());
+
+	MazeGenerator generator(10, 10);
+	generator.Generate();
 
 	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 2.5f, 7.0f));
 	renderer->SetCamera(camera);
@@ -42,22 +45,6 @@ void CreateScene() {
 	testCube.SetBodyType(b2_dynamicBody);
 	objectTracker->Add(testCube);
 	physicsWorld->AddObject(&testCube);
-
-	/*Shader cubeShader2("TextureVertShader.vs", "TextureFragShader.fs");
-
-	cubeShader2.Activate();
-	GameObject box("WallCube", "brick.png", ShapeType::CUBE, cubeShader2,
-		glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(4.0f, 1.0f, 1.0f));
-	objectTracker->Add(box);
-	physicsWorld->AddObject(&box);
-
-	Shader cubeShader3("TextureVertShader.vs", "TextureFragShader.fs");
-
-	cubeShader3.Activate();
-	GameObject box2("WallCube", "brick.png", ShapeType::CUBE, cubeShader3,
-		glm::vec3(2.5f, 3.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 4.0f, 1.0f));
-	objectTracker->Add(box2);
-	physicsWorld->AddObject(&box2);*/
 
 	// set up boxes to test collisions
 	int pos = -1.0f;
@@ -113,7 +100,7 @@ void GraphicsUpdate() {
 }
 
 void PhysicsUpdate() {
-	HandleInputs();
+	//HandleInputs();
 	physicsWorld->Update(objectTracker);
 }
 
@@ -139,14 +126,13 @@ int Teardown() {
 	return 0;
 }
 
-
 int main() {
 
 	// Initalize everything required for engine
 	Initialize();
 
 	// Create a scene for the purposes of testing
-	CreateScene();
+	//CreateScene();
 
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {
