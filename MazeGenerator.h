@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vector>
-#include <list>
 #include <queue>
+#include <algorithm>
 #include <iostream>
 #include <random>
 
@@ -22,8 +22,6 @@ public:
 
 private:
 
-	const int maxWallsRemoved = 50;
-
 	int directions[4][2] = {
 		{0, -2}, // north
 		{0,  2}, // south
@@ -39,7 +37,12 @@ private:
 	std::vector<MazeCell> GetCellsAround(MazeCell& cell, bool isWall);
 	void ConnectCells(MazeCell& main, MazeCell& neighbour);
 	bool IsValidPosition(int row, int col);
+
+	MazeCell& GetRandom(std::deque<MazeCell>& cells);
+	MazeCell& GetRandom(std::vector<MazeCell>& cells);
+
+	void PadOuterWalls();
 	
-	std::queue<MazeCell> ConvertToQueue(std::vector<MazeCell> cells);
+	std::deque<MazeCell> ConvertToDeque(std::vector<MazeCell> cells);
 };
 

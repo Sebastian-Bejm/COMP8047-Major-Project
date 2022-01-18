@@ -26,8 +26,10 @@ int Initialize() {
 	objectTracker = &(ObjectTracker::GetInstance());
 	physicsWorld = &(PhysicsWorld::GetInstance());
 
-	MazeGenerator generator(10, 10);
+	// Generate a maze of size m x n, use prime numbers
+	MazeGenerator generator(43, 29);
 	generator.Generate();
+	generator.PrintMaze();
 
 	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 2.5f, 7.0f));
 	renderer->SetCamera(camera);

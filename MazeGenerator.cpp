@@ -9,6 +9,12 @@ MazeGenerator::MazeGenerator(int rows, int cols) {
 		mazeCells[i].resize(width);
 	}
 
+	// Initialize all cells in the maze
+	for (size_t row = 0; row < mazeCells.size(); row++) {
+		for (size_t col = 0; col < mazeCells[row].size(); col++) {
+			mazeCells[row][col] = MazeCell(row, col);
+		}
+	}
 }
 
 // https://stackoverflow.com/questions/29739751/implementing-a-randomly-generated-maze-using-prims-algorithm
@@ -30,10 +36,28 @@ void MazeGenerator::Generate() {
 	// Pick a cell to start a path
 	int x = xDistr(gen);
 	int y = yDistr(gen);
-	std::cout << x << ", " << y << std::endl;
+	//std::cout << x << ", " << y << std::endl;
+	mazeCells[x][y].SetAsStart(true);
 	mazeCells[x][y].SetWall(false); // Set new cell as path
 	
-	std::queue<MazeCell> frontierCells = ConvertToQueue(FrontierCellsOf(mazeCells[x][y]));
+	std::deque<MazeCell> frontierCells = ConvertToDeque(FrontierCellsOf(mazeCells[x][y]));
+
+	while (!frontierCells.empty()) {
+		MazeCell& frontierCell = GetRandom(frontierCells);
+
+		std::vector<MazeCell> frontierNeighbours = PassageCellsOf(frontierCell);
+
+		if (!frontierNeighbours.empty()) {
+			MazeCell& neighbour = GetRandom(frontierNeighbours);
+
+			ConnectCells(frontierCell, neighbour);
+		}
+
+		std::vector<MazeCell> nextFrontiers = FrontierCellsOf(frontierCell);
+		frontierCells.insert(frontierCells.end(), std::begin(nextFrontiers), std::end(nextFrontiers));
+
+		frontierCells.erase(std::remove(frontierCells.begin(), frontierCells.end(), frontierCell), frontierCells.end());
+	}
 
 }
 
@@ -47,8 +71,9 @@ void MazeGenerator::PrintMaze() {
 	}
 	for (int row = 0; row < height; row++) {
 		for (int col = 0; col < width; col++) {
-
+			std::cout << mazeCells[row][col].str();
 		}
+		std::cout << std::endl;
 	}
 
 }
@@ -57,10 +82,12 @@ std::vector<std::vector<MazeCell>> MazeGenerator::GetMazeCells() {
 	return mazeCells;
 }
 
+// Gets the frontier cells (wall cells) within a distance of 2 units
 std::vector<MazeCell> MazeGenerator::FrontierCellsOf(MazeCell& cell) {
 	return GetCellsAround(cell, true);
 }
 
+// Gets the passage cells within a distance of 2 units
 std::vector<MazeCell> MazeGenerator::PassageCellsOf(MazeCell& cell) {
 	return GetCellsAround(cell, false);
 }
@@ -72,6 +99,7 @@ std::vector<MazeCell> MazeGenerator::GetCellsAround(MazeCell& cell, bool isWall)
 		int newCol = cell.GetColumn() + dir[1];
 		if (IsValidPosition(newRow, newCol) && mazeCells[newRow][newCol].IsWall() == isWall) {
 			frontier.push_back(mazeCells[newRow][newCol]);
+			//mazeCells[newRow][newCol].SetWall(false);
 		}
 	}
 	return frontier;
@@ -81,16 +109,46 @@ std::vector<MazeCell> MazeGenerator::GetCellsAround(MazeCell& cell, bool isWall)
 void MazeGenerator::ConnectCells(MazeCell& main, MazeCell& neighbour) {
 	int betweenRow = (neighbour.GetRow() + main.GetRow()) / 2;
 	int betweenCol = (neighbour.GetColumn() + main.GetColumn()) / 2;
-	main.SetWall(false);
+
+	//main.SetWall(false);
+	mazeCells[main.GetRow()][main.GetColumn()].SetWall(false);
 	mazeCells[betweenRow][betweenCol].SetWall(false);
-	neighbour.SetWall(false);
+	//neighbour.SetWall(false);
+	mazeCells[neighbour.GetRow()][neighbour.GetColumn()].SetWall(false);
 }
 
 bool MazeGenerator::IsValidPosition(int row, int col) {
 	return row >= 0 && row < mazeCells.size() && col >= 0 && col < mazeCells[0].size();
 }
 
-std::queue<MazeCell> MazeGenerator::ConvertToQueue(std::vector<MazeCell> cells) {
-	std::queue<MazeCell> cellQueue(std::deque<MazeCell>(cells.begin(), cells.end()));
+MazeCell& MazeGenerator::GetRandom(std::deque<MazeCell>& cells) {
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> cellDistr(0, cells.size() - 1);
+
+	int pos = cellDistr(gen);
+
+	MazeCell& chosen = cells[pos];
+	//cells.erase(cells.begin() + pos);
+
+	return chosen;
+}
+
+MazeCell& MazeGenerator::GetRandom(std::vector<MazeCell>& cells) {
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> cellDistr(0, cells.size() - 1);
+
+	int pos = cellDistr(gen);
+
+	MazeCell& chosen = cells[pos];
+	//cells.erase(cells.begin() + pos);
+	
+	return chosen;
+}
+
+
+std::deque<MazeCell> MazeGenerator::ConvertToDeque(std::vector<MazeCell> cells) {
+	std::deque<MazeCell> cellQueue(cells.begin(), cells.end());
 	return cellQueue;
 }
