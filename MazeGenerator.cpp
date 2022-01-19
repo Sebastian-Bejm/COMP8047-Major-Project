@@ -59,6 +59,7 @@ void MazeGenerator::Generate() {
 		frontierCells.erase(std::remove(frontierCells.begin(), frontierCells.end(), frontierCell), frontierCells.end());
 	}
 
+	PadOuterWalls();
 }
 
 void MazeGenerator::WriteToFile() {
@@ -78,6 +79,7 @@ void MazeGenerator::PrintMaze() {
 
 }
 
+// Get the collection of maze cells
 std::vector<std::vector<MazeCell>> MazeGenerator::GetMazeCells() {
 	return mazeCells;
 }
@@ -92,6 +94,7 @@ std::vector<MazeCell> MazeGenerator::PassageCellsOf(MazeCell& cell) {
 	return GetCellsAround(cell, false);
 }
 
+// Get the cells around a specific cell
 std::vector<MazeCell> MazeGenerator::GetCellsAround(MazeCell& cell, bool isWall) {
 	std::vector<MazeCell> frontier;
 	for (int* dir : directions) {
@@ -99,7 +102,6 @@ std::vector<MazeCell> MazeGenerator::GetCellsAround(MazeCell& cell, bool isWall)
 		int newCol = cell.GetColumn() + dir[1];
 		if (IsValidPosition(newRow, newCol) && mazeCells[newRow][newCol].IsWall() == isWall) {
 			frontier.push_back(mazeCells[newRow][newCol]);
-			//mazeCells[newRow][newCol].SetWall(false);
 		}
 	}
 	return frontier;
@@ -129,7 +131,6 @@ MazeCell& MazeGenerator::GetRandom(std::deque<MazeCell>& cells) {
 	int pos = cellDistr(gen);
 
 	MazeCell& chosen = cells[pos];
-	//cells.erase(cells.begin() + pos);
 
 	return chosen;
 }
@@ -142,11 +143,40 @@ MazeCell& MazeGenerator::GetRandom(std::vector<MazeCell>& cells) {
 	int pos = cellDistr(gen);
 
 	MazeCell& chosen = cells[pos];
-	//cells.erase(cells.begin() + pos);
 	
 	return chosen;
 }
 
+void MazeGenerator::PadOuterWalls() {
+	// Check the corners of the maze if there is already an outer wall in place
+	// If there is no outer wall then recreate the maze with outer walls
+	std::vector<std::vector<MazeCell>> paddedMaze;
+
+	size_t rows = mazeCells.size(); // height
+	size_t cols = mazeCells[0].size(); // width
+	size_t newMazeWidth, newMazeHeight;
+	std::cout << rows << " : " << cols << std::endl;
+
+	// Check the top left, if there is a wall, check down and right
+	if (mazeCells[0][0].IsWall()) {
+		std::cout << "TL Wall" << std::endl;
+		if (mazeCells[1][0].IsWall()) {
+			//std::cout << "Top open" << std::endl;
+			// Top wall is open, so pad north and south
+			newMazeHeight = rows + 2;
+		}
+		if (mazeCells[0][1].IsWall()) {
+			//std::cout << "Left open" << std::endl;
+			// left wall is open, so pad east and west
+			newMazeWidth = cols + 2;
+		}
+	}
+	// There is no wall in the corner so both sections must be padded
+	else {
+		newMazeHeight = rows + 2;
+		newMazeWidth = cols + 2;
+	}
+}
 
 std::deque<MazeCell> MazeGenerator::ConvertToDeque(std::vector<MazeCell> cells) {
 	std::deque<MazeCell> cellQueue(cells.begin(), cells.end());

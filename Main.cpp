@@ -27,7 +27,7 @@ int Initialize() {
 	physicsWorld = &(PhysicsWorld::GetInstance());
 
 	// Generate a maze of size m x n, use prime numbers
-	MazeGenerator generator(43, 29);
+	MazeGenerator generator(31, 29);
 	generator.Generate();
 	generator.PrintMaze();
 

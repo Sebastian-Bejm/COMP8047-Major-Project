@@ -35,7 +35,9 @@ private:
 	std::vector<MazeCell> FrontierCellsOf(MazeCell& cell);
 	std::vector<MazeCell> PassageCellsOf(MazeCell& cell);
 	std::vector<MazeCell> GetCellsAround(MazeCell& cell, bool isWall);
+
 	void ConnectCells(MazeCell& main, MazeCell& neighbour);
+
 	bool IsValidPosition(int row, int col);
 
 	MazeCell& GetRandom(std::deque<MazeCell>& cells);
