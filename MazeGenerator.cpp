@@ -1,12 +1,9 @@
 #include "MazeGenerator.h"
 
 MazeGenerator::MazeGenerator(int rows, int cols) {
-	height = rows;
-	width = cols;
-
-	mazeCells.resize(height);
-	for (size_t i = 0; i < height; i++) {
-		mazeCells[i].resize(width);
+	mazeCells.resize(rows);
+	for (size_t i = 0; i < rows; i++) {
+		mazeCells[i].resize(cols);
 	}
 
 	// Initialize all cells in the maze
@@ -18,8 +15,7 @@ MazeGenerator::MazeGenerator(int rows, int cols) {
 }
 
 // https://stackoverflow.com/questions/29739751/implementing-a-randomly-generated-maze-using-prims-algorithm
-// https://github.com/keesiemeijer/maze-generator/blob/master/src/maze.js for wall removal
-
+// Generates a random maze using Prim's algorithm
 void MazeGenerator::Generate() {
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -59,19 +55,27 @@ void MazeGenerator::Generate() {
 		frontierCells.erase(std::remove(frontierCells.begin(), frontierCells.end(), frontierCell), frontierCells.end());
 	}
 
-	PadOuterWalls();
+	// after generation, mark a random spot that is far away from the start
+
+	PrintMaze(); // debug
+
+	PadOuterWalls(); // temporary
+
+	std::cout << "Padded maze: " << std::endl;
+	PrintMaze();
 }
 
 void MazeGenerator::WriteToFile() {
 
 }
 
+// Print the generated maze. Mainly used for debugging.
 void MazeGenerator::PrintMaze() {
-	if (width <= 1 || height <= 1) {
+	if (mazeCells.size() <= 1 || mazeCells[0].size() <= 1) {
 		return;
 	}
-	for (int row = 0; row < height; row++) {
-		for (int col = 0; col < width; col++) {
+	for (int row = 0; row < mazeCells.size(); row++) {
+		for (int col = 0; col < mazeCells[0].size(); col++) {
 			std::cout << mazeCells[row][col].str();
 		}
 		std::cout << std::endl;
@@ -111,11 +115,9 @@ std::vector<MazeCell> MazeGenerator::GetCellsAround(MazeCell& cell, bool isWall)
 void MazeGenerator::ConnectCells(MazeCell& main, MazeCell& neighbour) {
 	int betweenRow = (neighbour.GetRow() + main.GetRow()) / 2;
 	int betweenCol = (neighbour.GetColumn() + main.GetColumn()) / 2;
-
-	//main.SetWall(false);
+	// Connect the cells by making them a path
 	mazeCells[main.GetRow()][main.GetColumn()].SetWall(false);
 	mazeCells[betweenRow][betweenCol].SetWall(false);
-	//neighbour.SetWall(false);
 	mazeCells[neighbour.GetRow()][neighbour.GetColumn()].SetWall(false);
 }
 
@@ -123,6 +125,7 @@ bool MazeGenerator::IsValidPosition(int row, int col) {
 	return row >= 0 && row < mazeCells.size() && col >= 0 && col < mazeCells[0].size();
 }
 
+// Get a random cell from the deque of maze cells
 MazeCell& MazeGenerator::GetRandom(std::deque<MazeCell>& cells) {
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -135,6 +138,7 @@ MazeCell& MazeGenerator::GetRandom(std::deque<MazeCell>& cells) {
 	return chosen;
 }
 
+// Get a random cell from the vector of maze cells
 MazeCell& MazeGenerator::GetRandom(std::vector<MazeCell>& cells) {
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -152,30 +156,72 @@ void MazeGenerator::PadOuterWalls() {
 	// If there is no outer wall then recreate the maze with outer walls
 	std::vector<std::vector<MazeCell>> paddedMaze;
 
-	size_t rows = mazeCells.size(); // height
-	size_t cols = mazeCells[0].size(); // width
-	size_t newMazeWidth, newMazeHeight;
-	std::cout << rows << " : " << cols << std::endl;
+	const size_t rows = mazeCells.size(); // height
+	const size_t cols = mazeCells[0].size(); // width
+	size_t newMazeWidth = cols, newMazeHeight = rows;
+
+	bool rowsAdded = false, colsAdded = false;
 
 	// Check the top left, if there is a wall, check down and right
 	if (mazeCells[0][0].IsWall()) {
-		std::cout << "TL Wall" << std::endl;
-		if (mazeCells[1][0].IsWall()) {
-			//std::cout << "Top open" << std::endl;
+		if (!mazeCells[0][1].IsWall()) {
 			// Top wall is open, so pad north and south
+			rowsAdded = true;
 			newMazeHeight = rows + 2;
 		}
-		if (mazeCells[0][1].IsWall()) {
-			//std::cout << "Left open" << std::endl;
+		if (!mazeCells[1][0].IsWall()) {
 			// left wall is open, so pad east and west
+			colsAdded = true;
+			std::cout << "Cols added" << std::endl;
 			newMazeWidth = cols + 2;
 		}
+		// Both directions are properly walled, exit
+		if (mazeCells[1][0].IsWall() && mazeCells[0][1].IsWall()) {
+			return;
+		}
 	}
-	// There is no wall in the corner so both sections must be padded
+	// There is no wall part in the corner so both directions must be padded
 	else {
+		rowsAdded = colsAdded = true;
 		newMazeHeight = rows + 2;
 		newMazeWidth = cols + 2;
 	}
+
+	paddedMaze.resize(newMazeHeight);
+	for (size_t i = 0; i < newMazeHeight; i++) {
+		paddedMaze[i].resize(newMazeWidth);
+	}
+
+	std::cout << "New size " << newMazeHeight << ", " << newMazeWidth << std::endl;
+
+	size_t addRow = rowsAdded ? 1 : 0;
+	size_t addCol = colsAdded ? 1 : 0;
+	// Copy the maze to the padded maze
+	for (int row = 0; row < paddedMaze.size(); row++) {
+		for (int col = 0; col < paddedMaze[row].size(); col++) {
+			if (row >= mazeCells.size() || col >= mazeCells[0].size()) {
+				continue;
+			}
+			paddedMaze[row+addRow][col+addCol] = mazeCells[row][col];
+		}
+	}
+	// If rows or columns were added set the walls accoringdly
+	if (rowsAdded) {
+		for (int i = 0; i < paddedMaze.size(); i++) {
+			paddedMaze[0][i].SetWall(true);
+			paddedMaze[paddedMaze.size() - 1][i].SetWall(true);
+		}
+	}
+	if (colsAdded) {
+		for (int i = 0; i < paddedMaze[0].size(); i++) {
+			paddedMaze[i][0].SetWall(true);
+			paddedMaze[i][paddedMaze[0].size() - 1].SetWall(true);
+		}
+	}
+
+	// Set the padded maze to the original maze 
+	mazeCells = paddedMaze;
+
 }
 
 std::deque<MazeCell> MazeGenerator::ConvertToDeque(std::vector<MazeCell> cells) {

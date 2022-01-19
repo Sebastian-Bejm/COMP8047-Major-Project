@@ -67,5 +67,11 @@ std::string MazeCell::str() {
 	if (isWall) {
 		return "# ";
 	}
+	if (start) {
+		return "E ";
+	}
+	if (exit) {
+		return "X ";
+	}
 	return ". ";
 }

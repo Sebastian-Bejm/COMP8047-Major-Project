@@ -27,9 +27,8 @@ int Initialize() {
 	physicsWorld = &(PhysicsWorld::GetInstance());
 
 	// Generate a maze of size m x n, use prime numbers
-	MazeGenerator generator(31, 29);
+	MazeGenerator generator(25, 25);
 	generator.Generate();
-	generator.PrintMaze();
 
 	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 2.5f, 7.0f));
 	renderer->SetCamera(camera);

@@ -29,7 +29,6 @@ private:
 		{-2, 0}, // west
 	};
 
-	int width, height;
 	std::vector<std::vector<MazeCell>> mazeCells;
 
 	std::vector<MazeCell> FrontierCellsOf(MazeCell& cell);
