@@ -135,7 +135,7 @@ void GraphicsUpdate() {
 }
 
 void PhysicsUpdate() {
-	HandleInputs();
+	//HandleInputs();
 	physicsWorld->Update(objectTracker);
 }
 
@@ -167,7 +167,7 @@ int main() {
 	Initialize();
 
 	// Create a scene for the purposes of testing
-	CreateScene();
+	//CreateScene();
 	//CreateMazeScene();
 
 	// Main loop
