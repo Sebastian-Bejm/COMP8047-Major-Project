@@ -12,10 +12,11 @@ class MazeGenerator
 {
 public:
 
-	MazeGenerator(int rows, int cols);
+	MazeGenerator();
 
+	void InitMaze(int rows, int cols);
 	void Generate();
-	void WriteToFile();
+	//void WriteToFile(); // this may be used later for the neural network
 	void PrintMaze();
 
 	std::vector<std::vector<MazeCell>> GetMazeCells();

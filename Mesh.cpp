@@ -27,7 +27,7 @@ Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, Texture&
 
 // Draw the mesh of this object by using a shader and the camera of the scene
 void Mesh::Draw(Shader& shader, Camera& camera) {
-	// Activate the shader program for this mesh
+	// Bind shader in the Mesh to be able to access uniforms
 	shader.Activate();
 	vao.Bind();
 

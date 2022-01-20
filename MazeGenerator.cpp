@@ -1,6 +1,8 @@
 #include "MazeGenerator.h"
 
-MazeGenerator::MazeGenerator(int rows, int cols) {
+MazeGenerator::MazeGenerator() {}
+
+void MazeGenerator::InitMaze(int rows, int cols) {
 	mazeCells.resize(rows);
 	for (size_t i = 0; i < rows; i++) {
 		mazeCells[i].resize(cols);
@@ -60,10 +62,6 @@ void MazeGenerator::Generate() {
 	//PrintMaze(); // debug
 
 	PadOuterWalls(); 
-}
-
-void MazeGenerator::WriteToFile() {
-
 }
 
 // Print the generated maze. Mainly used for debugging.
@@ -148,6 +146,7 @@ MazeCell& MazeGenerator::GetRandom(std::vector<MazeCell>& cells) {
 	return chosen;
 }
 
+// Helper function to create the outer walls if the generated maze does not have the correct walls
 void MazeGenerator::PadOuterWalls() {
 	// Check the corners of the maze if there is already an outer wall in place
 	// If there is no outer wall then recreate the maze with outer walls
@@ -188,7 +187,7 @@ void MazeGenerator::PadOuterWalls() {
 		paddedMaze[i].resize(newMazeWidth);
 	}
 
-	std::cout << "New size " << newMazeHeight << ", " << newMazeWidth << std::endl;
+	//std::cout << "New size " << newMazeHeight << ", " << newMazeWidth << std::endl;
 
 	size_t addRow = rowsAdded ? 1 : 0;
 	size_t addCol = colsAdded ? 1 : 0;
@@ -202,18 +201,16 @@ void MazeGenerator::PadOuterWalls() {
 		}
 	}
 
-
 	// If rows or columns were added set the walls accoringdly
 	if (rowsAdded) {
-		std::cout << "Padding top/bot" << std::endl;
+		//std::cout << "Padding top/bot" << std::endl;
 		for (int i = 0; i < paddedMaze[0].size(); i++) {
-			std::cout << i << " : " << paddedMaze[0].size() - 1 << std::endl;
 			paddedMaze[0][i].SetWall(true);
 			paddedMaze[paddedMaze.size() - 1][i].SetWall(true);
 		}
 	}
 	if (colsAdded) {
-		std::cout << "Padding left/right" << std::endl;
+		//std::cout << "Padding left/right" << std::endl;
 		for (int i = 0; i < paddedMaze.size(); i++) {
 			paddedMaze[i][0].SetWall(true);
 			paddedMaze[i][paddedMaze[0].size() - 1].SetWall(true);
