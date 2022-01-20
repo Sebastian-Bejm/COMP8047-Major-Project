@@ -44,9 +44,9 @@ GameObject::GameObject(std::string tag, std::string textureFile, ShapeType shape
 	rigidBody->halfWidth = transform->GetScale().x / 2;
 	rigidBody->halfHeight = transform->GetScale().y / 2;
 
-	// Set the initial model matrix 
-	GLint cubeLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
-	glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(transform->GetModelMatrix()));
+	// Set the initial model matrix (not required?)
+	//GLint cubeLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
+	//glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(transform->GetModelMatrix()));
 }
 
 // Get the transform of this object

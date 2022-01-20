@@ -31,7 +31,6 @@ int Initialize() {
 	// Generate a maze of size m x n (medium/large size)
 	mazeGenerator.InitMaze(8, 8);
 	mazeGenerator.Generate();
-	mazeGenerator.PrintMaze();
 
 	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 2.5f, 7.0f));
 	renderer->SetCamera(camera);
@@ -50,14 +49,16 @@ void CreateScene() {
 	objectTracker->Add(testCube);
 	physicsWorld->AddObject(&testCube);
 
+	Shader cubeShaderNext("TextureVertShader.vs", "TextureFragShader.fs");
+	cubeShaderNext.Activate();
+
 	// set up boxes to test collisions
 	int pos = -1.0f;
 	for (int i = 0; i < 4; i++) {
-		Shader cubeShader2("TextureVertShader.vs", "TextureFragShader.fs");
+		//Shader cubeShader2("TextureVertShader.vs", "TextureFragShader.fs");
+		//cubeShader2.Activate();
 
-		cubeShader2.Activate();
-
-		GameObject box("WallCube", "brick.png", ShapeType::CUBE, cubeShader2,
+		GameObject box("WallCube", "brick.png", ShapeType::CUBE, cubeShaderNext,
 			glm::vec3(pos, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 		objectTracker->Add(box);
 		physicsWorld->AddObject(&box);
@@ -66,11 +67,10 @@ void CreateScene() {
 
 	int z = 1.0f;
 	for (int i = 0; i < 3; i++) {
-		Shader cubeShader3("TextureVertShader.vs", "TextureFragShader.fs");
+		//Shader cubeShader3("TextureVertShader.vs", "TextureFragShader.fs");
+		//cubeShader3.Activate();
 
-		cubeShader3.Activate();
-
-		GameObject box("WallCube", "brick.png", ShapeType::CUBE, cubeShader3,
+		GameObject box("WallCube", "brick.png", ShapeType::CUBE, cubeShaderNext,
 			glm::vec3(pos - 1.0f, z + 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 		objectTracker->Add(box);
 		physicsWorld->AddObject(&box);
@@ -83,6 +83,9 @@ void CreateScene() {
 void CreateMazeScene() {
 	std::vector<std::vector<MazeCell>> maze = mazeGenerator.GetMazeCells();
 
+	Shader wallShader("TextureVertShader.vs", "TextureFragShader.fs");
+	wallShader.Activate();
+
 	// Create the maze and center it via camera
 	// Row: y, Col: x;
 	for (size_t r = 0; r < maze.size(); r++) {
@@ -91,9 +94,6 @@ void CreateMazeScene() {
 			if (maze[r][c].IsWall()) {
 				int x = c;
 				int y = r;
-
-				Shader wallShader("TextureVertShader.vs", "TextureFragShader.fs");
-				wallShader.Activate();
 
 				glm::vec3 position = glm::vec3(x, -y, 0.0f);
 				glm::vec3 rotation = glm::vec3(0.0f);
@@ -112,18 +112,19 @@ void HandleInputs() {
 	GameObject* go = &objectTracker->GetAllObjects()[0];
 
 	float velX = 0.0f, velY = 0.0f;
+	float speed = 0.25f;
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-		velX = -0.8f;
+		velX = -speed;
 	}
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-		velX = 0.8f;
+		velX = speed;
 	}
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-		velY = 0.8f;
+		velY = speed;
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-		velY = -0.8f;
+		velY = -speed;
 	}
 
 	go->GetRigidBody()->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));
@@ -134,7 +135,7 @@ void GraphicsUpdate() {
 }
 
 void PhysicsUpdate() {
-	//HandleInputs();
+	HandleInputs();
 	physicsWorld->Update(objectTracker);
 }
 
@@ -166,7 +167,7 @@ int main() {
 	Initialize();
 
 	// Create a scene for the purposes of testing
-	//CreateScene();
+	CreateScene();
 	//CreateMazeScene();
 
 	// Main loop

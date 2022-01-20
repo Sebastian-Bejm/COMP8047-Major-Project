@@ -59,9 +59,12 @@ void MazeGenerator::Generate() {
 
 	// After generation, mark spots as the start and the end of the maze
 
-	//PrintMaze(); // debug
+	PrintMaze(); // debug
 
 	PadOuterWalls(); 
+
+	std::cout << std::endl;
+	PrintMaze();
 }
 
 // Print the generated maze. Mainly used for debugging.
@@ -161,17 +164,17 @@ void MazeGenerator::PadOuterWalls() {
 	// Check the top left, if there is a wall, check down and right
 	if (mazeCells[0][0].IsWall()) {
 		if (!mazeCells[0][1].IsWall()) {
-			// Top wall is open, so pad north and south
+			// Top/bottom wall is open, so pad north and south
 			rowsAdded = true;
 			newMazeHeight = rows + 2;
 		}
 		if (!mazeCells[1][0].IsWall()) {
-			// left wall is open, so pad east and west
+			// Left/right wall is open, so pad east and west
 			colsAdded = true;
 			newMazeWidth = cols + 2;
 		}
 		// Both directions are properly walled, exit
-		if (mazeCells[1][0].IsWall() && mazeCells[0][1].IsWall()) {
+		if (mazeCells[1][0].IsWall() && mazeCells[0][1].IsWall() ) {
 			return;
 		}
 	}
@@ -191,6 +194,7 @@ void MazeGenerator::PadOuterWalls() {
 
 	size_t addRow = rowsAdded ? 1 : 0;
 	size_t addCol = colsAdded ? 1 : 0;
+
 	// Copy the maze to the padded maze
 	for (int row = 0; row < paddedMaze.size(); row++) {
 		for (int col = 0; col < paddedMaze[row].size(); col++) {
@@ -205,15 +209,21 @@ void MazeGenerator::PadOuterWalls() {
 	if (rowsAdded) {
 		//std::cout << "Padding top/bot" << std::endl;
 		for (int i = 0; i < paddedMaze[0].size(); i++) {
-			paddedMaze[0][i].SetWall(true);
-			paddedMaze[paddedMaze.size() - 1][i].SetWall(true);
+			if (!paddedMaze[0][i].IsWall())
+				paddedMaze[0][i].SetWall(true);
+
+			if (!paddedMaze[paddedMaze.size() - 1][i].IsWall())
+				paddedMaze[paddedMaze.size() - 1][i].SetWall(true);
 		}
 	}
 	if (colsAdded) {
 		//std::cout << "Padding left/right" << std::endl;
 		for (int i = 0; i < paddedMaze.size(); i++) {
-			paddedMaze[i][0].SetWall(true);
-			paddedMaze[i][paddedMaze[0].size() - 1].SetWall(true);
+			if (!paddedMaze[i][0].IsWall())
+				paddedMaze[i][0].SetWall(true);
+			
+			if (!paddedMaze[i][paddedMaze[0].size() - 1].IsWall())
+				paddedMaze[i][paddedMaze[0].size() - 1].SetWall(true);
 		}
 	}
 
