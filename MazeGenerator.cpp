@@ -32,7 +32,7 @@ void MazeGenerator::Generate() {
 	// Pick a cell to start a path
 	int x = xDistr(gen);
 	int y = yDistr(gen);
-	//std::cout << x << ", " << y << std::endl;
+
 	mazeCells[x][y].SetAsStart(true);
 	mazeCells[x][y].SetWall(false); // Set new cell as path
 	
@@ -55,14 +55,11 @@ void MazeGenerator::Generate() {
 		frontierCells.erase(std::remove(frontierCells.begin(), frontierCells.end(), frontierCell), frontierCells.end());
 	}
 
-	// after generation, mark a random spot that is far away from the start
+	// After generation, mark spots as the start and the end of the maze
 
-	PrintMaze(); // debug
+	//PrintMaze(); // debug
 
-	PadOuterWalls(); // temporary
-
-	std::cout << "Padded maze: " << std::endl;
-	PrintMaze();
+	PadOuterWalls(); 
 }
 
 void MazeGenerator::WriteToFile() {
@@ -172,7 +169,6 @@ void MazeGenerator::PadOuterWalls() {
 		if (!mazeCells[1][0].IsWall()) {
 			// left wall is open, so pad east and west
 			colsAdded = true;
-			std::cout << "Cols added" << std::endl;
 			newMazeWidth = cols + 2;
 		}
 		// Both directions are properly walled, exit
@@ -186,7 +182,7 @@ void MazeGenerator::PadOuterWalls() {
 		newMazeHeight = rows + 2;
 		newMazeWidth = cols + 2;
 	}
-
+	// Resize the maze with the padding
 	paddedMaze.resize(newMazeHeight);
 	for (size_t i = 0; i < newMazeHeight; i++) {
 		paddedMaze[i].resize(newMazeWidth);
@@ -205,15 +201,20 @@ void MazeGenerator::PadOuterWalls() {
 			paddedMaze[row+addRow][col+addCol] = mazeCells[row][col];
 		}
 	}
+
+
 	// If rows or columns were added set the walls accoringdly
 	if (rowsAdded) {
-		for (int i = 0; i < paddedMaze.size(); i++) {
+		std::cout << "Padding top/bot" << std::endl;
+		for (int i = 0; i < paddedMaze[0].size(); i++) {
+			std::cout << i << " : " << paddedMaze[0].size() - 1 << std::endl;
 			paddedMaze[0][i].SetWall(true);
 			paddedMaze[paddedMaze.size() - 1][i].SetWall(true);
 		}
 	}
 	if (colsAdded) {
-		for (int i = 0; i < paddedMaze[0].size(); i++) {
+		std::cout << "Padding left/right" << std::endl;
+		for (int i = 0; i < paddedMaze.size(); i++) {
 			paddedMaze[i][0].SetWall(true);
 			paddedMaze[i][paddedMaze[0].size() - 1].SetWall(true);
 		}
@@ -221,7 +222,6 @@ void MazeGenerator::PadOuterWalls() {
 
 	// Set the padded maze to the original maze 
 	mazeCells = paddedMaze;
-
 }
 
 std::deque<MazeCell> MazeGenerator::ConvertToDeque(std::vector<MazeCell> cells) {

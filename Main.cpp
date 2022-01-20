@@ -26,9 +26,10 @@ int Initialize() {
 	objectTracker = &(ObjectTracker::GetInstance());
 	physicsWorld = &(PhysicsWorld::GetInstance());
 
-	// Generate a maze of size m x n, use prime numbers
+	// Generate a maze of size m x n (medium/large size)
 	MazeGenerator generator(25, 25);
 	generator.Generate();
+	//std::vector<std::vector<MazeCell>> generatedMaze = generator.GetMazeCells();
 
 	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 2.5f, 7.0f));
 	renderer->SetCamera(camera);
@@ -73,6 +74,10 @@ void CreateScene() {
 		physicsWorld->AddObject(&box);
 		z += 1.0f;
 	}
+}
+
+void CreateMaze() {
+
 }
 
 void HandleInputs() {
