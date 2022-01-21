@@ -160,25 +160,6 @@ void MazeGenerator::PadOuterWalls() {
 	size_t newMazeWidth = cols, newMazeHeight = rows;
 
 	bool rowsAdded = false, colsAdded = false;
-	bool top = false, bottom = false, left = false, right = false;
-
-	// Check the top and bottom rows
-	/*for (size_t i = 0; i < mazeCells[0].size(); i++) {
-		if (!mazeCells[0][i].IsWall() && !top) {
-			top = true;
-		}
-		if (!mazeCells[rows - 1][i].IsWall() && !bottom) {
-			bottom = true;
-		}
-	}
-	for (size_t i = 0; i < mazeCells.size(); i++) {
-		if (!mazeCells[i][0].IsWall() && !left) {
-			left = true;
-		}
-		if (!mazeCells[i][cols - 1].IsWall() && !right) {
-			right = true;
-		}
-	}*/
 
 	// Check the top left, if there is a wall, check down and right
 	if (mazeCells[0][0].IsWall()) {
@@ -203,6 +184,7 @@ void MazeGenerator::PadOuterWalls() {
 		newMazeHeight = rows + 2;
 		newMazeWidth = cols + 2;
 	}
+
 	// Resize the maze with the padding
 	paddedMaze.resize(newMazeHeight);
 	for (size_t i = 0; i < newMazeHeight; i++) {
@@ -226,23 +208,25 @@ void MazeGenerator::PadOuterWalls() {
 
 	// If rows or columns were added set the walls accoringdly
 	if (rowsAdded) {
-		//std::cout << "Padding top/bot" << std::endl;
 		for (int i = 0; i < paddedMaze[0].size(); i++) {
-			if (!paddedMaze[0][i].IsWall())
+			if (!paddedMaze[0][i].IsWall()) {
 				paddedMaze[0][i].SetWall(true);
+			}
 
-			if (!paddedMaze[paddedMaze.size() - 1][i].IsWall())
+			if (!paddedMaze[paddedMaze.size() - 1][i].IsWall()) {
 				paddedMaze[paddedMaze.size() - 1][i].SetWall(true);
+			}
 		}
 	}
 	if (colsAdded) {
-		//std::cout << "Padding left/right" << std::endl;
 		for (int i = 0; i < paddedMaze.size(); i++) {
-			if (!paddedMaze[i][0].IsWall())
+			if (!paddedMaze[i][0].IsWall()) {
 				paddedMaze[i][0].SetWall(true);
+			}
 			
-			if (!paddedMaze[i][paddedMaze[0].size() - 1].IsWall())
+			if (!paddedMaze[i][paddedMaze[0].size() - 1].IsWall()) {
 				paddedMaze[i][paddedMaze[0].size() - 1].SetWall(true);
+			}
 		}
 	}
 

@@ -28,8 +28,8 @@ int Initialize() {
 	objectTracker = &(ObjectTracker::GetInstance());
 	physicsWorld = &(PhysicsWorld::GetInstance());
 
-	// Generate a maze of size m x n (medium/large size)
-	mazeGenerator.InitMaze(8, 8);
+	// Generate a maze of size m x n (medium/large size, use odd numbers)
+	mazeGenerator.InitMaze(9, 9);
 	mazeGenerator.Generate();
 
 	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 2.5f, 7.0f));
