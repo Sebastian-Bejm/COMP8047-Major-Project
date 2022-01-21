@@ -29,7 +29,7 @@ int Initialize() {
 	physicsWorld = &(PhysicsWorld::GetInstance());
 
 	// Generate a maze of size m x n (medium/large size, use odd numbers)
-	mazeGenerator.InitMaze(9, 9);
+	mazeGenerator.InitMaze(25, 25);
 	mazeGenerator.Generate();
 
 	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 2.5f, 7.0f));
@@ -41,8 +41,8 @@ int Initialize() {
 void CreateScene() {
 
 	Shader cubeShader("TextureVertShader.vs", "TextureFragShader.fs");
-
 	cubeShader.Activate();
+
 	GameObject testCube("TestCube", "crate.jpg", ShapeType::CUBE, cubeShader,
 		glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 	testCube.SetBodyType(b2_dynamicBody);

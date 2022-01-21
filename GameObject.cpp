@@ -88,10 +88,10 @@ void GameObject::Draw(Camera& camera) {
 
 // Delete the contents of this GameObject
 void GameObject::Delete() {
-	// Delete everything in the mesh
+	// Delete VBO, VAO, EBO, and Texture in the mesh
 	mesh.Delete();
 
-	// Delete rigidbody
+	// Delete rigidbody and transform 
 	delete rigidBody;
 	delete transform;
 

@@ -41,7 +41,7 @@ void Mesh::Draw(Shader& shader, Camera& camera) {
 	glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(cam));
 
 	// Draw the actual Mesh
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
 }
 
 // Cleanup our VAO, VBO, EBO and texture in this mesh

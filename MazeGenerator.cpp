@@ -35,7 +35,6 @@ void MazeGenerator::Generate() {
 	int x = xDistr(gen);
 	int y = yDistr(gen);
 
-	mazeCells[x][y].SetAsStart(true);
 	mazeCells[x][y].SetWall(false); // Set new cell as path
 	
 	std::deque<MazeCell> frontierCells = ConvertToDeque(FrontierCellsOf(mazeCells[x][y]));
@@ -56,15 +55,11 @@ void MazeGenerator::Generate() {
 
 		frontierCells.erase(std::remove(frontierCells.begin(), frontierCells.end(), frontierCell), frontierCells.end());
 	}
-
-	// After generation, mark spots as the start and the end of the maze
-
-	PrintMaze(); // debug
-
+	//PrintMaze(); // debug
 	PadOuterWalls(); 
 
-	std::cout << std::endl;
-	PrintMaze();
+	//PrintMaze();
+	CreateMazePositions();
 }
 
 // Print the generated maze. Mainly used for debugging.
@@ -119,6 +114,7 @@ void MazeGenerator::ConnectCells(MazeCell& main, MazeCell& neighbour) {
 	mazeCells[neighbour.GetRow()][neighbour.GetColumn()].SetWall(false);
 }
 
+// Checks if a cell is in a valid position
 bool MazeGenerator::IsValidPosition(int row, int col) {
 	return row >= 0 && row < mazeCells.size() && col >= 0 && col < mazeCells[0].size();
 }
@@ -157,6 +153,7 @@ void MazeGenerator::PadOuterWalls() {
 
 	const size_t rows = mazeCells.size(); // height
 	const size_t cols = mazeCells[0].size(); // width
+
 	size_t newMazeWidth = cols, newMazeHeight = rows;
 
 	bool rowsAdded = false, colsAdded = false;
@@ -232,6 +229,39 @@ void MazeGenerator::PadOuterWalls() {
 
 	// Set the padded maze to the original maze 
 	mazeCells = paddedMaze;
+}
+
+// Sets the entrance and exit positions after correcting the maze
+void MazeGenerator::CreateMazePositions() {
+	// Set the entrance point and exit points at opposite sides of the map
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> cellDistr(1, 4);
+
+	const size_t rows = mazeCells.size();
+	const size_t cols = mazeCells[0].size();
+
+	int points[4][2] = {
+		{1, 1}, // NW
+		{1, cols-2}, // NE
+		{rows - 2, cols - 2}, // SE
+		{rows-2, 1}, // SW
+	};
+
+	int startPoint = cellDistr(gen);
+	mazeCells[points[startPoint - 1][0]][points[startPoint - 1][1]].SetAsStart(true);
+
+	// if 1 then 3, if 2 then 4, if 3 then 1, if 4 then 2
+	int endPoint = 0;
+	if (startPoint <= 2) {
+		endPoint = startPoint + 2;
+	}
+	else if (startPoint > 2) {
+		endPoint = startPoint - 2;
+	}
+	mazeCells[points[endPoint - 1][0]][points[endPoint - 1][1]].SetAsExit(true);
+
+	PrintMaze();
 }
 
 std::deque<MazeCell> MazeGenerator::ConvertToDeque(std::vector<MazeCell> cells) {

@@ -44,6 +44,7 @@ private:
 	MazeCell& GetRandom(std::vector<MazeCell>& cells);
 
 	void PadOuterWalls();
+	void CreateMazePositions();
 	
 	std::deque<MazeCell> ConvertToDeque(std::vector<MazeCell> cells);
 };
