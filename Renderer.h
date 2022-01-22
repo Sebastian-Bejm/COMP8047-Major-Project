@@ -24,6 +24,13 @@ private:
 
 	static Renderer* renderer;
 
+	//VAO vao;
+	//VBO vbo;
+	//EBO ebo;
+
+	std::vector<Vertex> vertices;
+	std::vector<GLuint> indices;
+
 	float deltaTime;
 	float currentFrame, lastFrame;
 
@@ -32,6 +39,7 @@ private:
 
 	Camera camera;
 
+	void PrepareGLBuffers();
 	GLFWwindow* SetupGLFW();
 	void SetWindow(int width, int height);
 };

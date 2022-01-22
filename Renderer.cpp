@@ -40,7 +40,36 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	// Enable the depth buffer for 3D objects
 	glEnable(GL_DEPTH_TEST);
 
+	PrepareGLBuffers();
+
 	return 0;
+}
+
+void Renderer::PrepareGLBuffers() {
+	// Get shape vertices and indices
+	ShapeDetails shapeDetails;
+	Shape shape = shapeDetails.GetShape(ShapeType::CUBE);
+
+	this->vertices = shape.vertices;
+	this->indices = shape.indices;
+
+	VAO vao;
+	vao.Bind();
+	// Generates Vertex Buffer object and links it to vertices
+	VBO vbo = VBO(vertices);
+	// Generates Element Buffer object and links it to indices
+	EBO ebo = EBO(indices);
+
+	// Links the attributes to the shader based on the layout
+	vao.LinkAttrib(vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void*)0); // coordinates
+	vao.LinkAttrib(vbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void*)(3 * sizeof(float))); // color
+	vao.LinkAttrib(vbo, 2, 2, GL_FLOAT, sizeof(Vertex), (void*)(6 * sizeof(float))); // texture
+
+	// Unbind to prevent modification
+	vao.Unbind();
+	vbo.Unbind();
+	ebo.Unbind();
+
 }
 
 int Renderer::Update(ObjectTracker* tracker) {
@@ -58,10 +87,26 @@ int Renderer::Update(ObjectTracker* tracker) {
 	camera.ProcessInput(window, deltaTime);
 	camera.SetMatrix(45.0f, 0.1f, 100.0f);
 
-	// draw the game objects here with a reference to the camera
+	// Draw the game objects here with a reference to the camera
 	std::vector<GameObject> objects = tracker->GetAllObjects();
 	for (int i = 0; i < objects.size(); i++) {
-		objects[i].Draw(camera);
+
+		//glUseProgram(objects[i].GetShaderID());
+		//vao.Bind();
+
+		//objects[i].Draw(camera);
+
+		// Get our camera matrix in order to update the matrices to show where this new object is
+		/*glm::mat4 cam = camera.GetCameraMatrix();
+		GLint cameraLoc = glGetUniformLocation(objects[i].GetShaderID(), "camMatrix");
+		glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(cam));
+
+		// Update the object model after drawing initial object
+		GLint cubeLoc = glGetUniformLocation(objects[i].GetShaderID(), "model");
+		glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(objects[i].GetTransform()->GetModelMatrix()));
+
+		// Draw the actual Mesh
+		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);*/
 	}
 
 	glfwSwapBuffers(window);
@@ -70,6 +115,9 @@ int Renderer::Update(ObjectTracker* tracker) {
 }
 
 int Renderer::Teardown() {
+	//vao.Delete();
+	//vbo.Delete();
+	//ebo.Delete();
 
 	glfwDestroyWindow(window);
 	glfwTerminate();

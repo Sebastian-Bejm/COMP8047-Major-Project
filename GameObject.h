@@ -18,6 +18,7 @@ public:
 	void SetBodyType(b2BodyType type);
 	RigidBody* GetRigidBody();
 
+	GLuint GetShaderID();
 	std::string GetTag();
 
 	void Draw(Camera& camera);

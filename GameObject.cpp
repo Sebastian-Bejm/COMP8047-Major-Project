@@ -11,7 +11,7 @@ GameObject::GameObject(std::string tag, std::string textureFile, ShapeType shape
 	// Retrieve vertices/indices data for a shape
 	ShapeDetails shapeDetails;
 	Shape shape = shapeDetails.GetShape(shapeType);
-	
+
 	std::vector<Vertex> vertices = shape.vertices;
 	std::vector<GLuint> indices = shape.indices;
 
@@ -31,6 +31,7 @@ GameObject::GameObject(std::string tag, std::string textureFile, ShapeType shape
 
 	// Create a mesh with the vertices, indices, and transform
 	mesh = Mesh(vertices, indices, texture);
+
 	transform = new Transform(position, rotation, scale);
 
 	// Set initial rigidbody in game object
@@ -44,9 +45,6 @@ GameObject::GameObject(std::string tag, std::string textureFile, ShapeType shape
 	rigidBody->halfWidth = transform->GetScale().x / 2;
 	rigidBody->halfHeight = transform->GetScale().y / 2;
 
-	// Set the initial model matrix (not required?)
-	//GLint cubeLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
-	//glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(transform->GetModelMatrix()));
 }
 
 // Get the transform of this object
@@ -68,6 +66,10 @@ void GameObject::SetBodyType(b2BodyType type) {
 // Used to help manipulate the physics attached to this object
 RigidBody* GameObject::GetRigidBody() {
 	return rigidBody;
+}
+
+GLuint GameObject::GetShaderID() {
+	return shaderProgram.GetID();
 }
 
 // Get the tag of this game object
@@ -95,8 +97,6 @@ void GameObject::Delete() {
 	delete rigidBody;
 	delete transform;
 
-	//std::cout << "Shader ID: " << shaderProgram.GetID() << std::endl;
-	shaderProgram.Delete();
 }
 
 std::string GameObject::GetTextureFileExtension(const std::string& textureFile) {

@@ -19,6 +19,8 @@ PhysicsWorld* physicsWorld;
 
 MazeGenerator mazeGenerator;
 
+Shader crateShader, brickShader;
+
 int Initialize() {
 	renderer = Renderer::GetInstance();
 
@@ -29,7 +31,7 @@ int Initialize() {
 	physicsWorld = &(PhysicsWorld::GetInstance());
 
 	// Generate a maze of size m x n (medium/large size, use odd numbers)
-	mazeGenerator.InitMaze(25, 25);
+	mazeGenerator.InitMaze(9, 9);
 	mazeGenerator.Generate();
 
 	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 2.5f, 7.0f));
@@ -40,41 +42,38 @@ int Initialize() {
 
 void CreateScene() {
 
-	Shader cubeShader("TextureVertShader.vs", "TextureFragShader.fs");
-	cubeShader.Activate();
+	crateShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
+	crateShader.Activate();
 
-	GameObject testCube("TestCube", "crate.jpg", ShapeType::CUBE, cubeShader,
+	brickShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
+	brickShader.Activate();
+
+	GameObject testCube("TestCube", "crate.jpg", ShapeType::CUBE, crateShader,
 		glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 	testCube.SetBodyType(b2_dynamicBody);
+
 	objectTracker->Add(testCube);
 	physicsWorld->AddObject(&testCube);
-
-	Shader cubeShaderNext("TextureVertShader.vs", "TextureFragShader.fs");
-	cubeShaderNext.Activate();
 
 	// set up boxes to test collisions
 	int pos = -1.0f;
 	for (int i = 0; i < 4; i++) {
-		//Shader cubeShader2("TextureVertShader.vs", "TextureFragShader.fs");
-		//cubeShader2.Activate();
-
-		GameObject box("WallCube", "brick.png", ShapeType::CUBE, cubeShaderNext,
+		GameObject box("WallCube", "brick.png", ShapeType::CUBE, brickShader,
 			glm::vec3(pos, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+
 		objectTracker->Add(box);
 		physicsWorld->AddObject(&box);
 		pos += 1.0f;
 	}
 
-	int z = 1.0f;
+	int y = 1.0f;
 	for (int i = 0; i < 3; i++) {
-		//Shader cubeShader3("TextureVertShader.vs", "TextureFragShader.fs");
-		//cubeShader3.Activate();
+		GameObject box("WallCube", "brick.png", ShapeType::CUBE, brickShader,
+			glm::vec3(pos - 1.0f, y + 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
-		GameObject box("WallCube", "brick.png", ShapeType::CUBE, cubeShaderNext,
-			glm::vec3(pos - 1.0f, z + 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 		objectTracker->Add(box);
 		physicsWorld->AddObject(&box);
-		z += 1.0f;
+		y += 1.0f;
 	}
 }
 
@@ -135,7 +134,7 @@ void GraphicsUpdate() {
 }
 
 void PhysicsUpdate() {
-	//HandleInputs();
+	HandleInputs();
 	physicsWorld->Update(objectTracker);
 }
 
@@ -154,6 +153,9 @@ int Teardown() {
 
 	// Deletes memory allocated by OpenGL that is stored in game objects
 	objectTracker->DeleteAllObjects();
+	// Delete shaders used
+	crateShader.Delete();
+	brickShader.Delete();
 
 	// Destroys the window on exit
 	renderer->Teardown();
@@ -167,7 +169,7 @@ int main() {
 	Initialize();
 
 	// Create a scene for the purposes of testing
-	//CreateScene();
+	CreateScene();
 	//CreateMazeScene();
 
 	// Main loop
