@@ -8,6 +8,7 @@ Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, Texture&
 	this->indices = indices;
 	this->texture = texture;
 
+	vao.InitVAO();
 	vao.Bind();
 	// Generates Vertex Buffer object and links it to vertices
 	VBO vbo = VBO(vertices);

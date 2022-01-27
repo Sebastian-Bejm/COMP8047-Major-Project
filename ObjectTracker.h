@@ -13,9 +13,7 @@ public:
 	void Add(GameObject& gameObject);
 	void DeleteAllObjects();
 
-
 	std::vector<GameObject>& GetAllObjects();
-	GameObject* GetAgentObject();
 
 	GameObject& FindByTag(std::string objectTag);
 

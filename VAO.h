@@ -6,6 +6,10 @@ class VAO {
 public:
 
 	VAO() {
+		//glGenVertexArrays(1, &ID);
+	}
+
+	void InitVAO() {
 		glGenVertexArrays(1, &ID);
 	}
 
