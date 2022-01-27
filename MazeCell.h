@@ -12,6 +12,9 @@ public:
 	void SetWall(bool isWall);
 	bool IsWall();
 
+	void SetObstruction(bool obstructed);
+	bool IsObstruction();
+
 	void SetAsStart(bool start);
 	void SetAsExit(bool exit);
 	bool IsStart();
@@ -31,5 +34,6 @@ private:
 
 	int row, col;
 	bool isWall; // represented as '*'
+	bool obstructed;
 	bool start, exit;
 };

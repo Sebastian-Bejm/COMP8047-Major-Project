@@ -37,15 +37,18 @@
     <Filter Include="Header Files\Maze">
       <UniqueIdentifier>{1b5ea42d-6924-480c-86a7-091446e55ae0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Rendering">
+      <UniqueIdentifier>{cc9ce0d1-ab90-4d93-9fdb-af71b1709b1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rendering">
+      <UniqueIdentifier>{96015d1c-9b1a-4b63-9e94-190f3ba289ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
@@ -63,12 +66,6 @@
     <ClCompile Include="stb.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ObjectTracker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -83,6 +80,18 @@
     </ClCompile>
     <ClCompile Include="MazeGenerator.cpp">
       <Filter>Source Files\Maze</Filter>
+    </ClCompile>
+    <ClCompile Include="Agent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files\Rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -100,12 +109,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -130,14 +133,8 @@
     <ClInclude Include="GameObject.h">
       <Filter>Header Files\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="ShapeDetails.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Vertex.h">
       <Filter>Header Files\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ObjectTracker.h">
       <Filter>Header Files</Filter>
@@ -156,6 +153,21 @@
     </ClInclude>
     <ClInclude Include="MazeGenerator.h">
       <Filter>Header Files\Maze</Filter>
+    </ClInclude>
+    <ClInclude Include="Agent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeDetails.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

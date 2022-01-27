@@ -20,9 +20,8 @@ private:
 
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
+	
 	Texture texture;
-
 	VAO vao;
-	VBO vbo;
-	EBO ebo;
+
 };

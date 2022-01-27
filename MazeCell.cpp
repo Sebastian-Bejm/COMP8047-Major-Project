@@ -4,6 +4,7 @@ MazeCell::MazeCell() {
 	row = -1;
 	col = -1;
 	isWall = false;
+	obstructed = false;
 	start = false;
 	exit = false;
 }
@@ -12,6 +13,7 @@ MazeCell::MazeCell(int row, int col) {
 	this->row = row;
 	this->col = col;
 	isWall = false;
+	obstructed = false;
 	start = false;
 	exit = false;
 }
@@ -20,6 +22,7 @@ MazeCell::MazeCell(int row, int col, bool isWall) {
 	this->row = row;
 	this->col = col;
 	this->isWall = isWall;
+	obstructed = false;
 	start = false;
 	exit = false;
 }
@@ -31,6 +34,14 @@ void MazeCell::SetWall(bool isWall) {
 
 bool MazeCell::IsWall() {
 	return isWall;
+}
+
+void MazeCell::SetObstruction(bool obstructed) {
+	this->obstructed = obstructed;
+}
+
+bool MazeCell::IsObstruction() {
+	return obstructed;
 }
 
 void MazeCell::SetAsStart(bool start) {
@@ -67,11 +78,14 @@ std::string MazeCell::str() {
 	if (isWall) {
 		return "# ";
 	}
+	if (obstructed) {
+		return "X ";
+	}
 	if (start) {
-		return "E ";
+		return "S ";
 	}
 	if (exit) {
-		return "X ";
+		return "E ";
 	}
 	return ". ";
 }

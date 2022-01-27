@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Agent.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ContactListener.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -168,6 +169,7 @@
     <None Include="DefaultVertShader.vs" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Agent.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ContactListener.h" />
     <ClInclude Include="EBO.h" />

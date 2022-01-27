@@ -40,7 +40,7 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	// Enable the depth buffer for 3D objects
 	glEnable(GL_DEPTH_TEST);
 
-	PrepareGLBuffers();
+	//PrepareGLBuffers();
 
 	return 0;
 }
@@ -53,8 +53,7 @@ void Renderer::PrepareGLBuffers() {
 	this->vertices = shape.vertices;
 	this->indices = shape.indices;
 
-	VAO vao;
-	vao.Bind();
+	/*vao.Bind();
 	// Generates Vertex Buffer object and links it to vertices
 	VBO vbo = VBO(vertices);
 	// Generates Element Buffer object and links it to indices
@@ -68,7 +67,7 @@ void Renderer::PrepareGLBuffers() {
 	// Unbind to prevent modification
 	vao.Unbind();
 	vbo.Unbind();
-	ebo.Unbind();
+	ebo.Unbind();*/
 
 }
 
@@ -94,7 +93,7 @@ int Renderer::Update(ObjectTracker* tracker) {
 		//glUseProgram(objects[i].GetShaderID());
 		//vao.Bind();
 
-		//objects[i].Draw(camera);
+		objects[i].Draw(camera);
 
 		// Get our camera matrix in order to update the matrices to show where this new object is
 		/*glm::mat4 cam = camera.GetCameraMatrix();

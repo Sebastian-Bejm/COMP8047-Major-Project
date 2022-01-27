@@ -2,6 +2,8 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+#include "Agent.h"
+
 #include "GameObject.h"
 #include "ObjectTracker.h"
 #include "Renderer.h"
@@ -19,7 +21,10 @@ PhysicsWorld* physicsWorld;
 
 MazeGenerator mazeGenerator;
 
+// might have to regulate to a ShaderFactory?
 Shader crateShader, brickShader;
+
+Agent dummyAgent;
 
 int Initialize() {
 	renderer = Renderer::GetInstance();
@@ -31,7 +36,7 @@ int Initialize() {
 	physicsWorld = &(PhysicsWorld::GetInstance());
 
 	// Generate a maze of size m x n (medium/large size, use odd numbers)
-	mazeGenerator.InitMaze(9, 9);
+	mazeGenerator.InitMaze(9, 9); // TODO: correctly render the maze
 	mazeGenerator.Generate();
 
 	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 2.5f, 7.0f));
@@ -129,13 +134,17 @@ void HandleInputs() {
 	go->GetRigidBody()->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));
 }
 
-void GraphicsUpdate() {
-	renderer->Update(objectTracker);
+void PhysicsUpdate() {
+	//HandleInputs();
+	//GameObject* go = &objectTracker->GetAllObjects()[0]; // crate
+
+	//dummyAgent.Move(go, -2.0f, 1.0f);
+
+	physicsWorld->Update(objectTracker);
 }
 
-void PhysicsUpdate() {
-	HandleInputs();
-	physicsWorld->Update(objectTracker);
+void GraphicsUpdate() {
+	renderer->Update(objectTracker);
 }
 
 int RunEngine() {

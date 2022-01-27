@@ -10,9 +10,9 @@ Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, Texture&
 
 	vao.Bind();
 	// Generates Vertex Buffer object and links it to vertices
-	vbo = VBO(vertices);
+	VBO vbo = VBO(vertices);
 	// Generates Element Buffer object and links it to indices
-	ebo = EBO(indices);
+	EBO ebo = EBO(indices);
 
 	// Links the attributes to the shader based on the layout
 	vao.LinkAttrib(vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void*)0); // coordinates
@@ -47,8 +47,6 @@ void Mesh::Draw(Shader& shader, Camera& camera) {
 // Cleanup our VAO, VBO, EBO and texture in this mesh
 void Mesh::Delete() {
 	vao.Delete();
-	vbo.Delete();
-	ebo.Delete();
 	texture.Delete();
 }
 
