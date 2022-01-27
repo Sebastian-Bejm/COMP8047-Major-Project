@@ -2,13 +2,14 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
-#include "Agent.h"
-
 #include "GameObject.h"
 #include "ObjectTracker.h"
 #include "Renderer.h"
 #include "PhysicsWorld.h"
 #include "MazeGenerator.h"
+
+#include "Agent.h"
+#include "FPSCounter.h"
 
 const int screenWidth = 1200;
 const int screenHeight = 900;
@@ -25,6 +26,8 @@ MazeGenerator mazeGenerator;
 Shader crateShader, brickShader;
 
 Agent dummyAgent;
+
+FPSCounter fpsCounter = FPSCounter();
 
 int Initialize() {
 	renderer = Renderer::GetInstance();
@@ -154,6 +157,8 @@ int RunEngine() {
 
 	// graphics comes after physics
 	GraphicsUpdate();
+
+	fpsCounter.NextFrame();
 
 	return 0;
 }
