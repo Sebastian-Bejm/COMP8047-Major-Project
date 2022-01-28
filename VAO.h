@@ -5,9 +5,7 @@
 class VAO {
 public:
 
-	VAO() {
-		//glGenVertexArrays(1, &ID);
-	}
+	VAO() {}
 
 	void InitVAO() {
 		glGenVertexArrays(1, &ID);

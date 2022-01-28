@@ -22,12 +22,10 @@ PhysicsWorld* physicsWorld;
 
 MazeGenerator mazeGenerator;
 
-// might have to regulate to a ShaderFactory?
 Shader crateShader, brickShader;
 
-Agent dummyAgent;
-
-FPSCounter fpsCounter = FPSCounter();
+//Agent dummyAgent;
+//FPSCounter fpsCounter = FPSCounter();
 
 int Initialize() {
 	renderer = Renderer::GetInstance();
@@ -56,7 +54,7 @@ void CreateScene() {
 	brickShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
 	brickShader.Activate();
 
-	GameObject testCube("TestCube", "crate.jpg", ShapeType::CUBE, crateShader,
+	GameObject testCube("crate", "crate.jpg", ShapeType::CUBE, crateShader,
 		glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 	testCube.SetBodyType(b2_dynamicBody);
 
@@ -66,7 +64,7 @@ void CreateScene() {
 	// set up boxes to test collisions
 	int pos = -1.0f;
 	for (int i = 0; i < 4; i++) {
-		GameObject box("WallCube", "brick.png", ShapeType::CUBE, brickShader,
+		GameObject box("brick", "brick.png", ShapeType::CUBE, brickShader,
 			glm::vec3(pos, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
 		objectTracker->Add(box);
@@ -76,7 +74,7 @@ void CreateScene() {
 
 	int y = 1.0f;
 	for (int i = 0; i < 3; i++) {
-		GameObject box("WallCube", "brick.png", ShapeType::CUBE, brickShader,
+		GameObject box("brick", "brick.png", ShapeType::CUBE, brickShader,
 			glm::vec3(pos - 1.0f, y + 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
 		objectTracker->Add(box);
@@ -106,7 +104,7 @@ void CreateMazeScene() {
 				glm::vec3 rotation = glm::vec3(0.0f);
 				glm::vec3 scale = glm::vec3(1.0f);
 
-				GameObject wall("WallCube", "brick.png", ShapeType::CUBE, wallShader,
+				GameObject wall("brick", "brick.png", ShapeType::CUBE, wallShader,
 					position, rotation, scale);
 				objectTracker->Add(wall);
 				physicsWorld->AddObject(&wall);
@@ -119,7 +117,7 @@ void HandleInputs() {
 	GameObject* go = &objectTracker->GetAllObjects()[0];
 
 	float velX = 0.0f, velY = 0.0f;
-	float speed = 0.25f;
+	float speed = 0.15f;
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 		velX = -speed;
@@ -138,10 +136,7 @@ void HandleInputs() {
 }
 
 void PhysicsUpdate() {
-	//HandleInputs();
-	//GameObject* go = &objectTracker->GetAllObjects()[0]; // crate
-
-	//dummyAgent.Move(go, -2.0f, 1.0f);
+	HandleInputs();
 
 	physicsWorld->Update(objectTracker);
 }
@@ -157,8 +152,6 @@ int RunEngine() {
 
 	// graphics comes after physics
 	GraphicsUpdate();
-
-	fpsCounter.NextFrame();
 
 	return 0;
 }
@@ -183,8 +176,8 @@ int main() {
 	Initialize();
 
 	// Create a scene for the purposes of testing
-	CreateScene();
-	//CreateMazeScene();
+	//CreateScene();
+	CreateMazeScene();
 
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {

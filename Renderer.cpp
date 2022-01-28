@@ -40,7 +40,9 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	// Enable the depth buffer for 3D objects
 	glEnable(GL_DEPTH_TEST);
 
-	//PrepareGLBuffers();
+	PrepareGLBuffers();
+
+	CreateTextureBuffers();
 
 	return 0;
 }
@@ -53,7 +55,8 @@ void Renderer::PrepareGLBuffers() {
 	this->vertices = shape.vertices;
 	this->indices = shape.indices;
 
-	/*vao.Bind();
+	vao.InitVAO();
+	vao.Bind();
 	// Generates Vertex Buffer object and links it to vertices
 	VBO vbo = VBO(vertices);
 	// Generates Element Buffer object and links it to indices
@@ -67,8 +70,16 @@ void Renderer::PrepareGLBuffers() {
 	// Unbind to prevent modification
 	vao.Unbind();
 	vbo.Unbind();
-	ebo.Unbind();*/
+	ebo.Unbind();
 
+}
+
+void Renderer::CreateTextureBuffers() {
+	std::string crate = "crate.jpg";
+	crateTexture = Texture(crate.c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
+
+	std::string brick = "brick.png";
+	brickTexture = Texture(brick.c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 }
 
 int Renderer::Update(ObjectTracker* tracker) {
@@ -90,22 +101,29 @@ int Renderer::Update(ObjectTracker* tracker) {
 	std::vector<GameObject> objects = tracker->GetAllObjects();
 	for (int i = 0; i < objects.size(); i++) {
 
-		//glUseProgram(objects[i].GetShaderID());
-		//vao.Bind();
+		objects[i].GetShader().Activate();
+		vao.Bind();
 
-		objects[i].Draw(camera);
+		if (objects[i].GetTag() == "crate") {
+			crateTexture.TexUnit(objects[i].GetShader(), "tex0", 0);
+			crateTexture.Bind();
+		}
+		else if (objects[i].GetTag() == "brick") {
+			brickTexture.TexUnit(objects[i].GetShader(), "tex0", 0);
+			brickTexture.Bind();
+		}
 
 		// Get our camera matrix in order to update the matrices to show where this new object is
-		/*glm::mat4 cam = camera.GetCameraMatrix();
-		GLint cameraLoc = glGetUniformLocation(objects[i].GetShaderID(), "camMatrix");
+		glm::mat4 cam = camera.GetCameraMatrix();
+		GLint cameraLoc = glGetUniformLocation(objects[i].GetShader().GetID(), "camMatrix");
 		glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(cam));
 
-		// Update the object model after drawing initial object
-		GLint cubeLoc = glGetUniformLocation(objects[i].GetShaderID(), "model");
-		glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(objects[i].GetTransform()->GetModelMatrix()));
-
 		// Draw the actual Mesh
-		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);*/
+		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
+
+		// Update the object model after drawing initial object
+		GLint cubeLoc = glGetUniformLocation(objects[i].GetShader().GetID(), "model");
+		glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(objects[i].GetTransform()->GetModelMatrix()));
 	}
 
 	glfwSwapBuffers(window);
@@ -114,9 +132,9 @@ int Renderer::Update(ObjectTracker* tracker) {
 }
 
 int Renderer::Teardown() {
-	//vao.Delete();
-	//vbo.Delete();
-	//ebo.Delete();
+	vao.Delete();
+	crateTexture.Delete();
+	brickTexture.Delete();
 
 	glfwDestroyWindow(window);
 	glfwTerminate();

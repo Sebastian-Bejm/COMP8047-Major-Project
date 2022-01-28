@@ -9,7 +9,7 @@ GameObject::GameObject(std::string tag, std::string textureFile, ShapeType shape
 	shaderProgram = shader;
 
 	// Retrieve vertices/indices data for a shape
-	ShapeDetails shapeDetails;
+	/*ShapeDetails shapeDetails;
 	Shape shape = shapeDetails.GetShape(shapeType);
 
 	std::vector<Vertex> vertices = shape.vertices;
@@ -27,10 +27,10 @@ GameObject::GameObject(std::string tag, std::string textureFile, ShapeType shape
 	else if (ext == "jpg") {
 		format = GL_RGB;
 	}
-	Texture texture(textureFile.c_str(), GL_TEXTURE_2D, GL_TEXTURE0, format, GL_UNSIGNED_BYTE);
+	Texture texture(textureFile.c_str(), GL_TEXTURE_2D, GL_TEXTURE0, format, GL_UNSIGNED_BYTE);*/
 
 	// Create a mesh with the vertices, indices, and transform
-	mesh = Mesh(vertices, indices, texture);
+	//mesh = Mesh(vertices, indices, texture);
 
 	transform = new Transform(position, rotation, scale);
 
@@ -68,8 +68,8 @@ RigidBody* GameObject::GetRigidBody() {
 	return rigidBody;
 }
 
-GLuint GameObject::GetShaderID() {
-	return shaderProgram.GetID();
+Shader& GameObject::GetShader() {
+	return shaderProgram;
 }
 
 // Get the tag of this game object
@@ -81,17 +81,17 @@ std::string GameObject::GetTag() {
 // Uses the camera's view and projection matrices to update the object's positions accordingly
 void GameObject::Draw(Camera& camera) {
 	// Draw the mesh first to avoid wrong textures
-	mesh.Draw(shaderProgram, camera);
+	//mesh.Draw(shaderProgram, camera);
 
 	// Update the object model after drawing initial object
-	GLint cubeLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
-	glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(transform->GetModelMatrix()));
+	//GLint cubeLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
+	//glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(transform->GetModelMatrix()));
 }
 
 // Delete the contents of this GameObject
 void GameObject::Delete() {
 	// Delete VBO, VAO, EBO, and Texture in the mesh
-	mesh.Delete();
+	//mesh.Delete();
 
 	// Delete rigidbody and transform 
 	delete rigidBody;

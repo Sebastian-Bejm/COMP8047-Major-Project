@@ -24,12 +24,12 @@ private:
 
 	static Renderer* renderer;
 
-	//VAO vao;
-	//VBO vbo;
-	//EBO ebo;
-
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
+
+	VAO vao;
+	Texture crateTexture;
+	Texture brickTexture;
 
 	float deltaTime;
 	float currentFrame, lastFrame;
@@ -40,6 +40,7 @@ private:
 	Camera camera;
 
 	void PrepareGLBuffers();
+	void CreateTextureBuffers();
 	GLFWwindow* SetupGLFW();
 	void SetWindow(int width, int height);
 };
