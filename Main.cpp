@@ -21,6 +21,7 @@ Renderer* renderer;
 PhysicsWorld* physicsWorld;
 
 MazeGenerator mazeGenerator;
+Camera camera;
 
 Shader crateShader, brickShader;
 
@@ -37,10 +38,10 @@ int Initialize() {
 	physicsWorld = &(PhysicsWorld::GetInstance());
 
 	// Generate a maze of size m x n (medium/large size, use odd numbers)
-	mazeGenerator.InitMaze(9, 9); // TODO: correctly render the maze
+	mazeGenerator.InitMaze(11, 11);
 	mazeGenerator.Generate();
 
-	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 2.5f, 7.0f));
+	camera = Camera(screenWidth, screenHeight, glm::vec3(6.0f, -6.0f, 18.0f));
 	renderer->SetCamera(camera);
 
 	return 0;
@@ -83,18 +84,17 @@ void CreateScene() {
 	}
 }
 
-
-// https://www.youtube.com/watch?v=7D8lLbp9_rQ
 void CreateMazeScene() {
 	std::vector<std::vector<MazeCell>> maze = mazeGenerator.GetMazeCells();
 
 	Shader wallShader("TextureVertShader.vs", "TextureFragShader.fs");
 	wallShader.Activate();
 
-	// Create the maze and center it via camera
+	// Create the maze using game objects
 	// Row: y, Col: x;
 	for (size_t r = 0; r < maze.size(); r++) {
 		for (size_t c = 0; c < maze[r].size(); c++) {
+
 			// Only create objects when a maze cell is a wall
 			if (maze[r][c].IsWall()) {
 				int x = c;
@@ -106,6 +106,7 @@ void CreateMazeScene() {
 
 				GameObject wall("brick", "brick.png", ShapeType::CUBE, wallShader,
 					position, rotation, scale);
+
 				objectTracker->Add(wall);
 				physicsWorld->AddObject(&wall);
 			}
@@ -136,7 +137,7 @@ void HandleInputs() {
 }
 
 void PhysicsUpdate() {
-	HandleInputs();
+	//HandleInputs();
 
 	physicsWorld->Update(objectTracker);
 }
@@ -176,7 +177,6 @@ int main() {
 	Initialize();
 
 	// Create a scene for the purposes of testing
-	//CreateScene();
 	CreateMazeScene();
 
 	// Main loop

@@ -40,8 +40,9 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	// Enable the depth buffer for 3D objects
 	glEnable(GL_DEPTH_TEST);
 
+	// Prepare the buffers needed to render Vertex of objects
 	PrepareGLBuffers();
-
+	// Prepare the textures needed for the scene to be rendered
 	CreateTextureBuffers();
 
 	return 0;
@@ -118,12 +119,13 @@ int Renderer::Update(ObjectTracker* tracker) {
 		GLint cameraLoc = glGetUniformLocation(objects[i].GetShader().GetID(), "camMatrix");
 		glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(cam));
 
+		// Update the object model after drawing initial object
+		glm::mat4 modelMat = objects[i].GetTransform()->GetModelMatrix();
+		GLint cubeLoc = glGetUniformLocation(objects[i].GetShader().GetID(), "model");
+		glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(modelMat));
+
 		// Draw the actual Mesh
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
-
-		// Update the object model after drawing initial object
-		GLint cubeLoc = glGetUniformLocation(objects[i].GetShader().GetID(), "model");
-		glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(objects[i].GetTransform()->GetModelMatrix()));
 	}
 
 	glfwSwapBuffers(window);

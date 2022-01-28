@@ -11,6 +11,7 @@ public:
 	Camera();
 	Camera(int viewWidth, int viewHeight, glm::vec3 position);
 
+	void SetPosition(glm::vec3 newPosition);
 	void SetMatrix(float fovDeg, float nearPlane, float farPlane);
 	void ProcessInput(GLFWwindow *window, float deltaTime);
 

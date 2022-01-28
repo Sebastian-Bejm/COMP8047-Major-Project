@@ -96,7 +96,6 @@ void GameObject::Delete() {
 	// Delete rigidbody and transform 
 	delete rigidBody;
 	delete transform;
-
 }
 
 std::string GameObject::GetTextureFileExtension(const std::string& textureFile) {

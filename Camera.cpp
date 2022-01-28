@@ -4,6 +4,10 @@ Camera::Camera() {
 	position = glm::vec3(0.0f, 0.0f, 0.0f);
 	viewWidth = 1;
 	viewHeight = 1;
+
+	projectionMatrix = glm::mat4(1.0f);
+	viewMatrix = glm::mat4(1.0f);
+	cameraMatrix = glm::mat4(1.0f);
 }
 
 // Camera constructor: create a new camera that takes in our view width/height, and its new position
@@ -18,8 +22,11 @@ Camera::Camera(int viewWidth, int viewHeight, glm::vec3 position) {
 	cameraMatrix = glm::mat4(1.0f);
 }
 
+void Camera::SetPosition(glm::vec3 newPosition) {
+	this->position = newPosition;
+}
+
 // Set our view and projection matrices
-// 
 void Camera::SetMatrix(float fovDeg, float nearPlane, float farPlane) {
 
 	viewMatrix = glm::lookAt(position, position + front, up);
