@@ -175,6 +175,7 @@ void MazeGenerator::PadOuterWalls() {
 
 	const size_t rows = mazeCells.size(); // height
 	const size_t cols = mazeCells[0].size(); // width
+	//std::cout << "Old - " << rows << " " << cols << std::endl;
 
 	size_t newMazeWidth = cols, newMazeHeight = rows;
 
@@ -262,6 +263,7 @@ void MazeGenerator::CreateMazePositions() {
 
 	const size_t rows = mazeCells.size();
 	const size_t cols = mazeCells[0].size();
+	//std::cout << "New - " << rows << " " << cols << std::endl;
 
 	int points[4][2] = {
 		{1, 1}, // NW
@@ -272,6 +274,10 @@ void MazeGenerator::CreateMazePositions() {
 
 	int startPoint = cellDistr(gen);
 	mazeCells[points[startPoint - 1][0]][points[startPoint - 1][1]].SetAsStart(true);
+
+	//std::cout << mazeCells[points[startPoint - 1][0]][points[startPoint - 1][1]].GetColumn()
+		//<< " : " << mazeCells[points[startPoint - 1][0]][points[startPoint - 1][1]].GetRow() << std::endl;
+
 
 	// if 1 then 3, if 2 then 4, if 3 then 1, if 4 then 2
 	int endPoint = 0;

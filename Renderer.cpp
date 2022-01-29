@@ -23,13 +23,13 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Get our monitor information
-	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	/*GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 	const GLFWvidmode* monitorInfo = glfwGetVideoMode(monitor);
 
 	glfwWindowHint(GLFW_RED_BITS, monitorInfo->redBits);
 	glfwWindowHint(GLFW_GREEN_BITS, monitorInfo->greenBits);
 	glfwWindowHint(GLFW_BLUE_BITS, monitorInfo->blueBits);
-	glfwWindowHint(GLFW_REFRESH_RATE, monitorInfo->refreshRate);
+	glfwWindowHint(GLFW_REFRESH_RATE, monitorInfo->refreshRate);*/
 
 	// Setup our window for OpenGL
 	window = glfwCreateWindow(windowWidth, windowHeight, "COMP8047 Major Project", NULL, NULL);

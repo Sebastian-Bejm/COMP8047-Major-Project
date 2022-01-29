@@ -70,10 +70,9 @@ void CreateMazeScene() {
 	int startColX = startCell.GetColumn();
 	int startRowY = -startCell.GetRow();
 
-	std::cout << startColX << " " << startRowY << std::endl;
-
 	glm::vec3 startPos = glm::vec3(startColX, startRowY, 0.0f);
 	glm::vec3 agentScale = glm::vec3(0.6f, 0.6f, 0.6f);
+
 	// The agent is the first object added to the object tracker
 	GameObject agent("agent", "crate.jpg", crateShader, startPos, glm::vec3(0.0f, 0.0f, 0.0f), agentScale);
 	agent.SetBodyType(b2_dynamicBody);
@@ -139,13 +138,13 @@ void GraphicsUpdate() {
 
 int RunEngine() {
 
+	obsGenerator.RunGenerator(objectTracker, physicsWorld);
+
 	// physics update comes first
 	PhysicsUpdate();
 
 	// graphics comes after physics
 	GraphicsUpdate();
-
-	//fpsCounter.NextFrame();
 
 	return 0;
 }
