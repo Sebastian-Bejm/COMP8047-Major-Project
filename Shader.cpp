@@ -47,7 +47,6 @@ void Shader::Activate() {
 }
 
 void Shader::Delete() {
-	std::cout << ID << std::endl;
 	glDeleteProgram(ID);
 }
 

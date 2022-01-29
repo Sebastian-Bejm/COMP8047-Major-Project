@@ -18,6 +18,6 @@ public:
 	}
 
 private:
-	float deltaTime;
-	float currentFrame, lastFrame;
+	double deltaTime;
+	double currentFrame, lastFrame;
 };

@@ -34,9 +34,9 @@ void Agent::Move(GameObject* agent, float destX, float destY) {
 
 	// Testing (loop while game is going?)
 	// The agent will be able to move every step, so a loop may not be neccesary
-	for (int i = 0; i < 2; i++) {
+	//for (int i = 0; i < 2; i++) {
 		agentRb->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));
-	}
+	//}
 }
 
 void Agent::UpdateMaze(std::vector<std::vector<MazeCell>>& maze) {

@@ -22,7 +22,7 @@ private:
 
 	bool MazeUpdated(bool update);
 
-	float speed = 0.25f;
+	float speed = 0.35f;
 	std::vector<std::vector<MazeCell>> maze;
 };
 

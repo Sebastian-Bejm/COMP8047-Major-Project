@@ -7,6 +7,7 @@
 #include "Renderer.h"
 #include "PhysicsWorld.h"
 #include "MazeGenerator.h"
+#include "ObstructionGenerator.h"
 
 #include "Agent.h"
 #include "FPSCounter.h"
@@ -21,6 +22,8 @@ Renderer* renderer;
 PhysicsWorld* physicsWorld;
 
 MazeGenerator mazeGenerator;
+ObstructionGenerator obsGenerator;
+
 Camera camera;
 
 Shader crateShader, brickShader;
@@ -41,6 +44,8 @@ int Initialize() {
 	mazeGenerator.InitMaze(11, 11);
 	mazeGenerator.Generate();
 
+	obsGenerator.AttachMaze(mazeGenerator.GetMazeCells());
+
 	camera = Camera(screenWidth, screenHeight, glm::vec3(6.0f, -6.0f, 18.0f));
 	renderer->SetCamera(camera);
 
@@ -59,6 +64,22 @@ void CreateMazeScene() {
 	LoadShaders();
 
 	std::vector<std::vector<MazeCell>> maze = mazeGenerator.GetMazeCells();
+
+	// Set the agent object at the starting cell
+	MazeCell startCell = mazeGenerator.GetStartCell();
+	int startColX = startCell.GetColumn();
+	int startRowY = -startCell.GetRow();
+
+	std::cout << startColX << " " << startRowY << std::endl;
+
+	glm::vec3 startPos = glm::vec3(startColX, startRowY, 0.0f);
+	glm::vec3 agentScale = glm::vec3(0.6f, 0.6f, 0.6f);
+	// The agent is the first object added to the object tracker
+	GameObject agent("agent", "crate.jpg", crateShader, startPos, glm::vec3(0.0f, 0.0f, 0.0f), agentScale);
+	agent.SetBodyType(b2_dynamicBody);
+
+	objectTracker->AddObject(agent);
+	physicsWorld->AddObject(&agent);
 
 	// Create the maze using game objects
 	// Row: y, Col: x;
@@ -82,22 +103,13 @@ void CreateMazeScene() {
 		}
 	}
 
-	// Set the agent object at the starting cell
-
-	glm::vec3 startPos = glm::vec3(1.0f, -1.0f, 0.0f);
-	glm::vec3 agentScale = glm::vec3(0.6f, 0.6f, 0.6f);
-	GameObject agent("agent", "crate.jpg", crateShader, startPos, glm::vec3(0.0f, 0.0f, 0.0f), agentScale);
-	agent.SetBodyType(b2_dynamicBody);
-
-	objectTracker->AddObject(agent);
-	physicsWorld->AddObject(&agent);
 }
 
 void HandleInputs() {
 	GameObject* go = &objectTracker->GetAllObjects()[0];
 
 	float velX = 0.0f, velY = 0.0f;
-	float speed = 0.15f;
+	float speed = 0.35f;
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 		velX = -speed;
@@ -116,6 +128,8 @@ void HandleInputs() {
 }
 
 void PhysicsUpdate() {
+	HandleInputs();
+
 	physicsWorld->Update(objectTracker);
 }
 

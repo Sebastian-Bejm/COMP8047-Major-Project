@@ -46,6 +46,9 @@
     <Filter Include="Header Files\Utility">
       <UniqueIdentifier>{a075a298-c50d-4fe0-a9e8-eb7a2365154d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Utility">
+      <UniqueIdentifier>{5ecbc8a2-1ec2-4293-a1a7-426fefec51fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
@@ -65,9 +68,6 @@
     </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>Source Files\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="stb.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ObjectTracker.cpp">
       <Filter>Source Files</Filter>
@@ -96,11 +96,14 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="FPSCounter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ObstructionGenerator.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stb.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="FPSCounter.cpp">
+      <Filter>Source Files\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
