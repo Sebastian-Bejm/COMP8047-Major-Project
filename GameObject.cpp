@@ -22,7 +22,6 @@ GameObject::GameObject(std::string tag, std::string textureFile, Shader& shader,
 	rigidBody->y = transform->GetPosition().y;
 	rigidBody->halfWidth = transform->GetScale().x / 2;
 	rigidBody->halfHeight = transform->GetScale().y / 2;
-
 }
 
 // Get the transform of this object
@@ -55,6 +54,7 @@ std::string GameObject::GetTag() {
 	return objectTag;
 }
 
+// Get the ID of the texture image passed into the object
 int GameObject::GetTextureID() {
 	int texID;
 	if (imageFile == "crate.jpg") {
@@ -73,12 +73,13 @@ int GameObject::GetTextureID() {
 // Uses the camera's view and projection matrices to update the object's positions accordingly
 void GameObject::Draw(Camera& camera) {
 
-	//texture.TexUnit(shaderProgram, "tex0", 0);
-	//texture.Bind();
+	// Use the camera matrix to tell OpenGL where to look at in the world space
+	GLint cameraLoc = glGetUniformLocation(shaderProgram.GetID(), "camMatrix");
+	glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(camera.GetCameraMatrix()));
 
-	// Update the object model after drawing initial object
-	//GLint cubeLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
-	//glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(transform->GetModelMatrix()));
+	// Update the object model to show the objects actual position in world space
+	GLint cubeLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
+	glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(transform->GetModelMatrix()));
 }
 
 // Delete the contents of this GameObject

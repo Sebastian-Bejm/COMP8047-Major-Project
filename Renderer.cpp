@@ -129,27 +129,10 @@ int Renderer::Update(ObjectTracker* tracker) {
 		vao.Bind();
 
 		int textureID = objects[i].GetTextureID();
-		textures[textureID]->TexUnit(objects[i].GetShader(), "tex0", 0);
-		textures[textureID]->Bind();
+		textures[textureID].TexUnit(objects[i].GetShader(), "tex0", 0);
+		textures[textureID].Bind();
 
-		/*if (objects[i].GetTag() == "crate") {
-			crateTexture.TexUnit(objects[i].GetShader(), "tex0", 0);
-			crateTexture.Bind();
-		}
-		else if (objects[i].GetTag() == "brick") {
-			brickTexture.TexUnit(objects[i].GetShader(), "tex0", 0);
-			brickTexture.Bind();
-		}*/
-
-		// Get our camera matrix in order to update the matrices to show where this new object is
-		glm::mat4 cam = camera.GetCameraMatrix();
-		GLint cameraLoc = glGetUniformLocation(objects[i].GetShader().GetID(), "camMatrix");
-		glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(cam));
-
-		// Update the object model after drawing initial object
-		glm::mat4 modelMat = objects[i].GetTransform()->GetModelMatrix();
-		GLint cubeLoc = glGetUniformLocation(objects[i].GetShader().GetID(), "model");
-		glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(modelMat));
+		objects[i].Draw(camera);
 
 		// Draw the actual Mesh
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);

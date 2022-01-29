@@ -39,7 +39,7 @@ void Camera::SetMatrix(float fovDeg, float nearPlane, float farPlane) {
 // This is mainly used to look around our scene to ensure everything looks correct
 void Camera::ProcessInput(GLFWwindow* window, float deltaTime) {
 
-	float speed = 1.0f * deltaTime;
+	float speed = 2.0f * deltaTime;
 
 	// Key inputs
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {

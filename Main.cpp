@@ -26,7 +26,7 @@ Camera camera;
 Shader crateShader, brickShader;
 
 //Agent dummyAgent;
-//FPSCounter fpsCounter = FPSCounter();
+FPSCounter fpsCounter = FPSCounter();
 
 int Initialize() {
 	renderer = Renderer::GetInstance();
@@ -102,8 +102,6 @@ void HandleInputs() {
 }
 
 void PhysicsUpdate() {
-	//HandleInputs();
-
 	physicsWorld->Update(objectTracker);
 }
 
@@ -118,6 +116,8 @@ int RunEngine() {
 
 	// graphics comes after physics
 	GraphicsUpdate();
+
+	fpsCounter.NextFrame();
 
 	return 0;
 }
