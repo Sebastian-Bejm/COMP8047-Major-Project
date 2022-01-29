@@ -47,43 +47,6 @@ int Initialize() {
 	return 0;
 }
 
-void CreateScene() {
-
-	crateShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
-	crateShader.Activate();
-
-	brickShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
-	brickShader.Activate();
-
-	GameObject testCube("crate", "crate.jpg", ShapeType::CUBE, crateShader,
-		glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-	testCube.SetBodyType(b2_dynamicBody);
-
-	objectTracker->Add(testCube);
-	physicsWorld->AddObject(&testCube);
-
-	// set up boxes to test collisions
-	int pos = -1.0f;
-	for (int i = 0; i < 4; i++) {
-		GameObject box("brick", "brick.png", ShapeType::CUBE, brickShader,
-			glm::vec3(pos, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-
-		objectTracker->Add(box);
-		physicsWorld->AddObject(&box);
-		pos += 1.0f;
-	}
-
-	int y = 1.0f;
-	for (int i = 0; i < 3; i++) {
-		GameObject box("brick", "brick.png", ShapeType::CUBE, brickShader,
-			glm::vec3(pos - 1.0f, y + 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-
-		objectTracker->Add(box);
-		physicsWorld->AddObject(&box);
-		y += 1.0f;
-	}
-}
-
 void CreateMazeScene() {
 	std::vector<std::vector<MazeCell>> maze = mazeGenerator.GetMazeCells();
 
@@ -104,14 +67,16 @@ void CreateMazeScene() {
 				glm::vec3 rotation = glm::vec3(0.0f);
 				glm::vec3 scale = glm::vec3(1.0f);
 
-				GameObject wall("brick", "brick.png", ShapeType::CUBE, wallShader,
+				GameObject wall("brick", "brick.png", wallShader,
 					position, rotation, scale);
 
-				objectTracker->Add(wall);
+				objectTracker->AddObject(wall);
 				physicsWorld->AddObject(&wall);
 			}
 		}
 	}
+
+	// Set the agent object at the starting cell
 }
 
 void HandleInputs() {

@@ -29,6 +29,7 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 		glfwTerminate();
 		return -1;
 	}
+
 	glfwMakeContextCurrent(window);
 
 	// Load GLAD so it configures OpenGL
@@ -43,13 +44,14 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	// Prepare the buffers needed to render Vertex of objects
 	PrepareGLBuffers();
 	// Prepare the textures needed for the scene to be rendered
-	CreateTextureBuffers();
+	LoadTextures();
 
 	return 0;
 }
 
 void Renderer::PrepareGLBuffers() {
 	// Get shape vertices and indices
+	// All shapes used will be cubes unless this changes next month
 	ShapeDetails shapeDetails;
 	Shape shape = shapeDetails.GetShape(ShapeType::CUBE);
 
@@ -75,12 +77,33 @@ void Renderer::PrepareGLBuffers() {
 
 }
 
-void Renderer::CreateTextureBuffers() {
-	std::string crate = "crate.jpg";
-	crateTexture = Texture(crate.c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
+void Renderer::LoadTextures() {
+	// Order image according to enum in GameObject
+	std::vector<std::string> images = { "crate.jpg", "brick.png" };
 
-	std::string brick = "brick.png";
-	brickTexture = Texture(brick.c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	for (std::string image : images) {
+		GLenum format = NULL;
+		std::string ext = GetTextureFileExtension(image);
+
+		if (ext == "png") {
+			format = GL_RGBA;
+		}
+		else if (ext == "jpg") {
+			format = GL_RGB;
+		}
+		// Create a new texture and store it for later use
+		Texture texture(image.c_str(), GL_TEXTURE_2D, GL_TEXTURE0, format, GL_UNSIGNED_BYTE);
+		textures.push_back(texture);
+	}
+
+}
+
+std::string Renderer::GetTextureFileExtension(const std::string& textureFile) {
+	size_t i = textureFile.rfind('.', textureFile.length());
+	if (i != std::string::npos) {
+		return (textureFile.substr(i + 1, textureFile.length() - i));
+	}
+	return "";
 }
 
 int Renderer::Update(ObjectTracker* tracker) {
@@ -105,14 +128,18 @@ int Renderer::Update(ObjectTracker* tracker) {
 		objects[i].GetShader().Activate();
 		vao.Bind();
 
-		if (objects[i].GetTag() == "crate") {
+		int textureID = objects[i].GetTextureID();
+		textures[textureID]->TexUnit(objects[i].GetShader(), "tex0", 0);
+		textures[textureID]->Bind();
+
+		/*if (objects[i].GetTag() == "crate") {
 			crateTexture.TexUnit(objects[i].GetShader(), "tex0", 0);
 			crateTexture.Bind();
 		}
 		else if (objects[i].GetTag() == "brick") {
 			brickTexture.TexUnit(objects[i].GetShader(), "tex0", 0);
 			brickTexture.Bind();
-		}
+		}*/
 
 		// Get our camera matrix in order to update the matrices to show where this new object is
 		glm::mat4 cam = camera.GetCameraMatrix();
@@ -134,9 +161,13 @@ int Renderer::Update(ObjectTracker* tracker) {
 }
 
 int Renderer::Teardown() {
+	// Delete the VAO
 	vao.Delete();
-	crateTexture.Delete();
-	brickTexture.Delete();
+	
+	// Delete the textures
+	for (Texture tex : textures) {
+		tex.Delete();
+	}
 
 	glfwDestroyWindow(window);
 	glfwTerminate();

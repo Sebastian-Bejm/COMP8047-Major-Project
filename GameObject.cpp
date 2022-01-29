@@ -2,36 +2,14 @@
 
 // Constructor to create a new GameObject
 // A GameObject requires a tag, texture file, shape, shader, and transform
-GameObject::GameObject(std::string tag, std::string textureFile, ShapeType shapeType, Shader& shader,
+GameObject::GameObject(std::string tag, std::string textureFile, Shader& shader,
 	glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) {
 
 	objectTag = tag;
+	imageFile = textureFile;
 	shaderProgram = shader;
 
-	// Retrieve vertices/indices data for a shape
-	/*ShapeDetails shapeDetails;
-	Shape shape = shapeDetails.GetShape(shapeType);
-
-	std::vector<Vertex> vertices = shape.vertices;
-	std::vector<GLuint> indices = shape.indices;
-
-	// Initialize the texture for this object
-	// GL_RGBA for png
-	// GL_RGB for jpg
-	GLenum format = NULL;
-	std::string ext = GetTextureFileExtension(textureFile);
-
-	if (ext == "png") {
-		format = GL_RGBA;
-	}
-	else if (ext == "jpg") {
-		format = GL_RGB;
-	}
-	Texture texture(textureFile.c_str(), GL_TEXTURE_2D, GL_TEXTURE0, format, GL_UNSIGNED_BYTE);*/
-
-	// Create a mesh with the vertices, indices, and transform
-	//mesh = Mesh(vertices, indices, texture);
-
+	// Set the initial transform to this object
 	transform = new Transform(position, rotation, scale);
 
 	// Set initial rigidbody in game object
@@ -77,11 +55,26 @@ std::string GameObject::GetTag() {
 	return objectTag;
 }
 
+int GameObject::GetTextureID() {
+	int texID;
+	if (imageFile == "crate.jpg") {
+		texID = 0;
+	}
+	else if (imageFile == "brick.png") {
+		texID = 1;
+	}
+	else {
+		texID = -1;
+	}
+	return texID;
+}
+
 // Update this GameObject's matrices. 
 // Uses the camera's view and projection matrices to update the object's positions accordingly
 void GameObject::Draw(Camera& camera) {
-	// Draw the mesh first to avoid wrong textures
-	//mesh.Draw(shaderProgram, camera);
+
+	//texture.TexUnit(shaderProgram, "tex0", 0);
+	//texture.Bind();
 
 	// Update the object model after drawing initial object
 	//GLint cubeLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
@@ -90,18 +83,7 @@ void GameObject::Draw(Camera& camera) {
 
 // Delete the contents of this GameObject
 void GameObject::Delete() {
-	// Delete VBO, VAO, EBO, and Texture in the mesh
-	//mesh.Delete();
-
 	// Delete rigidbody and transform 
 	delete rigidBody;
 	delete transform;
-}
-
-std::string GameObject::GetTextureFileExtension(const std::string& textureFile) {
-	size_t i = textureFile.rfind('.', textureFile.length());
-	if (i != std::string::npos) {
-		return (textureFile.substr(i + 1, textureFile.length() - i));
-	}
-	return "";
 }

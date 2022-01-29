@@ -6,6 +6,7 @@
 
 #include "Camera.h"
 #include "ObjectTracker.h"
+#include "ShapeDetails.h"
 
 extern GLFWwindow* window;
 
@@ -28,8 +29,7 @@ private:
 	std::vector<GLuint> indices;
 
 	VAO vao;
-	Texture crateTexture;
-	Texture brickTexture;
+	std::vector<Texture> textures;
 
 	float deltaTime;
 	float currentFrame, lastFrame;
@@ -40,7 +40,9 @@ private:
 	Camera camera;
 
 	void PrepareGLBuffers();
-	void CreateTextureBuffers();
+	void LoadTextures();
+	std::string GetTextureFileExtension(const std::string& textureFile);
+
 	GLFWwindow* SetupGLFW();
 	void SetWindow(int width, int height);
 };

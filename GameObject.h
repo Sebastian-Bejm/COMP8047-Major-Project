@@ -3,13 +3,12 @@
 #include "Mesh.h"
 #include "Transform.h"
 #include "RigidBody.h"
-#include "ShapeDetails.h"
 
 class GameObject
 {
 public:
 
-	GameObject(std::string tag, std::string textureFile, ShapeType shapeType, Shader& shader, 
+	GameObject(std::string tag, std::string textureFile, Shader& shader, 
 		glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
 	
 	Transform* GetTransform();
@@ -20,18 +19,20 @@ public:
 
 	Shader& GetShader();
 	std::string GetTag();
+	int GetTextureID();
 
 	void Draw(Camera& camera);
 	void Delete();
 
 private:
+
 	std::string objectTag;
+	std::string imageFile;
 
 	Shader shaderProgram;
-	Mesh mesh;
+
 	Transform* transform;
 	RigidBody* rigidBody;
 
-	std::string GetTextureFileExtension(const std::string& textureFile);
 };
 
