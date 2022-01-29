@@ -22,6 +22,15 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+	// Get our monitor information
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* monitorInfo = glfwGetVideoMode(monitor);
+
+	glfwWindowHint(GLFW_RED_BITS, monitorInfo->redBits);
+	glfwWindowHint(GLFW_GREEN_BITS, monitorInfo->greenBits);
+	glfwWindowHint(GLFW_BLUE_BITS, monitorInfo->blueBits);
+	glfwWindowHint(GLFW_REFRESH_RATE, monitorInfo->refreshRate);
+
 	// Setup our window for OpenGL
 	window = glfwCreateWindow(windowWidth, windowHeight, "COMP8047 Major Project", NULL, NULL);
 	if (window == NULL) {
@@ -108,9 +117,7 @@ std::string Renderer::GetTextureFileExtension(const std::string& textureFile) {
 
 int Renderer::Update(ObjectTracker* tracker) {
 	// This fixes the fast movement over time on the machine
-	currentFrame = glfwGetTime();
-	deltaTime = currentFrame - lastFrame;
-	lastFrame = currentFrame;
+	float deltaTime = Time::GetInstance().DeltaTime();
 
 	// Specify the color of the background (silver)
 	glClearColor(backgroundColour.r, backgroundColour.g, backgroundColour.b, backgroundColour.a);

@@ -76,6 +76,28 @@ void MazeGenerator::PrintMaze() {
 
 }
 
+// Get the starting cell where the agent is first spawned in the maze
+MazeCell& MazeGenerator::GetStartCell() {
+	for (int row = 0; row < mazeCells.size(); row++) {
+		for (int col = 0; col < mazeCells[0].size(); col++) {
+			if (mazeCells[row][col].IsStart()) {
+				return mazeCells[row][col];
+			}
+		}
+	}
+}
+
+// Get the exit cell of the maze
+MazeCell& MazeGenerator::GetEndCell() {
+	for (int row = 0; row < mazeCells.size(); row++) {
+		for (int col = 0; col < mazeCells[0].size(); col++) {
+			if (mazeCells[row][col].IsExit()) {
+				return mazeCells[row][col];
+			}
+		}
+	}
+}
+
 // Get the collection of maze cells
 std::vector<std::vector<MazeCell>> MazeGenerator::GetMazeCells() {
 	return mazeCells;

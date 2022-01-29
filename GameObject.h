@@ -12,6 +12,7 @@ public:
 		glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
 	
 	Transform* GetTransform();
+	void ResetTransform();
 
 	void SetRigidBody(RigidBody* rigidBody);
 	void SetBodyType(b2BodyType type);

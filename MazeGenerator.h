@@ -18,6 +18,9 @@ public:
 	void Generate();
 	//void WriteToFile(); // this may be used later for the neural network
 	void PrintMaze();
+	
+	MazeCell& GetStartCell();
+	MazeCell& GetEndCell();
 
 	std::vector<std::vector<MazeCell>> GetMazeCells();
 

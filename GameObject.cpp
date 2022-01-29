@@ -30,6 +30,10 @@ Transform* GameObject::GetTransform() {
 	return transform;
 }
 
+void GameObject::ResetTransform() {
+
+}
+
 void GameObject::SetRigidBody(RigidBody* rigidBody) {
 	this->rigidBody = rigidBody;
 }

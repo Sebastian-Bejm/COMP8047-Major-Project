@@ -26,7 +26,7 @@ Camera camera;
 Shader crateShader, brickShader;
 
 //Agent dummyAgent;
-FPSCounter fpsCounter = FPSCounter();
+//FPSCounter fpsCounter = FPSCounter();
 
 int Initialize() {
 	renderer = Renderer::GetInstance();
@@ -47,11 +47,18 @@ int Initialize() {
 	return 0;
 }
 
-void CreateMazeScene() {
-	std::vector<std::vector<MazeCell>> maze = mazeGenerator.GetMazeCells();
+// Load the shaders to be used for objects in the scene
+void LoadShaders() {
+	crateShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
+	brickShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
+}
 
-	Shader wallShader("TextureVertShader.vs", "TextureFragShader.fs");
-	wallShader.Activate();
+// Create the scene which includes the generated maze as well as the agent object
+void CreateMazeScene() {
+
+	LoadShaders();
+
+	std::vector<std::vector<MazeCell>> maze = mazeGenerator.GetMazeCells();
 
 	// Create the maze using game objects
 	// Row: y, Col: x;
@@ -67,8 +74,7 @@ void CreateMazeScene() {
 				glm::vec3 rotation = glm::vec3(0.0f);
 				glm::vec3 scale = glm::vec3(1.0f);
 
-				GameObject wall("brick", "brick.png", wallShader,
-					position, rotation, scale);
+				GameObject wall("wall", "brick.png", brickShader, position, rotation, scale);
 
 				objectTracker->AddObject(wall);
 				physicsWorld->AddObject(&wall);
@@ -77,6 +83,14 @@ void CreateMazeScene() {
 	}
 
 	// Set the agent object at the starting cell
+
+	glm::vec3 startPos = glm::vec3(1.0f, -1.0f, 0.0f);
+	glm::vec3 agentScale = glm::vec3(0.6f, 0.6f, 0.6f);
+	GameObject agent("agent", "crate.jpg", crateShader, startPos, glm::vec3(0.0f, 0.0f, 0.0f), agentScale);
+	agent.SetBodyType(b2_dynamicBody);
+
+	objectTracker->AddObject(agent);
+	physicsWorld->AddObject(&agent);
 }
 
 void HandleInputs() {
@@ -117,15 +131,16 @@ int RunEngine() {
 	// graphics comes after physics
 	GraphicsUpdate();
 
-	fpsCounter.NextFrame();
+	//fpsCounter.NextFrame();
 
 	return 0;
 }
 
 int Teardown() {
 
-	// Deletes memory allocated by OpenGL that is stored in game objects
+	// Deletes pointers that is stored in game objects
 	objectTracker->DeleteAllObjects();
+	
 	// Delete shaders used
 	crateShader.Delete();
 	brickShader.Delete();

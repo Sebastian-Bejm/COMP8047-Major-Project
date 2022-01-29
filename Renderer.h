@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+#include "Time.h"
 #include "Camera.h"
 #include "ObjectTracker.h"
 #include "ShapeDetails.h"
@@ -30,9 +31,6 @@ private:
 
 	VAO vao;
 	std::vector<Texture> textures;
-
-	float deltaTime;
-	float currentFrame, lastFrame;
 
 	int windowWidth, windowHeight;
 	glm::vec4 backgroundColour;
