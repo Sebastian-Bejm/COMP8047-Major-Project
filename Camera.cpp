@@ -49,19 +49,19 @@ void Camera::ProcessInput(GLFWwindow* window, float deltaTime) {
 	float speed = 2.0f * deltaTime;
 
 	// Key inputs
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		position += speed * front;
+	if (isPerspective) {
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+			position += speed * front;
+		}
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+			position += speed * -front;
+		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 		position += speed * -glm::normalize(glm::cross(front, up));
 	}
-	if (isPerspective) {
-		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-			position += speed * -front;
-		}
-		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-			position += speed * glm::normalize(glm::cross(front, up));
-		}
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+		position += speed * glm::normalize(glm::cross(front, up));
 	}
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
 		position += speed * up;

@@ -47,6 +47,10 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	// Specify the viewport of OpenGL in the window
 	glViewport(0, 0, windowWidth, windowHeight);
 
+	// Enable blending for 2D text
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+
 	// Enable the depth buffer for 3D objects
 	glEnable(GL_DEPTH_TEST);
 
@@ -54,10 +58,14 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	PrepareGLBuffers();
 	// Prepare the textures needed for the scene to be rendered
 	LoadTextures();
+	// Load the freetype library font
+	LoadFreetype();
 
 	return 0;
 }
 
+// https://stackoverflow.com/questions/40652905/render-one-vao-containing-two-vbos
+// Prepares the OpenGL VAO, VBO, and EBO for later usage
 void Renderer::PrepareGLBuffers() {
 	// Get shape vertices and indices
 	// All shapes used will be cubes unless this changes next month
@@ -115,7 +123,79 @@ std::string Renderer::GetTextureFileExtension(const std::string& textureFile) {
 	return "";
 }
 
+// Load the Freetype library and the font used
 void Renderer::LoadFreetype() {
+	// init the library
+	FT_Library ft;
+	if (FT_Init_FreeType(&ft))
+	{
+		std::cerr << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+		return;
+	}
+
+	// load font file as a texture
+	FT_Face face;
+	if (FT_New_Face(ft, "arial.ttf", 0, &face))
+	{
+		std::cerr << "ERROR::FREETYPE: Failed to load font" << std::endl;
+		return;
+	}
+	FT_Set_Pixel_Sizes(face, 0, 48);
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	// load all the characters from the font file
+	for (unsigned char c = 0; c < 128; c++) {
+		// load character glyph
+		if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
+			std::cerr << "ERROR::FREETYPE: Failed to load glyph" << std::endl;
+			continue;
+		}
+
+		// generate texture
+		GLuint texture;
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+
+		int height = face->glyph->bitmap.rows;
+		int width = face->glyph->bitmap.width;
+		unsigned char* &data = face->glyph->bitmap.buffer;
+
+		glTexImage2D(
+			GL_TEXTURE_2D,
+			0,
+			GL_RED,
+			width,
+			height,
+			0,
+			GL_RED,
+			GL_UNSIGNED_BYTE,
+			data
+		);
+
+		// set the texture parameters to the currently bound texture font
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		FT_Int left = face->glyph->bitmap_left;
+		FT_Int top = face->glyph->bitmap_top;
+		unsigned int advance = (unsigned int)face->glyph->advance.x;
+
+		Character character = {
+			texture,
+			glm::ivec2(width, height),
+			glm::ivec2(left, top),
+			advance
+		};
+
+		characters.insert(std::pair<char, Character>(c, character));
+	}
+
+	// clean up freetype
+	FT_Done_Face(face);
+	FT_Done_FreeType(ft);
 
 }
 
@@ -134,8 +214,8 @@ int Renderer::Update(ObjectTracker* tracker) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	camera.ProcessInput(window, deltaTime);
-	//camera.SetMatrix(45.0f, 0.1f, 100.0f); // 0.1f, 100.0f
-	camera.SetOrthoMatrix(-10.0f, 12.0f, -10.0f, 12.0f, 0.1f, 100.0f);
+	//camera.SetPerspectiveMatrix(45.0f, 0.1f, 100.0f); // 0.1f, 100.0f
+	camera.SetOrthoMatrix(-8.0f, 11.0f, -11.0f, 8.0f, 0.1f, 100.0f);
 
 	// Draw the game objects here with a reference to the camera
 	std::vector<GameObject> objects = tracker->GetAllObjects();
@@ -181,7 +261,7 @@ void Renderer::SetCamera(Camera& camera) {
 GLFWwindow* Renderer::SetupGLFW() {
 	// Setup GLFW
 	// Get the main monitor for the screen size
-	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	/*GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 	const GLFWvidmode* monitorInfo = glfwGetVideoMode(monitor);
 	GLFWmonitor* fullScreenMonitor;
 
@@ -206,7 +286,7 @@ GLFWwindow* Renderer::SetupGLFW() {
 	glfwMakeContextCurrent(window);
 
 	delete monitor;
-	delete monitorInfo;
+	delete monitorInfo;*/
 
 	return window;
 }

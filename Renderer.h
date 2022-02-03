@@ -1,9 +1,13 @@
 #pragma once
 
+#include <iostream>
+#include <map>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
+#include "Character.h"
 #include "Time.h"
 #include "Camera.h"
 #include "ObjectTracker.h"
@@ -25,6 +29,7 @@ public:
 private:
 
 	static Renderer* renderer;
+	Camera camera;
 
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
@@ -32,10 +37,10 @@ private:
 	VAO vao;
 	std::vector<Texture> textures;
 
+	std::map<char, Character> characters;
+
 	int windowWidth, windowHeight;
 	glm::vec4 backgroundColour;
-
-	Camera camera;
 
 	void PrepareGLBuffers();
 	void LoadTextures();
