@@ -7,7 +7,7 @@ ObjectTracker& ObjectTracker::GetInstance() {
 }
 
 // Adds the GameObject to the tracker
-void ObjectTracker::Add(GameObject& gameObject) {
+void ObjectTracker::AddObject(GameObject& gameObject) {
 	staticObjects.push_back(gameObject);
 }
 

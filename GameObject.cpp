@@ -2,35 +2,14 @@
 
 // Constructor to create a new GameObject
 // A GameObject requires a tag, texture file, shape, shader, and transform
-GameObject::GameObject(std::string tag, std::string textureFile, ShapeType shapeType, Shader& shader,
+GameObject::GameObject(std::string tag, std::string textureFile, Shader& shader,
 	glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) {
 
 	objectTag = tag;
+	imageFile = textureFile;
 	shaderProgram = shader;
 
-	// Retrieve vertices/indices data for a shape
-	ShapeDetails shapeDetails;
-	Shape shape = shapeDetails.GetShape(shapeType);
-	
-	std::vector<Vertex> vertices = shape.vertices;
-	std::vector<GLuint> indices = shape.indices;
-
-	// Initialize the texture for this object
-	// GL_RGBA for png
-	// GL_RGB for jpg
-	GLenum format = NULL;
-	std::string ext = GetTextureFileExtension(textureFile);
-
-	if (ext == "png") {
-		format = GL_RGBA;
-	}
-	else if (ext == "jpg") {
-		format = GL_RGB;
-	}
-	Texture texture(textureFile.c_str(), GL_TEXTURE_2D, GL_TEXTURE0, format, GL_UNSIGNED_BYTE);
-
-	// Create a mesh with the vertices, indices, and transform
-	mesh = Mesh(vertices, indices, texture);
+	// Set the initial transform to this object
 	transform = new Transform(position, rotation, scale);
 
 	// Set initial rigidbody in game object
@@ -43,16 +22,16 @@ GameObject::GameObject(std::string tag, std::string textureFile, ShapeType shape
 	rigidBody->y = transform->GetPosition().y;
 	rigidBody->halfWidth = transform->GetScale().x / 2;
 	rigidBody->halfHeight = transform->GetScale().y / 2;
-
-	// Set the initial model matrix 
-	GLint cubeLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
-	glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(transform->GetModelMatrix()));
 }
 
 // Get the transform of this object
 // Used to help manipulate the position of object when necessary
 Transform* GameObject::GetTransform() {
 	return transform;
+}
+
+void GameObject::ResetTransform() {
+
 }
 
 void GameObject::SetRigidBody(RigidBody* rigidBody) {
@@ -70,39 +49,46 @@ RigidBody* GameObject::GetRigidBody() {
 	return rigidBody;
 }
 
+Shader& GameObject::GetShader() {
+	return shaderProgram;
+}
+
 // Get the tag of this game object
 std::string GameObject::GetTag() {
 	return objectTag;
 }
 
+// Get the ID of the texture image passed into the object
+int GameObject::GetTextureID() {
+	int texID;
+	if (imageFile == "crate.jpg") {
+		texID = 0;
+	}
+	else if (imageFile == "brick.png") {
+		texID = 1;
+	}
+	else {
+		texID = -1;
+	}
+	return texID;
+}
+
 // Update this GameObject's matrices. 
 // Uses the camera's view and projection matrices to update the object's positions accordingly
 void GameObject::Draw(Camera& camera) {
-	// Draw the mesh first to avoid wrong textures
-	mesh.Draw(shaderProgram, camera);
 
-	// Update the object model after drawing initial object
+	// Use the camera matrix to tell OpenGL where to look at in the world space
+	GLint cameraLoc = glGetUniformLocation(shaderProgram.GetID(), "camMatrix");
+	glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(camera.GetCameraMatrix()));
+
+	// Update the object model to show the objects actual position in world space
 	GLint cubeLoc = glGetUniformLocation(shaderProgram.GetID(), "model");
 	glUniformMatrix4fv(cubeLoc, 1, GL_FALSE, glm::value_ptr(transform->GetModelMatrix()));
 }
 
 // Delete the contents of this GameObject
 void GameObject::Delete() {
-	// Delete everything in the mesh
-	mesh.Delete();
-
-	// Delete rigidbody
+	// Delete rigidbody and transform 
 	delete rigidBody;
 	delete transform;
-
-	//std::cout << "Shader ID: " << shaderProgram.GetID() << std::endl;
-	shaderProgram.Delete();
-}
-
-std::string GameObject::GetTextureFileExtension(const std::string& textureFile) {
-	size_t i = textureFile.rfind('.', textureFile.length());
-	if (i != std::string::npos) {
-		return (textureFile.substr(i + 1, textureFile.length() - i));
-	}
-	return "";
 }

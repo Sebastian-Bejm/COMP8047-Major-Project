@@ -40,10 +40,13 @@ Texture::Texture(const char* image, GLenum texType, GLenum slot, GLenum format, 
 }
 
 void Texture::TexUnit(Shader shader, const char* uniform, GLuint unit) {
+	// Gets the location of the uniform
 	GLuint texUni = glGetUniformLocation(shader.GetID(), uniform);
 
+	// Shader needs to be activated before changing the value of a uniform
 	shader.Activate();
 
+	// Sets the texture value of the uniform
 	glUniform1i(texUni, unit);
 }
 

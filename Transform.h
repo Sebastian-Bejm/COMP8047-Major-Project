@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 #include "GLMHeader.h"
 
 class Transform
@@ -12,6 +14,7 @@ public:
 	void SetPosition(glm::vec3 newPosition);
 	void Translate(glm::vec3 translate, float speed);
 	void Rotate(glm::vec3 rotate);
+	void ResetTransform();
 
 	glm::mat4 GetModelMatrix();
 
@@ -23,9 +26,8 @@ private:
 
 	glm::mat4 modelMatrix;
 
-	glm::vec3 position;
-	glm::vec3 rotation;
-	glm::vec3 scale;
+	glm::vec3 position, rotation, scale;
+	glm::vec3 originalPos, originalRotation, originalScale;
 
 };
 

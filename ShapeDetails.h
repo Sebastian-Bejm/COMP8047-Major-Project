@@ -43,6 +43,10 @@ public:
 
 private:
 
+	Shape currentShape;
+
+	// NEED TO CHANGE THIS CLASS TO CORRECTLY USE REFERENCES
+
 	Shape GetCube() {
 		Vertex cubeVerts[] = {
 			//		COORDINATES					,			COLORS			,
@@ -77,7 +81,7 @@ private:
 			glm::vec3(0.5f,  0.5f, -0.5f),		glm::vec3(0.95f, 0.85f, 0.7f),	glm::vec2(1.0f, 0.0f)
 		};
 
-		int cubeInds[] = {
+		GLuint cubeInds[] = {
 			0, 2, 1,
 			0, 3, 2,
 			4, 5, 6,

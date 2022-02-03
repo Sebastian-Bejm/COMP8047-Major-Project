@@ -6,6 +6,11 @@
 #include "ObjectTracker.h"
 #include "Renderer.h"
 #include "PhysicsWorld.h"
+#include "MazeGenerator.h"
+#include "ObstructionGenerator.h"
+
+#include "Agent.h"
+#include "FPSCounter.h"
 
 const int screenWidth = 1200;
 const int screenHeight = 900;
@@ -16,7 +21,16 @@ ObjectTracker* objectTracker;
 Renderer* renderer;
 PhysicsWorld* physicsWorld;
 
-// TODO: refactor later for initalize, update, and teardown
+MazeGenerator mazeGenerator;
+//ObstructionGenerator obsGenerator;
+
+Camera camera;
+
+Shader crateShader, brickShader;
+
+//Agent dummyAgent;
+//FPSCounter fpsCounter = FPSCounter();
+
 int Initialize() {
 	renderer = Renderer::GetInstance();
 
@@ -26,98 +40,105 @@ int Initialize() {
 	objectTracker = &(ObjectTracker::GetInstance());
 	physicsWorld = &(PhysicsWorld::GetInstance());
 
-	Camera camera(screenWidth, screenHeight, glm::vec3(0.0f, 2.5f, 7.0f));
+	// Generate a maze of size m x n (medium/large size, use odd numbers)
+	mazeGenerator.InitMaze(15, 15);
+	mazeGenerator.Generate();
+
+	//obsGenerator.AttachMaze(mazeGenerator.GetMazeCells());
+
+	camera = Camera(screenWidth, screenHeight, glm::vec3(6.5f, -6.5f, 19.0f));
 	renderer->SetCamera(camera);
 
 	return 0;
 }
 
-void CreateScene() {
+// Load the shaders to be used for objects in the scene
+void LoadShaders() {
+	crateShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
+	brickShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
+}
 
-	Shader cubeShader("TextureVertShader.vs", "TextureFragShader.fs");
+// Create the scene which includes the generated maze as well as the agent object
+void CreateMazeScene() {
 
-	cubeShader.Activate();
-	GameObject testCube("TestCube", "crate.jpg", ShapeType::CUBE, cubeShader,
-		glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-	testCube.SetBodyType(b2_dynamicBody);
-	objectTracker->Add(testCube);
-	physicsWorld->AddObject(&testCube);
+	LoadShaders();
 
-	/*Shader cubeShader2("TextureVertShader.vs", "TextureFragShader.fs");
+	std::vector<std::vector<MazeCell>> maze = mazeGenerator.GetMazeCells();
 
-	cubeShader2.Activate();
-	GameObject box("WallCube", "brick.png", ShapeType::CUBE, cubeShader2,
-		glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(4.0f, 1.0f, 1.0f));
-	objectTracker->Add(box);
-	physicsWorld->AddObject(&box);
+	// Set the agent object at the starting cell
+	MazeCell startCell = mazeGenerator.GetStartCell();
+	int startColX = startCell.GetColumn();
+	int startRowY = -startCell.GetRow();
 
-	Shader cubeShader3("TextureVertShader.vs", "TextureFragShader.fs");
+	glm::vec3 startPos = glm::vec3(startColX, startRowY, 0.0f);
+	glm::vec3 agentScale = glm::vec3(0.6f, 0.6f, 0.6f);
 
-	cubeShader3.Activate();
-	GameObject box2("WallCube", "brick.png", ShapeType::CUBE, cubeShader3,
-		glm::vec3(2.5f, 3.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 4.0f, 1.0f));
-	objectTracker->Add(box2);
-	physicsWorld->AddObject(&box2);*/
+	// The agent is the first object added to the object tracker
+	GameObject agent("agent", "crate.jpg", crateShader, startPos, glm::vec3(0.0f, 0.0f, 0.0f), agentScale);
+	agent.SetBodyType(b2_dynamicBody);
 
-	// set up boxes to test collisions
-	int pos = -1.0f;
-	for (int i = 0; i < 4; i++) {
-		Shader cubeShader2("TextureVertShader.vs", "TextureFragShader.fs");
+	objectTracker->AddObject(agent);
+	physicsWorld->AddObject(&agent);
 
-		cubeShader2.Activate();
+	// Create the maze using game objects
+	// Row: y, Col: x;
+	for (size_t r = 0; r < maze.size(); r++) {
+		for (size_t c = 0; c < maze[r].size(); c++) {
 
-		GameObject box("WallCube", "brick.png", ShapeType::CUBE, cubeShader2,
-			glm::vec3(pos, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-		objectTracker->Add(box);
-		physicsWorld->AddObject(&box);
-		pos += 1.0f;
+			// Only create objects when a maze cell is a wall
+			if (maze[r][c].IsWall()) {
+				int x = c;
+				int y = r;
+
+				glm::vec3 position = glm::vec3(x, -y, 0.0f);
+				glm::vec3 rotation = glm::vec3(0.0f);
+				glm::vec3 scale = glm::vec3(1.0f);
+
+				GameObject wall("wall", "brick.png", brickShader, position, rotation, scale);
+
+				objectTracker->AddObject(wall);
+				physicsWorld->AddObject(&wall);
+			}
+		}
 	}
 
-	int z = 1.0f;
-	for (int i = 0; i < 3; i++) {
-		Shader cubeShader3("TextureVertShader.vs", "TextureFragShader.fs");
-
-		cubeShader3.Activate();
-
-		GameObject box("WallCube", "brick.png", ShapeType::CUBE, cubeShader3,
-			glm::vec3(pos - 1.0f, z + 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-		objectTracker->Add(box);
-		physicsWorld->AddObject(&box);
-		z += 1.0f;
-	}
 }
 
 void HandleInputs() {
 	GameObject* go = &objectTracker->GetAllObjects()[0];
 
 	float velX = 0.0f, velY = 0.0f;
+	float speed = 0.35f;
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-		velX = -0.8f;
+		velX = -speed;
 	}
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-		velX = 0.8f;
+		velX = speed;
 	}
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-		velY = 0.8f;
+		velY = speed;
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-		velY = -0.8f;
+		velY = -speed;
 	}
 
 	go->GetRigidBody()->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));
+}
+
+void PhysicsUpdate() {
+	HandleInputs();
+
+	physicsWorld->Update(objectTracker);
 }
 
 void GraphicsUpdate() {
 	renderer->Update(objectTracker);
 }
 
-void PhysicsUpdate() {
-	HandleInputs();
-	physicsWorld->Update(objectTracker);
-}
-
 int RunEngine() {
+
+	//obsGenerator.RunGenerator(objectTracker, physicsWorld);
 
 	// physics update comes first
 	PhysicsUpdate();
@@ -130,8 +151,12 @@ int RunEngine() {
 
 int Teardown() {
 
-	// Deletes memory allocated by OpenGL that is stored in game objects
+	// Deletes pointers that is stored in game objects
 	objectTracker->DeleteAllObjects();
+	
+	// Delete shaders used
+	crateShader.Delete();
+	brickShader.Delete();
 
 	// Destroys the window on exit
 	renderer->Teardown();
@@ -139,14 +164,13 @@ int Teardown() {
 	return 0;
 }
 
-
 int main() {
 
 	// Initalize everything required for engine
 	Initialize();
 
 	// Create a scene for the purposes of testing
-	CreateScene();
+	CreateMazeScene();
 
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {

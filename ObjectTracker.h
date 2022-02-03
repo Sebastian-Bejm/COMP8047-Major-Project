@@ -10,7 +10,7 @@ public:
 
 	static ObjectTracker& GetInstance();
 
-	void Add(GameObject& gameObject);
+	void AddObject(GameObject& gameObject);
 	void DeleteAllObjects();
 
 	std::vector<GameObject>& GetAllObjects();
@@ -19,6 +19,7 @@ public:
 
 private:
 
+	GameObject* agentObject;
 	std::vector<GameObject> staticObjects;
 
 };

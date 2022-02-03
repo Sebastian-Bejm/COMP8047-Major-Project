@@ -20,6 +20,5 @@ private:
 
 	GLuint ID;
 	GLenum type;
-
 };
 

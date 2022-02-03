@@ -8,11 +8,12 @@ Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, Texture&
 	this->indices = indices;
 	this->texture = texture;
 
+	vao.InitVAO();
 	vao.Bind();
 	// Generates Vertex Buffer object and links it to vertices
-	vbo = VBO(vertices);
+	VBO vbo = VBO(vertices);
 	// Generates Element Buffer object and links it to indices
-	ebo = EBO(indices);
+	EBO ebo = EBO(indices);
 
 	// Links the attributes to the shader based on the layout
 	vao.LinkAttrib(vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void*)0); // coordinates
@@ -27,7 +28,7 @@ Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, Texture&
 
 // Draw the mesh of this object by using a shader and the camera of the scene
 void Mesh::Draw(Shader& shader, Camera& camera) {
-	// Activate the shader program for this mesh
+	// Bind shader in the Mesh to be able to access uniforms
 	shader.Activate();
 	vao.Bind();
 
@@ -41,14 +42,12 @@ void Mesh::Draw(Shader& shader, Camera& camera) {
 	glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(cam));
 
 	// Draw the actual Mesh
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
 }
 
 // Cleanup our VAO, VBO, EBO and texture in this mesh
 void Mesh::Delete() {
 	vao.Delete();
-	vbo.Delete();
-	ebo.Delete();
 	texture.Delete();
 }
 
