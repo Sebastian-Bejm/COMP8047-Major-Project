@@ -115,6 +115,14 @@ std::string Renderer::GetTextureFileExtension(const std::string& textureFile) {
 	return "";
 }
 
+void Renderer::LoadFreetype() {
+
+}
+
+void Renderer::RenderText() {
+
+}
+
 int Renderer::Update(ObjectTracker* tracker) {
 	// This fixes the fast movement over time on the machine
 	float deltaTime = Time::GetInstance().DeltaTime();
@@ -126,7 +134,8 @@ int Renderer::Update(ObjectTracker* tracker) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	camera.ProcessInput(window, deltaTime);
-	camera.SetMatrix(45.0f, 0.1f, 100.0f);
+	//camera.SetMatrix(45.0f, 0.1f, 100.0f); // 0.1f, 100.0f
+	camera.SetOrthoMatrix(-10.0f, 12.0f, -10.0f, 12.0f, 0.1f, 100.0f);
 
 	// Draw the game objects here with a reference to the camera
 	std::vector<GameObject> objects = tracker->GetAllObjects();
@@ -200,12 +209,4 @@ GLFWwindow* Renderer::SetupGLFW() {
 	delete monitorInfo;
 
 	return window;
-}
-
-void Renderer::SetWindow(int width, int height) {
-	if (width < 0 || height < 0) {
-		return;
-	}
-	windowWidth = width;
-	windowHeight = height;
 }

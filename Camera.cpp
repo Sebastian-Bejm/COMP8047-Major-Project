@@ -26,9 +26,16 @@ void Camera::SetPosition(glm::vec3 newPosition) {
 	this->position = newPosition;
 }
 
-// Set our view and projection matrices
-void Camera::SetMatrix(float fovDeg, float nearPlane, float farPlane) {
+void Camera::SetOrthoMatrix(float left, float right, float bottom, float top, float nearPlane, float farPlane) {
+	viewMatrix = glm::lookAt(position, position + front, up);
+	projectionMatrix = glm::ortho(left, right, bottom, top, nearPlane, farPlane);
 
+	cameraMatrix = projectionMatrix * viewMatrix;
+}
+
+// Set our view and projection matrices
+void Camera::SetPerspectiveMatrix(float fovDeg, float nearPlane, float farPlane) {
+	isPerspective = true;
 	viewMatrix = glm::lookAt(position, position + front, up);
 	projectionMatrix = glm::perspective(glm::radians(fovDeg), (float)(viewWidth / viewHeight), nearPlane, farPlane);
 
@@ -39,7 +46,7 @@ void Camera::SetMatrix(float fovDeg, float nearPlane, float farPlane) {
 // This is mainly used to look around our scene to ensure everything looks correct
 void Camera::ProcessInput(GLFWwindow* window, float deltaTime) {
 
-	float speed = 1.5f * deltaTime;
+	float speed = 2.0f * deltaTime;
 
 	// Key inputs
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
@@ -48,11 +55,13 @@ void Camera::ProcessInput(GLFWwindow* window, float deltaTime) {
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 		position += speed * -glm::normalize(glm::cross(front, up));
 	}
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		position += speed * -front;
-	}
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		position += speed * glm::normalize(glm::cross(front, up));
+	if (isPerspective) {
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+			position += speed * -front;
+		}
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+			position += speed * glm::normalize(glm::cross(front, up));
+		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
 		position += speed * up;
@@ -62,34 +71,36 @@ void Camera::ProcessInput(GLFWwindow* window, float deltaTime) {
 	}
 
 	// Mouse inputs
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+	if (isPerspective) {
+		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
 
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
-		if (firstClick) {
+			if (firstClick) {
+				glfwSetCursorPos(window, (viewWidth / 2), (viewHeight / 2));
+				firstClick = false;
+			}
+
+			double mouseX, mouseY;
+			glfwGetCursorPos(window, &mouseX, &mouseY);
+
+			float rotX = sensitivity * (float)(mouseY - (viewHeight / 2)) / viewHeight;
+			float rotY = sensitivity * (float)(mouseX - (viewWidth / 2)) / viewWidth;
+
+			glm::vec3 newOrientation = glm::rotate(front, glm::radians(-rotX), glm::normalize(glm::cross(front, up)));
+
+			if (!(glm::angle(newOrientation, up) <= glm::radians(5.0f) || glm::angle(newOrientation, -up) <= glm::radians(5.0f))) {
+				front = newOrientation;
+			}
+
+			front = glm::rotate(front, glm::radians(-rotY), up);
+
 			glfwSetCursorPos(window, (viewWidth / 2), (viewHeight / 2));
-			firstClick = false;
 		}
-
-		double mouseX, mouseY;
-		glfwGetCursorPos(window, &mouseX, &mouseY);
-
-		float rotX = sensitivity * (float)(mouseY - (viewHeight / 2)) / viewHeight;
-		float rotY = sensitivity * (float)(mouseX - (viewWidth / 2)) / viewWidth;
-
-		glm::vec3 newOrientation = glm::rotate(front, glm::radians(-rotX), glm::normalize(glm::cross(front, up)));
-
-		if (!(glm::angle(newOrientation, up) <= glm::radians(5.0f) || glm::angle(newOrientation, -up) <= glm::radians(5.0f))) {
-			front = newOrientation;
+		else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			firstClick = true;
 		}
-
-		front = glm::rotate(front, glm::radians(-rotY), up);
-
-		glfwSetCursorPos(window, (viewWidth / 2), (viewHeight / 2));
-	}
-	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-		firstClick = true;
 	}
 }
 

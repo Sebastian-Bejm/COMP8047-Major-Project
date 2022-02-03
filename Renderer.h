@@ -39,8 +39,10 @@ private:
 
 	void PrepareGLBuffers();
 	void LoadTextures();
+	void LoadFreetype();
+	void RenderText();
+
 	std::string GetTextureFileExtension(const std::string& textureFile);
 
 	GLFWwindow* SetupGLFW();
-	void SetWindow(int width, int height);
 };
