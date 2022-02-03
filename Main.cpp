@@ -22,7 +22,7 @@ Renderer* renderer;
 PhysicsWorld* physicsWorld;
 
 MazeGenerator mazeGenerator;
-ObstructionGenerator obsGenerator;
+//ObstructionGenerator obsGenerator;
 
 Camera camera;
 
@@ -41,12 +41,12 @@ int Initialize() {
 	physicsWorld = &(PhysicsWorld::GetInstance());
 
 	// Generate a maze of size m x n (medium/large size, use odd numbers)
-	mazeGenerator.InitMaze(11, 11);
+	mazeGenerator.InitMaze(15, 15);
 	mazeGenerator.Generate();
 
-	obsGenerator.AttachMaze(mazeGenerator.GetMazeCells());
+	//obsGenerator.AttachMaze(mazeGenerator.GetMazeCells());
 
-	camera = Camera(screenWidth, screenHeight, glm::vec3(6.0f, -6.0f, 18.0f));
+	camera = Camera(screenWidth, screenHeight, glm::vec3(6.5f, -6.5f, 19.0f));
 	renderer->SetCamera(camera);
 
 	return 0;
@@ -138,7 +138,7 @@ void GraphicsUpdate() {
 
 int RunEngine() {
 
-	obsGenerator.RunGenerator(objectTracker, physicsWorld);
+	//obsGenerator.RunGenerator(objectTracker, physicsWorld);
 
 	// physics update comes first
 	PhysicsUpdate();
