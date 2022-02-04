@@ -279,10 +279,6 @@ int Renderer::Update(ObjectTracker* tracker) {
 	//camera.SetPerspectiveMatrix(45.0f, 0.1f, 100.0f); // 0.1f, 100.0f
 	camera.SetOrthoMatrix(-8.0f, 11.0f, -11.0f, 8.0f, 0.1f, 100.0f);
 
-	// Draw the text (testing)
-	textShader.Activate();
-	RenderText(textShader, "Hello World!", (float)windowWidth / 2, (float)windowHeight / 2, 1.5f, glm::vec3(0.3f, 0.7f, 0.9f));
-
 	// Draw the game objects here with a reference to the camera
 	std::vector<GameObject> objects = tracker->GetAllObjects();
 	for (int i = 0; i < objects.size(); i++) {
@@ -299,6 +295,10 @@ int Renderer::Update(ObjectTracker* tracker) {
 		// Draw the actual Mesh
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
 	}
+
+	// Draw the text (testing)
+	textShader.Activate();
+	RenderText(textShader, "Hello World! : 256", (float)windowWidth / 2, (float)windowHeight / 2, 1.5f, glm::vec3(0.3f, 0.7f, 0.9f));
 
 	glfwSwapBuffers(window);
 

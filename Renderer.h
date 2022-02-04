@@ -50,6 +50,8 @@ private:
 	int windowWidth, windowHeight;
 	glm::vec4 backgroundColour;
 
+	int test = 0;
+
 	void PrepareGLBuffers();
 	void LoadTextures();
 	void LoadFreetype();
