@@ -109,6 +109,11 @@ glm::mat4 Camera::GetCameraMatrix() {
 	return cameraMatrix;
 }
 
+// Get just the projection matrix from this camera
+glm::mat4 Camera::GetProjectionMatrix() {
+	return projectionMatrix;
+}
+
 // Get the position of our camera
 glm::vec3 Camera::GetPosition() {
 	return position;

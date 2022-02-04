@@ -13,6 +13,8 @@ Renderer* Renderer::GetInstance() {
 
 int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight) {
 	this->backgroundColour = backgroundColour;
+	this->windowWidth = windowWidth;
+	this->windowHeight = windowHeight;
 
 	// Init GLFW
 	glfwInit();
@@ -48,18 +50,24 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	glViewport(0, 0, windowWidth, windowHeight);
 
 	// Enable blending for 2D text
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// Enable the depth buffer for 3D objects
 	glEnable(GL_DEPTH_TEST);
 
-	// Prepare the buffers needed to render Vertex of objects
+	// Prepare the buffers needed for rendering
 	PrepareGLBuffers();
-	// Prepare the textures needed for the scene to be rendered
+
+	// Prepare the textures needed for objects in the scene
 	LoadTextures();
+
 	// Load the freetype library font
 	LoadFreetype();
+
+	//textProjectionMatrix = glm::ortho(-(float)windowWidth / 2, (float)windowWidth / 2, -(float)windowHeight / 2, (float)windowHeight / 2);
+	textProjectionMatrix = glm::ortho(0.0f, (float)windowWidth, 0.0f, (float)windowHeight);
+	textShader = Shader("FTTextVertShader.vs", "FTTextFragShader.fs");
 
 	return 0;
 }
@@ -68,7 +76,6 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 // Prepares the OpenGL VAO, VBO, and EBO for later usage
 void Renderer::PrepareGLBuffers() {
 	// Get shape vertices and indices
-	// All shapes used will be cubes unless this changes next month
 	ShapeDetails shapeDetails;
 	Shape shape = shapeDetails.GetShape(ShapeType::CUBE);
 
@@ -87,10 +94,22 @@ void Renderer::PrepareGLBuffers() {
 	vao.LinkAttrib(vbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void*)(3 * sizeof(float))); // color
 	vao.LinkAttrib(vbo, 2, 2, GL_FLOAT, sizeof(Vertex), (void*)(6 * sizeof(float))); // texture
 
-	// Unbind to prevent modification
+	// Unbind to prevent modification of the first data
 	vao.Unbind();
 	vbo.Unbind();
 	ebo.Unbind();
+
+	// temporary for text
+	glGenBuffers(1, &VBO2);
+	vao.Bind();
+	glBindBuffer(GL_ARRAY_BUFFER, VBO2); // bind vbo
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(3); // layout for text shader
+	glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
+	
+	// Unbind to prevent modification
+	vao.Unbind();
 
 }
 
@@ -199,8 +218,51 @@ void Renderer::LoadFreetype() {
 
 }
 
-void Renderer::RenderText() {
+// Render text using the freetype characters stored earlier
+void Renderer::RenderText(Shader& shader, std::string text, float x, float y, float scale, glm::vec3 color) {
+	// Activate coresponding render state
+	shader.Activate();
+	glUniform3f(glGetUniformLocation(shader.GetID(), "textColor"), color.x, color.y, color.z);
+	glUniformMatrix4fv(glGetUniformLocation(shader.GetID(), "projection"), 1, GL_FALSE, glm::value_ptr(textProjectionMatrix));
+	glActiveTexture(GL_TEXTURE0);
+	vao.Bind();
 
+	// Iterate through all the characters
+	std::string::const_iterator c;
+	for (c = text.begin(); c != text.end(); c++) {
+		Character ch = characters[*c];
+
+		float xpos = x + ch.bearing.x * scale;
+		float ypos = y - (ch.size.y - ch.bearing.y) * scale;
+
+		float w = ch.size.x * scale;
+		float h = ch.size.y * scale;
+
+		// Update VBO for each character
+		float charVertices[6][4] = {
+			{xpos, ypos + h, 0.0f, 0.0f},
+			{xpos, ypos,	 0.0f, 1.0f},
+			{xpos + w, ypos, 1.0f, 1.0f},
+
+			{xpos, ypos + h, 0.0f, 0.0f},
+			{xpos + w, ypos, 1.0f, 1.0f},
+			{xpos + w, ypos + h, 1.0f, 0.0f}
+		};
+
+		// Render glyph texture over quad
+		glBindTexture(GL_TEXTURE_2D, ch.textureID);
+		// Update content of VBO memory
+		glBindBuffer(GL_ARRAY_BUFFER, VBO2);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(charVertices), charVertices);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		// Render quad
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		// Bitshift by 6 to get value in pixels for next glyph (2^6 = 64)
+		x += (ch.advance >> 6) * scale;
+	}
+	
+	vao.Unbind();
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 int Renderer::Update(ObjectTracker* tracker) {
@@ -216,6 +278,10 @@ int Renderer::Update(ObjectTracker* tracker) {
 	camera.ProcessInput(window, deltaTime);
 	//camera.SetPerspectiveMatrix(45.0f, 0.1f, 100.0f); // 0.1f, 100.0f
 	camera.SetOrthoMatrix(-8.0f, 11.0f, -11.0f, 8.0f, 0.1f, 100.0f);
+
+	// Draw the text (testing)
+	textShader.Activate();
+	RenderText(textShader, "Hello World!", (float)windowWidth / 2, (float)windowHeight / 2, 1.5f, glm::vec3(0.3f, 0.7f, 0.9f));
 
 	// Draw the game objects here with a reference to the camera
 	std::vector<GameObject> objects = tracker->GetAllObjects();

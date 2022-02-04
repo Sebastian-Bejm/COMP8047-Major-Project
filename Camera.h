@@ -16,7 +16,8 @@ public:
 	void SetPerspectiveMatrix(float fovDeg, float nearPlane, float farPlane);
 	void ProcessInput(GLFWwindow *window, float deltaTime);
 
-	glm::mat4 GetCameraMatrix();
+	glm::mat4 GetCameraMatrix(); 
+	glm::mat4 GetProjectionMatrix();
 	glm::vec3 GetPosition();
 
 private:

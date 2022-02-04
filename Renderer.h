@@ -31,21 +31,29 @@ private:
 	static Renderer* renderer;
 	Camera camera;
 
+	VAO vao;
+	unsigned int VBO2; // temporary
+
+	// Vectors for the vertices and indices of each game object
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
 
-	VAO vao;
-	std::vector<Texture> textures;
+	// Vector for loading textures on initialization
+	std::vector<Texture> textures; 
 
+	// Store the freetype characters
 	std::map<char, Character> characters;
+	glm::mat4 textProjectionMatrix;
+	Shader textShader;
 
+	// Variables for window size and color
 	int windowWidth, windowHeight;
 	glm::vec4 backgroundColour;
 
 	void PrepareGLBuffers();
 	void LoadTextures();
 	void LoadFreetype();
-	void RenderText();
+	void RenderText(Shader& shader, std::string text, float x, float y, float scale, glm::vec3 color);
 
 	std::string GetTextureFileExtension(const std::string& textureFile);
 
