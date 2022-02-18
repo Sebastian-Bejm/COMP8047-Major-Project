@@ -33,9 +33,8 @@ private:
 
 	VAO vao;
 	VBO textVBO;
-	unsigned int VBO2; // temporary
 
-	// Vectors for the vertices and indices of each game object
+	// Vectors for the vertices and indices of each game object shape
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
 
@@ -51,14 +50,11 @@ private:
 	int windowWidth, windowHeight;
 	glm::vec4 backgroundColour;
 
-	int test = 0;
-
 	void PrepareGLBuffers();
 	void LoadTextures();
 	void LoadFreetype();
 	void RenderText(Shader& shader, std::string text, float x, float y, float scale, glm::vec3 color);
 
 	std::string GetTextureFileExtension(const std::string& textureFile);
-
 	GLFWwindow* SetupGLFW();
 };

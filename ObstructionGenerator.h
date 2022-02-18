@@ -1,7 +1,8 @@
 #pragma once
 
+#include <chrono>
+
 #include "MazeGenerator.h"
-#include "ObjectTracker.h"
 #include "PhysicsWorld.h"
 
 class ObstructionGenerator
@@ -10,21 +11,31 @@ public:
 
 	ObstructionGenerator();
 
+	void InitShaders();
 	void AttachMaze(std::vector<std::vector<MazeCell>> maze);
+	void SetSpawnRadius(int radius);
+	void SetTimeInterval(float interval);
 	void RunGenerator(ObjectTracker* tracker, PhysicsWorld* physicsWorld);
-	GameObject& GenerateObstruction(glm::vec3 targetPosition);
 	
 private:
 
-	void NextFrame();
-	bool IsValidLocation(GameObject* agent, GameObject* targetObject);
+	Shader obstacleShader;
+
+	// the time interval will increase according to the number of obstructions in game
+	// when a limit has been reached stop spawning
+	float timeInterval = 0.0f;
+	int generatedObstructions = 0, obstructionLimit = 6; // temp
+	int spawnRadius = 0;
+	bool limitReached;
+
+	bool clockStarted = false;
+	std::chrono::high_resolution_clock::time_point startTime, currentTime;
 
 	std::vector<std::vector<MazeCell>> maze;
 
-	const float interval = 5.0f;
-	const int radius = 4;
+	GameObject& GenerateObstruction(glm::vec3 targetPosition);
 
-	clock_t prevTime;
-	clock_t deltaTime = 0;
+	void NextFrame();
+	bool IsValidLocation(GameObject* agent, GameObject* targetObject);
 };
 

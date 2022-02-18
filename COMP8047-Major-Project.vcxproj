@@ -149,6 +149,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ContactListener.cpp" />
     <ClCompile Include="FPSCounter.cpp" />
+    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="MazeCell.cpp" />
     <ClCompile Include="MazeGenerator.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="ContactListener.h" />
     <ClInclude Include="EBO.h" />
     <ClInclude Include="FPSCounter.h" />
+    <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="MazeCell.h" />
     <ClInclude Include="MazeGenerator.h" />
@@ -201,6 +203,7 @@
   <ItemGroup>
     <Image Include="brick.png" />
     <Image Include="crate.jpg" />
+    <Image Include="tooncrate.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

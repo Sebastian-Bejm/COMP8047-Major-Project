@@ -24,15 +24,6 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	// Get our monitor information
-	/*GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-	const GLFWvidmode* monitorInfo = glfwGetVideoMode(monitor);
-
-	glfwWindowHint(GLFW_RED_BITS, monitorInfo->redBits);
-	glfwWindowHint(GLFW_GREEN_BITS, monitorInfo->greenBits);
-	glfwWindowHint(GLFW_BLUE_BITS, monitorInfo->blueBits);
-	glfwWindowHint(GLFW_REFRESH_RATE, monitorInfo->refreshRate);*/
-
 	// Setup our window for OpenGL
 	window = glfwCreateWindow(windowWidth, windowHeight, "COMP8047 Major Project", NULL, NULL);
 	if (window == NULL) {
@@ -298,10 +289,11 @@ int Renderer::Update(ObjectTracker* tracker) {
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
 	}
 
-	// Draw the text - placeholder text for the time being
+	// Activate the text shader
 	textShader.Activate();
 	// the text placement must be dynamic based on window size
-	RenderText(textShader, "Placeholder text", (float)windowWidth - 500, (float)windowHeight - 100, 1.2f, glm::vec3(0.3f, 0.7f, 0.9f));
+	// this is temporary
+	RenderText(textShader, "Time: placeholder", (float)windowWidth - 450, (float)windowHeight - 50, 1.0f, glm::vec3(0.3f, 0.7f, 0.9f));
 
 	glfwSwapBuffers(window);
 

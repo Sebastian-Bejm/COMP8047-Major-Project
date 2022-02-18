@@ -14,45 +14,53 @@
 
 const int screenWidth = 1200;
 const int screenHeight = 900;
+const float cameraDepthFactor = 1.5f;
 
-const float timeStep = 1.0f / 60.0f;
+const int mazeRows = 15, mazeCols = 15;
 
 ObjectTracker* objectTracker;
 Renderer* renderer;
 PhysicsWorld* physicsWorld;
 
 MazeGenerator mazeGenerator;
-//ObstructionGenerator obsGenerator;
+ObstructionGenerator obstructionGenerator;
 
 Camera camera;
-
 Shader crateShader, brickShader;
 
-//Agent dummyAgent;
 //FPSCounter fpsCounter = FPSCounter();
 
+// Initalize the systems required for the game engine
 int Initialize() {
+	// Init renderer
 	renderer = Renderer::GetInstance();
-
 	glm::fvec4 backgroundColour(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
 	renderer->Init(backgroundColour, screenWidth, screenHeight);
 
+	// Init object tracker and physics world as singletons
 	objectTracker = &(ObjectTracker::GetInstance());
 	physicsWorld = &(PhysicsWorld::GetInstance());
 
 	// Generate a maze of size m x n (medium/large size, use odd numbers)
-	mazeGenerator.InitMaze(15, 15);
+	mazeGenerator.InitMaze(mazeRows, mazeCols);
 	mazeGenerator.Generate();
 
-	//obsGenerator.AttachMaze(mazeGenerator.GetMazeCells());
+	// Init obstruction generator
+	obstructionGenerator = ObstructionGenerator();
+	obstructionGenerator.InitShaders();
+	obstructionGenerator.SetSpawnRadius(3);
+	obstructionGenerator.SetTimeInterval(5.0f);
+	obstructionGenerator.AttachMaze(mazeGenerator.GetMazeCells());
 
-	camera = Camera(screenWidth, screenHeight, glm::vec3(6.5f, -6.5f, 19.0f));
+	// Set the position according to the size of the maze
+	camera = Camera(screenWidth, screenHeight, 
+		glm::vec3((float)mazeCols / 2, (float)-mazeRows / 2, (mazeCols + mazeRows) / cameraDepthFactor));
 	renderer->SetCamera(camera);
 
 	return 0;
 }
 
-// Load the shaders to be used for objects in the scene
+// Prepare the shaders to be used for objects in the scene
 void LoadShaders() {
 	crateShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
 	brickShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
@@ -60,7 +68,7 @@ void LoadShaders() {
 
 // Create the scene which includes the generated maze as well as the agent object
 void CreateMazeScene() {
-
+	
 	LoadShaders();
 
 	std::vector<std::vector<MazeCell>> maze = mazeGenerator.GetMazeCells();
@@ -127,7 +135,7 @@ void HandleInputs() {
 }
 
 void PhysicsUpdate() {
-	HandleInputs();
+	HandleInputs(); // this will eventually be removed
 
 	physicsWorld->Update(objectTracker);
 }
@@ -137,13 +145,13 @@ void GraphicsUpdate() {
 }
 
 int RunEngine() {
+	// Run the generator as the game runs
+	obstructionGenerator.RunGenerator(objectTracker, physicsWorld);
 
-	//obsGenerator.RunGenerator(objectTracker, physicsWorld);
-
-	// physics update comes first
+	// Physics update is prioritized
 	PhysicsUpdate();
 
-	// graphics comes after physics
+	// Graphics comes after physics
 	GraphicsUpdate();
 
 	return 0;
