@@ -32,6 +32,7 @@ private:
 	Camera camera;
 
 	VAO vao;
+	VBO textVBO;
 	unsigned int VBO2; // temporary
 
 	// Vectors for the vertices and indices of each game object

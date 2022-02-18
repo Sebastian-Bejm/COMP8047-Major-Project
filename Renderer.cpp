@@ -72,7 +72,6 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	return 0;
 }
 
-// https://stackoverflow.com/questions/40652905/render-one-vao-containing-two-vbos
 // Prepares the OpenGL VAO, VBO, and EBO for later usage
 void Renderer::PrepareGLBuffers() {
 	// Get shape vertices and indices
@@ -94,21 +93,23 @@ void Renderer::PrepareGLBuffers() {
 	vao.LinkAttrib(vbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void*)(3 * sizeof(float))); // color
 	vao.LinkAttrib(vbo, 2, 2, GL_FLOAT, sizeof(Vertex), (void*)(6 * sizeof(float))); // texture
 
-	// Unbind to prevent modification of the first data
+	// Unbind to prevent modification of initial shape data
 	vao.Unbind();
 	vbo.Unbind();
 	ebo.Unbind();
 
-	// temporary for text
-	glGenBuffers(1, &VBO2);
+
+	// Handle GL buffers for freetype text
 	vao.Bind();
-	glBindBuffer(GL_ARRAY_BUFFER, VBO2); // bind vbo
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
-	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(3); // layout for text shader
-	glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
+	// Generate Vertex Buffer object for text
+	textVBO = VBO(sizeof(float) * 6 * 4);
+	// Link attributes for the text shader
+	vao.LinkAttrib(textVBO, 3, 4, GL_FLOAT, 4 * sizeof(float), (void*)0);
+
+	// Unbind text vbo
+	textVBO.Unbind();
 	
-	// Unbind to prevent modification
+	// Unbind to prevent modification of 
 	vao.Unbind();
 
 }
@@ -180,6 +181,7 @@ void Renderer::LoadFreetype() {
 		int width = face->glyph->bitmap.width;
 		unsigned char* &data = face->glyph->bitmap.buffer;
 
+		// set texture parameters
 		glTexImage2D(
 			GL_TEXTURE_2D,
 			0,
@@ -252,7 +254,7 @@ void Renderer::RenderText(Shader& shader, std::string text, float x, float y, fl
 		// Render glyph texture over quad
 		glBindTexture(GL_TEXTURE_2D, ch.textureID);
 		// Update content of VBO memory
-		glBindBuffer(GL_ARRAY_BUFFER, VBO2);
+		textVBO.Bind();
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(charVertices), charVertices);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		// Render quad
@@ -296,9 +298,10 @@ int Renderer::Update(ObjectTracker* tracker) {
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
 	}
 
-	// Draw the text (testing)
+	// Draw the text - placeholder text for the time being
 	textShader.Activate();
-	RenderText(textShader, "Hello World! : 256", (float)windowWidth / 2, (float)windowHeight / 2, 1.5f, glm::vec3(0.3f, 0.7f, 0.9f));
+	// the text placement must be dynamic based on window size
+	RenderText(textShader, "Placeholder text", (float)windowWidth - 500, (float)windowHeight - 100, 1.2f, glm::vec3(0.3f, 0.7f, 0.9f));
 
 	glfwSwapBuffers(window);
 
