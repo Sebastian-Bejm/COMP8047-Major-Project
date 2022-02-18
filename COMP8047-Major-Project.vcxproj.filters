@@ -49,6 +49,12 @@
     <Filter Include="Source Files\Utility">
       <UniqueIdentifier>{5ecbc8a2-1ec2-4293-a1a7-426fefec51fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Systems">
+      <UniqueIdentifier>{ed14e745-131e-4e88-b809-e40a1cf0c42c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Systems">
+      <UniqueIdentifier>{b81d5aae-ec5c-43b0-86b6-db021ddd202c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
@@ -117,6 +123,12 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="TextureVertShader.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="FTTextFragShader.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="FTTextVertShader.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>
