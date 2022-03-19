@@ -20,16 +20,13 @@ const float timeStep = 1.0f / 60.0f;
 ObjectTracker* objectTracker;
 Renderer* renderer;
 PhysicsWorld* physicsWorld;
-
 MazeGenerator mazeGenerator;
 //ObstructionGenerator obsGenerator;
 
 Camera camera;
-
 Shader crateShader, brickShader;
 
-//Agent dummyAgent;
-//FPSCounter fpsCounter = FPSCounter();
+Agent randomAgent;
 
 int Initialize() {
 	renderer = Renderer::GetInstance();
@@ -64,13 +61,14 @@ void CreateMazeScene() {
 	LoadShaders();
 
 	std::vector<std::vector<MazeCell>> maze = mazeGenerator.GetMazeCells();
+	mazeGenerator.PrintMaze();
 
 	// Set the agent object at the starting cell
-	MazeCell startCell = mazeGenerator.GetStartCell();
-	int startColX = startCell.GetColumn();
-	int startRowY = -startCell.GetRow();
+	std::vector<int> startCell = mazeGenerator.GetStartCoordinates();
+	int startX = startCell[0];
+	int startY = -startCell[1];
 
-	glm::vec3 startPos = glm::vec3(startColX, startRowY, 0.0f);
+	glm::vec3 startPos = glm::vec3(startX, startY, 0.0f);
 	glm::vec3 agentScale = glm::vec3(0.6f, 0.6f, 0.6f);
 
 	// The agent is the first object added to the object tracker
@@ -105,7 +103,7 @@ void CreateMazeScene() {
 }
 
 void HandleInputs() {
-	GameObject* go = &objectTracker->GetAllObjects()[0];
+	GameObject* go = &objectTracker->GetAllObjects().front();
 
 	float velX = 0.0f, velY = 0.0f;
 	float speed = 0.35f;
@@ -139,6 +137,7 @@ void GraphicsUpdate() {
 int RunEngine() {
 
 	//obsGenerator.RunGenerator(objectTracker, physicsWorld);
+	//randomAgent.Move(agentObject, 0, 0);
 
 	// physics update comes first
 	PhysicsUpdate();

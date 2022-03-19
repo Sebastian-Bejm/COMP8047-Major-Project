@@ -16,11 +16,12 @@ public:
 
 	void InitMaze(int rows, int cols);
 	void Generate();
-	//void WriteToFile(); // this may be used later for the neural network
 	void PrintMaze();
 	
 	MazeCell& GetStartCell();
 	MazeCell& GetEndCell();
+	std::vector<int> GetStartCoordinates();
+	std::vector<int> GetEndCoordinates();
 
 	std::vector<std::vector<MazeCell>> GetMazeCells();
 

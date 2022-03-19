@@ -2,7 +2,6 @@
 
 #include <vector>
 
-// include neural network later
 #include "MazeCell.h"
 #include "GameObject.h"
 
@@ -20,8 +19,7 @@ public:
 
 private:
 
-	bool MazeUpdated(bool update);
-
+	//GameObject* agentObject;
 	float speed = 0.35f;
 	std::vector<std::vector<MazeCell>> maze;
 };

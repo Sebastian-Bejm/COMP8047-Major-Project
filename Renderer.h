@@ -60,5 +60,4 @@ private:
 
 	std::string GetTextureFileExtension(const std::string& textureFile);
 
-	GLFWwindow* SetupGLFW();
 };

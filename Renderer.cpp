@@ -298,10 +298,10 @@ int Renderer::Update(ObjectTracker* tracker) {
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
 	}
 
-	// Draw the text - placeholder text for the time being
+	// Activate the freetype text shader
 	textShader.Activate();
 	// the text placement must be dynamic based on window size
-	RenderText(textShader, "Placeholder text", (float)windowWidth - 500, (float)windowHeight - 100, 1.2f, glm::vec3(0.3f, 0.7f, 0.9f));
+	RenderText(textShader, "Time: 0", (float)windowWidth - 500, (float)windowHeight - 100, 1.1f, glm::vec3(0.3f, 0.7f, 0.9f));
 
 	glfwSwapBuffers(window);
 
@@ -325,37 +325,4 @@ int Renderer::Teardown() {
 
 void Renderer::SetCamera(Camera& camera) {
 	this->camera = camera;
-}
-
-GLFWwindow* Renderer::SetupGLFW() {
-	// Setup GLFW
-	// Get the main monitor for the screen size
-	/*GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-	const GLFWvidmode* monitorInfo = glfwGetVideoMode(monitor);
-	GLFWmonitor* fullScreenMonitor;
-
-	glfwWindowHint(GLFW_RED_BITS, monitorInfo->redBits);
-	glfwWindowHint(GLFW_GREEN_BITS, monitorInfo->greenBits);
-	glfwWindowHint(GLFW_BLUE_BITS, monitorInfo->blueBits);
-	glfwWindowHint(GLFW_REFRESH_RATE, monitorInfo->refreshRate);
-
-	// Get the width and height of our monitor
-	// We want to make it full screen
-	windowWidth = monitorInfo->width;
-	windowHeight = monitorInfo->height;
-	fullScreenMonitor = monitor;
-
-	// Create window with reference to the monitor in full size
-	GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "COMP8047 Major Project", fullScreenMonitor, NULL);
-	if (window == NULL) {
-		std::cerr << "Failed to create window" << std::endl;
-		return NULL;
-	}
-
-	glfwMakeContextCurrent(window);
-
-	delete monitor;
-	delete monitorInfo;*/
-
-	return window;
 }

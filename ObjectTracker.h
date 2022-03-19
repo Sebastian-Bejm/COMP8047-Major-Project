@@ -19,7 +19,6 @@ public:
 
 private:
 
-	GameObject* agentObject;
 	std::vector<GameObject> staticObjects;
 
 };

@@ -22,7 +22,7 @@ private:
 	std::vector<std::vector<MazeCell>> maze;
 
 	const float interval = 5.0f;
-	const int radius = 4;
+	const int radius = 3;
 
 	clock_t prevTime;
 	clock_t deltaTime = 0;
