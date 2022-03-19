@@ -44,12 +44,9 @@ private:
 
 	bool IsValidPosition(int row, int col);
 
-	MazeCell& GetRandom(std::deque<MazeCell>& cells);
 	MazeCell& GetRandom(std::vector<MazeCell>& cells);
 
 	void PadOuterWalls();
 	void CreateMazePositions();
-	
-	std::deque<MazeCell> ConvertToDeque(std::vector<MazeCell> cells);
 };
 

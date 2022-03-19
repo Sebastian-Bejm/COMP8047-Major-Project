@@ -301,7 +301,9 @@ int Renderer::Update(ObjectTracker* tracker) {
 	// Activate the freetype text shader
 	textShader.Activate();
 	// the text placement must be dynamic based on window size
-	RenderText(textShader, "Time: 0", (float)windowWidth - 500, (float)windowHeight - 100, 1.1f, glm::vec3(0.3f, 0.7f, 0.9f));
+
+	// when updating text make sure its updated at least once per second, and converted to string correctly
+	RenderText(textShader, "Default Time text", (float)windowWidth - 500, (float)windowHeight - 100, 1.1f, glm::vec3(0.3f, 0.7f, 0.9f));
 
 	glfwSwapBuffers(window);
 

@@ -42,5 +42,4 @@ void Agent::UpdateMaze(std::vector<std::vector<MazeCell>>& maze) {
 	this->maze = maze;
 	// if maze is updated with an obstruction in front of agent, switch direction
 	// the agent SHOULD know that there is now an object in the new spot and try to avoid that
-
 }

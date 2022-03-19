@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <map>
+#include <chrono>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <ft2build.h>
@@ -50,8 +51,6 @@ private:
 	// Variables for window size and color
 	int windowWidth, windowHeight;
 	glm::vec4 backgroundColour;
-
-	int test = 0;
 
 	void PrepareGLBuffers();
 	void LoadTextures();

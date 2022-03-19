@@ -121,6 +121,9 @@ void HandleInputs() {
 		velY = -speed;
 	}
 
+	// spawn test
+
+
 	go->GetRigidBody()->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));
 }
 
@@ -135,7 +138,6 @@ void GraphicsUpdate() {
 }
 
 int RunEngine() {
-
 	//obsGenerator.RunGenerator(objectTracker, physicsWorld);
 	//randomAgent.Move(agentObject, 0, 0);
 
