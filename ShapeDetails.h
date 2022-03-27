@@ -45,11 +45,9 @@ private:
 
 	Shape currentShape;
 
-	// NEED TO CHANGE THIS CLASS TO CORRECTLY USE REFERENCES
-
 	Shape GetCube() {
 		Vertex cubeVerts[] = {
-			//		COORDINATES					,			COLORS			,
+			//     COORDINATES					/			COLORS				/		TEXTURES
 			glm::vec3(-0.5f, -0.5f, -0.5f),		glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(0.0f, 0.0f),
 			glm::vec3(-0.5f, -0.5f,  0.5f),		glm::vec3(0.95f, 0.85f, 0.7f),	glm::vec2(0.0f, 1.0f),
 			glm::vec3(0.5f, -0.5f,  0.5f),		glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(1.0f, 1.0f),
@@ -128,6 +126,7 @@ private:
 	Shape GetPyramid() {
 		Vertex pyramidVerts[] =
 		{
+			// //     COORDINATES			/			COLORS				/		TEXTURES
 			glm::vec3(-0.5f, 0.0f, 0.5f),	glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(0.0f, 0.0f), // Lower left corner
 			glm::vec3(-0.5f, 0.0f, -0.5f),	glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(1.0f, 0.0f), // Upper left corner
 			glm::vec3(0.5f, 0.0f, 0.5f),	glm::vec3(0.8f, 0.7f, 0.4f),	glm::vec2(1.0f, 0.0f),// Lower right corner

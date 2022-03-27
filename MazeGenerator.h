@@ -4,6 +4,8 @@
 #include <queue>
 #include <algorithm>
 #include <iostream>
+#include <string>
+#include <fstream>
 #include <random>
 
 #include "MazeCell.h"
@@ -19,6 +21,9 @@ public:
 	void Generate();
 	void PrintMaze();
 	
+	void WriteMazeData();
+	void ReadMazeData();
+
 	MazeCell& GetStartCell();
 	MazeCell& GetEndCell();
 	std::vector<int> GetStartCoordinates();
@@ -36,7 +41,7 @@ private:
 	};
 
 	std::vector<std::vector<MazeCell>> mazeCells;
-	std::vector<std::vector<MazeCell>> encodedMaze;
+	std::vector<std::vector<int>> encodedMaze;
 
 	std::vector<MazeCell> FrontierCellsOf(MazeCell& cell);
 	std::vector<MazeCell> PassageCellsOf(MazeCell& cell);
@@ -52,4 +57,3 @@ private:
 	void PadOuterWalls();
 	void CreateMazePositions();
 };
-

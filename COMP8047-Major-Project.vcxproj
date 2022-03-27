@@ -204,6 +204,9 @@
     <Image Include="brick.png" />
     <Image Include="crate.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="maze.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

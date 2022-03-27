@@ -271,14 +271,14 @@ int Renderer::Update(ObjectTracker* tracker) {
 	// This fixes the fast movement over time on the machine
 	float deltaTime = Time::GetInstance().DeltaTime();
 
-	// Specify the color of the background (silver)
+	// Specify the color of the background
 	glClearColor(backgroundColour.r, backgroundColour.g, backgroundColour.b, backgroundColour.a);
 
 	// Clean the back buffer and assign the new color to it, and depth buffer for correct 3D rendering
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	camera.ProcessInput(window, deltaTime);
-	//camera.SetPerspectiveMatrix(45.0f, 0.1f, 100.0f); // 0.1f, 100.0f
+	//camera.SetPerspectiveMatrix(45.0f, 0.1f, 100.0f);
 	camera.SetOrthoMatrix(-8.0f, 11.0f, -11.0f, 8.0f, 0.1f, 100.0f);
 
 	// Draw the game objects here with a reference to the camera
@@ -300,8 +300,8 @@ int Renderer::Update(ObjectTracker* tracker) {
 
 	// Activate the freetype text shader
 	textShader.Activate();
-	// the text placement must be dynamic based on window size
 
+	// the text placement must be dynamic based on window size
 	// when updating text make sure its updated at least once per second, and converted to string correctly
 	RenderText(textShader, "Default Time text", (float)windowWidth - 500, (float)windowHeight - 100, 1.1f, glm::vec3(0.3f, 0.7f, 0.9f));
 

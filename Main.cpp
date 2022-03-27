@@ -31,6 +31,7 @@ Agent randomAgent;
 // TODO:
 // obstruction generator proper algorithm for random objects
 // game manager load and reset/clear scenes
+// find textures to use for start and end cells
 // maze generator changes required to use with network
 
 int Initialize() {

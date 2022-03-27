@@ -76,16 +76,16 @@ bool MazeCell::IsEqual(const MazeCell& mc) {
 
 std::string MazeCell::str() {
 	if (isWall) {
-		return "# ";
+		return "#";
 	}
 	if (obstructed) {
-		return "X ";
+		return "X";
 	}
 	if (start) {
-		return "S ";
+		return "S";
 	}
 	if (exit) {
-		return "E ";
+		return "E";
 	}
-	return ". ";
+	return ".";
 }

@@ -32,8 +32,6 @@ void MazeGenerator::InitWalledEmptyMaze(int rows, int cols) {
 			}
 		}
 	}
-
-	PrintMaze();
 }
 
 // https://stackoverflow.com/questions/29739751/implementing-a-randomly-generated-maze-using-prims-algorithm
@@ -79,6 +77,10 @@ void MazeGenerator::Generate() {
 	PadOuterWalls(); 
 
 	CreateMazePositions();
+
+	EncodeMaze();
+
+	WriteMazeData();
 }
 
 // Print the generated maze. Mainly used for debugging.
@@ -88,11 +90,41 @@ void MazeGenerator::PrintMaze() {
 	}
 	for (int row = 0; row < mazeCells.size(); row++) {
 		for (int col = 0; col < mazeCells[0].size(); col++) {
-			std::cout << mazeCells[row][col].str();
+			std::cout << mazeCells[row][col].str() << " ";
 		}
 		std::cout << std::endl;
 	}
 
+}
+
+// Write the current maze to a file to be read on another run
+void MazeGenerator::WriteMazeData() {
+	std::string compactStr = "";
+	std::string codedStr = "";
+	std::ofstream out("maze.txt");
+
+	for (size_t row = 0; row < mazeCells.size(); row++) {
+		for (size_t col = 0; col < mazeCells[row].size(); col++) {
+			compactStr += mazeCells[row][col].str();
+			codedStr += std::to_string(encodedMaze[row][col]);
+		}
+	}
+
+	out << compactStr << std::endl;
+	out << codedStr << std::endl;
+	out.close();
+}
+
+// Read the maze data from a file to be reconstructed and also used by the network
+void MazeGenerator::ReadMazeData() {
+	std::ifstream in("maze.txt");
+	std::string line;
+	std::vector<std::string> lines;
+	while (std::getline(in, line)) {
+		lines.push_back(line);
+	}
+
+	// TODO: handle strings and reconstruct here...
 }
 
 // Get the starting cell where the agent is first spawned in the maze
@@ -201,15 +233,33 @@ MazeCell& MazeGenerator::GetRandom(std::vector<MazeCell>& cells) {
 	return chosen;
 }
 
+// Encode the maze as 1's and 0's required for finding shortest path
+void MazeGenerator::EncodeMaze() {
+	encodedMaze.resize(mazeCells.size());
+	for (size_t i = 0; i < mazeCells.size(); i++) {
+		encodedMaze[i].resize(mazeCells[0].size());
+	}
+
+	for (size_t row = 0; row < mazeCells.size(); row++) {
+		for (size_t col = 0; col < mazeCells[row].size(); col++) {
+			if (mazeCells[row][col].IsWall()) {
+				encodedMaze[row][col] = 1;
+			}
+			else {
+				encodedMaze[row][col] = 0;
+			}
+		}
+	}
+}
+
 // Helper function to create the outer walls if the generated maze does not have the correct walls
 void MazeGenerator::PadOuterWalls() {
 	// Check the corners of the maze if there is already an outer wall in place
-	// If there is no outer wall then recreate the maze with outer walls
+	// If there are no outer walls then recreate the maze with outer walls
 	std::vector<std::vector<MazeCell>> paddedMaze;
 
 	const size_t rows = mazeCells.size(); // height
 	const size_t cols = mazeCells[0].size(); // width
-	//std::cout << "Old - " << rows << " " << cols << std::endl;
 
 	size_t newMazeWidth = cols, newMazeHeight = rows;
 
@@ -245,8 +295,7 @@ void MazeGenerator::PadOuterWalls() {
 		paddedMaze[i].resize(newMazeWidth);
 	}
 
-	//std::cout << "New size " << newMazeHeight << ", " << newMazeWidth << std::endl;
-
+	// Check for rows or cols that have to be added
 	size_t addRow = rowsAdded ? 1 : 0;
 	size_t addCol = colsAdded ? 1 : 0;
 
