@@ -12,11 +12,14 @@ public:
 	Agent();
 	
 	void AttachAgentObject(GameObject* agentObject);
+	void AttachNetwork();
+
+	void RandomMove();
+	void NetworkMove();
+
 	void MoveUpdate();
-
 	void Move(GameObject* agent, float destX, float destY);
-	void UpdateMaze(std::vector<std::vector<MazeCell>>& maze);
-
+	
 private:
 
 	GameObject* agent;
