@@ -61,7 +61,7 @@ void CreateMazeScene() {
 	LoadShaders();
 
 	std::vector<std::vector<MazeCell>> maze = mazeGenerator.GetMazeCells();
-	mazeGenerator.PrintMaze();
+	//mazeGenerator.PrintMaze();
 
 	// Set the agent object at the starting cell
 	std::vector<int> startCell = mazeGenerator.GetStartCoordinates();
@@ -77,6 +77,8 @@ void CreateMazeScene() {
 
 	objectTracker->AddObject(agent);
 	physicsWorld->AddObject(&agent);
+
+	randomAgent.AttachAgentObject(&agent);
 
 	// Create the maze using game objects
 	// Row: y, Col: x;
@@ -121,9 +123,6 @@ void HandleInputs() {
 		velY = -speed;
 	}
 
-	// spawn test
-
-
 	go->GetRigidBody()->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));
 }
 
@@ -140,6 +139,7 @@ void GraphicsUpdate() {
 int RunEngine() {
 	//obsGenerator.RunGenerator(objectTracker, physicsWorld);
 	//randomAgent.Move(agentObject, 0, 0);
+	randomAgent.MoveUpdate();
 
 	// physics update comes first
 	PhysicsUpdate();

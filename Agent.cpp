@@ -2,11 +2,11 @@
 
 Agent::Agent() {}
 
-void Agent::Receive() {
-
+void Agent::AttachAgentObject(GameObject* agentObject) {
+	agent = agentObject;
 }
 
-void Agent::Actuate() {
+void Agent::MoveUpdate() {
 
 }
 

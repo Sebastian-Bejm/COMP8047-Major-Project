@@ -10,16 +10,16 @@ class Agent
 public:
 
 	Agent();
-
-	void Receive();
-	void Actuate();
+	
+	void AttachAgentObject(GameObject* agentObject);
+	void MoveUpdate();
 
 	void Move(GameObject* agent, float destX, float destY);
 	void UpdateMaze(std::vector<std::vector<MazeCell>>& maze);
 
 private:
 
-	//GameObject* agentObject;
+	GameObject* agent;
 	float speed = 0.35f;
 	std::vector<std::vector<MazeCell>> maze;
 };

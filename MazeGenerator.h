@@ -15,6 +15,7 @@ public:
 	MazeGenerator();
 
 	void InitMaze(int rows, int cols);
+	void CreateWalledEmptyMaze();
 	void Generate();
 	void PrintMaze();
 	
