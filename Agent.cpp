@@ -1,13 +1,24 @@
 #include "Agent.h"
 
-Agent::Agent() {}
+Agent::Agent() {
+	usingNetwork = false;
+}
+
+Agent::Agent(bool usingNetwork) {
+	this->usingNetwork = usingNetwork;
+}
 
 void Agent::AttachNetwork() {
 
 }
 
 void Agent::MoveUpdate() {
-	//RandomMove(5, -5);
+	if (usingNetwork) {
+		NetworkMove();
+	}
+	else {
+		//RandomMove(5, -5);
+	}
 }
 
 void Agent::RandomMove(float destX, float destY) {
@@ -37,4 +48,8 @@ void Agent::RandomMove(float destX, float destY) {
 	for (int i = 0; i < 2; i++) {
 		agentRb->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));
 	}
+}
+
+void Agent::NetworkMove() {
+
 }

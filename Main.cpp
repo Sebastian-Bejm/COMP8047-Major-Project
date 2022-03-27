@@ -26,9 +26,12 @@ ObstructionGenerator obsGenerator;
 GameManager* gameManager;
 
 Camera camera;
-Shader crateShader, brickShader;
-
 Agent randomAgent;
+
+// TODO:
+// obstruction generator proper algorithm for random objects
+// game manager load and reset/clear scenes
+// maze generator changes required to use with network
 
 int Initialize() {
 	glm::fvec4 backgroundColour(180.0f / 255.0f, 240.0f / 255.0f, 239.0f / 255.0f, 1.0f);
@@ -46,6 +49,9 @@ int Initialize() {
 
 	gameManager = &GameManager::GetInstance();
 	gameManager->Attach(&obsGenerator, &mazeGenerator);
+	gameManager->LoadShaders();
+
+	randomAgent = Agent(false);
 
 	camera = Camera(screenWidth, screenHeight, glm::vec3(6.5f, -6.5f, 19.0f));
 	renderer->SetCamera(camera);
@@ -62,7 +68,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 }
 
 // Load the shaders to be used for objects in the scene
-void LoadShaders() {
+/*void LoadShaders() {
+	// Create a new shader when using a different texture
 	crateShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
 	brickShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
 }
@@ -110,7 +117,7 @@ void CreateMazeScene() {
 		}
 	}
 
-}
+}*/
 
 // This will remain here until everything is finished and Agent properly works
 void HandleInputs() {
@@ -160,14 +167,14 @@ int RunEngine() {
 	return 0;
 }
 
+// Delete objects and free any memory that has been used
 int Teardown() {
 
 	// Deletes pointers that is stored in game objects
 	objectTracker->DeleteAllObjects();
 	
 	// Delete shaders used
-	crateShader.Delete();
-	brickShader.Delete();
+	gameManager->ClearScene();
 
 	// Destroys the window on exit
 	renderer->Teardown();
@@ -179,11 +186,9 @@ int main() {
 
 	// Initalize everything required for engine
 	Initialize();
-	LoadShaders();
 
 	// Load the initial scene
-	// GameManager.LoadScene
-	CreateMazeScene();
+	gameManager->LoadScene();
 
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {
