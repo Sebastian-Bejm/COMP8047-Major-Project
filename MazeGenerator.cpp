@@ -16,6 +16,10 @@ void MazeGenerator::InitMaze(int rows, int cols) {
 	}
 }
 
+void MazeGenerator::InitWalledEmptyMaze(int rows, int cols) {
+
+}
+
 // https://stackoverflow.com/questions/29739751/implementing-a-randomly-generated-maze-using-prims-algorithm
 // Generates a random maze using Prim's algorithm
 void MazeGenerator::Generate() {
@@ -118,7 +122,7 @@ std::vector<int> MazeGenerator::GetEndCoordinates() {
 		for (int col = 0; col < mazeCells[0].size(); col++) {
 			if (mazeCells[row][col].IsExit()) {
 				coords[0] = col;
-				coords[1] = row;
+				coords[1] = -row;
 			}
 		}
 	}
@@ -126,7 +130,7 @@ std::vector<int> MazeGenerator::GetEndCoordinates() {
 }
 
 // Get the collection of maze cells
-std::vector<std::vector<MazeCell>> MazeGenerator::GetMazeCells() {
+std::vector<std::vector<MazeCell>>& MazeGenerator::GetMazeCells() {
 	return mazeCells;
 }
 

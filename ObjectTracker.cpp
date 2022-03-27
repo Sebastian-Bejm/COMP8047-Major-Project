@@ -18,16 +18,16 @@ void ObjectTracker::DeleteAllObjects() {
 	}
 }
 
-// Returns all the objects in this tracker
-std::vector<GameObject>& ObjectTracker::GetAllObjects() {
-	return staticObjects;
-}
-
 // Returns a GameObject by its tag
-GameObject& ObjectTracker::FindByTag(std::string objectTag) {
+GameObject& ObjectTracker::GetObjectByTag(std::string objectTag) {
 	for (int i = 0; i < staticObjects.size(); i++) {
 		if (staticObjects[i].GetTag() == objectTag) {
 			return staticObjects[i];
 		}
 	}
+}
+
+// Returns all the objects in this tracker
+std::vector<GameObject>& ObjectTracker::GetAllObjects() {
+	return staticObjects;
 }

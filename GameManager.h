@@ -2,12 +2,14 @@
 
 #include "ObstructionGenerator.h"
 #include "MazeGenerator.h"
+#include "ObjectTracker.h"
 
 class GameManager
 {
 public:
-	GameManager();
-	GameManager(ObstructionGenerator* generator, MazeGenerator* mazeGenerator);
+
+	static GameManager& GetInstance();
+	void Attach(ObstructionGenerator* obsGenerator, MazeGenerator* mazeGenerator);
 
 	void LoadScene();
 	void ResetScene();
@@ -17,5 +19,10 @@ public:
 
 private:
 
-	bool IsTerminalState();
+	ObstructionGenerator* obsGenerator;
+	MazeGenerator* mazeGenerator;
+
+	bool resetGame = false;
+
+	bool InTerminalState(GameObject* agent);
 };

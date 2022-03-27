@@ -14,9 +14,6 @@ public:
 	void AttachAgentObject(GameObject* agentObject);
 	void AttachNetwork();
 
-	void RandomMove();
-	void NetworkMove();
-
 	void MoveUpdate();
 	void Move(GameObject* agent, float destX, float destY);
 	

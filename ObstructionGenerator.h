@@ -10,7 +10,7 @@ public:
 
 	ObstructionGenerator();
 
-	void AttachMaze(std::vector<std::vector<MazeCell>> maze);
+	void AttachMazeGenerator(MazeGenerator* mazeGenerator);
 	void RunGenerator(ObjectTracker* tracker, PhysicsWorld* physicsWorld);
 	GameObject& GenerateObstruction(glm::vec3 targetPosition);
 	
@@ -19,7 +19,7 @@ private:
 	void NextFrame();
 	bool IsValidLocation(GameObject* agent, GameObject* targetObject);
 
-	std::vector<std::vector<MazeCell>> maze;
+	MazeGenerator* mazeGenerator;
 
 	const float interval = 5.0f;
 	const int radius = 3;

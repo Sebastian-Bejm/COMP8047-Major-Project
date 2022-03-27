@@ -15,7 +15,7 @@ public:
 	MazeGenerator();
 
 	void InitMaze(int rows, int cols);
-	void CreateWalledEmptyMaze();
+	void InitWalledEmptyMaze(int rows, int cols);
 	void Generate();
 	void PrintMaze();
 	
@@ -24,7 +24,7 @@ public:
 	std::vector<int> GetStartCoordinates();
 	std::vector<int> GetEndCoordinates();
 
-	std::vector<std::vector<MazeCell>> GetMazeCells();
+	std::vector<std::vector<MazeCell>>& GetMazeCells();
 
 private:
 
@@ -36,6 +36,7 @@ private:
 	};
 
 	std::vector<std::vector<MazeCell>> mazeCells;
+	std::vector<std::vector<MazeCell>> encodedMaze;
 
 	std::vector<MazeCell> FrontierCellsOf(MazeCell& cell);
 	std::vector<MazeCell> PassageCellsOf(MazeCell& cell);
@@ -46,7 +47,8 @@ private:
 	bool IsValidPosition(int row, int col);
 
 	MazeCell& GetRandom(std::vector<MazeCell>& cells);
-
+	
+	void EncodeMaze();
 	void PadOuterWalls();
 	void CreateMazePositions();
 };

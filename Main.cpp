@@ -8,6 +8,7 @@
 #include "PhysicsWorld.h"
 #include "MazeGenerator.h"
 #include "ObstructionGenerator.h"
+#include "GameManager.h"
 
 #include "Agent.h"
 #include "FPSCounter.h"
@@ -21,7 +22,8 @@ ObjectTracker* objectTracker;
 Renderer* renderer;
 PhysicsWorld* physicsWorld;
 MazeGenerator mazeGenerator;
-//ObstructionGenerator obsGenerator;
+ObstructionGenerator obsGenerator;
+GameManager* gameManager;
 
 Camera camera;
 Shader crateShader, brickShader;
@@ -29,24 +31,34 @@ Shader crateShader, brickShader;
 Agent randomAgent;
 
 int Initialize() {
+	glm::fvec4 backgroundColour(180.0f / 255.0f, 240.0f / 255.0f, 239.0f / 255.0f, 1.0f);
 	renderer = Renderer::GetInstance();
-
-	glm::fvec4 backgroundColour(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
 	renderer->Init(backgroundColour, screenWidth, screenHeight);
 
-	objectTracker = &(ObjectTracker::GetInstance());
-	physicsWorld = &(PhysicsWorld::GetInstance());
+	objectTracker = &ObjectTracker::GetInstance();
+	physicsWorld = &PhysicsWorld::GetInstance();
 
 	// Generate a maze of size m x n (medium/large size, use odd numbers)
 	mazeGenerator.InitMaze(15, 15);
 	mazeGenerator.Generate();
 
-	//obsGenerator.AttachMaze(mazeGenerator.GetMazeCells());
+	obsGenerator.AttachMazeGenerator(&mazeGenerator);
+
+	gameManager = &GameManager::GetInstance();
+	gameManager->Attach(&obsGenerator, &mazeGenerator);
 
 	camera = Camera(screenWidth, screenHeight, glm::vec3(6.5f, -6.5f, 19.0f));
 	renderer->SetCamera(camera);
 
 	return 0;
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+	{
+		
+	}
 }
 
 // Load the shaders to be used for objects in the scene
@@ -55,35 +67,34 @@ void LoadShaders() {
 	brickShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
 }
 
-// Create the scene which includes the generated maze as well as the agent object
+// Create the scene that includes the maze and agent object at the start
 void CreateMazeScene() {
-
-	LoadShaders();
 
 	std::vector<std::vector<MazeCell>> maze = mazeGenerator.GetMazeCells();
 	//mazeGenerator.PrintMaze();
-
-	// Set the agent object at the starting cell
-	std::vector<int> startCell = mazeGenerator.GetStartCoordinates();
-	int startX = startCell[0];
-	int startY = -startCell[1];
-
-	glm::vec3 startPos = glm::vec3(startX, startY, 0.0f);
-	glm::vec3 agentScale = glm::vec3(0.6f, 0.6f, 0.6f);
-
-	// The agent is the first object added to the object tracker
-	GameObject agent("agent", "crate.jpg", crateShader, startPos, glm::vec3(0.0f, 0.0f, 0.0f), agentScale);
-	agent.SetBodyType(b2_dynamicBody);
-
-	objectTracker->AddObject(agent);
-	physicsWorld->AddObject(&agent);
-
-	randomAgent.AttachAgentObject(&agent);
 
 	// Create the maze using game objects
 	// Row: y, Col: x;
 	for (size_t r = 0; r < maze.size(); r++) {
 		for (size_t c = 0; c < maze[r].size(); c++) {
+			// Create agent if cell is the start point
+			if (maze[r][c].IsStart()) {
+				int x = c;
+				int y = r;
+
+				glm::vec3 startPos = glm::vec3(x, -y, 0.0f);
+				glm::vec3 agentRotation = glm::vec3(0.0f);
+				glm::vec3 agentScale = glm::vec3(0.6f, 0.6f, 0.6f);
+
+				// The agent is the first object added to the object tracker
+				GameObject agent("agent", "crate.jpg", crateShader, startPos, agentRotation, agentScale);
+				agent.SetBodyType(b2_dynamicBody);
+
+				objectTracker->AddObject(agent);
+				physicsWorld->AddObject(&agent);
+
+				randomAgent.AttachAgentObject(&agent);
+			}
 
 			// Only create objects when a maze cell is a wall
 			if (maze[r][c].IsWall()) {
@@ -104,8 +115,9 @@ void CreateMazeScene() {
 
 }
 
+// This will remain here until everything is finished and Agent properly works
 void HandleInputs() {
-	GameObject* go = &objectTracker->GetAllObjects().front();
+	GameObject* agent = &objectTracker->GetObjectByTag("agent");
 
 	float velX = 0.0f, velY = 0.0f;
 	float speed = 0.35f;
@@ -123,7 +135,7 @@ void HandleInputs() {
 		velY = -speed;
 	}
 
-	go->GetRigidBody()->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));
+	agent->GetRigidBody()->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));
 }
 
 void PhysicsUpdate() {
@@ -138,7 +150,6 @@ void GraphicsUpdate() {
 
 int RunEngine() {
 	//obsGenerator.RunGenerator(objectTracker, physicsWorld);
-	//randomAgent.Move(agentObject, 0, 0);
 	randomAgent.MoveUpdate();
 
 	// physics update comes first
@@ -169,8 +180,10 @@ int main() {
 
 	// Initalize everything required for engine
 	Initialize();
+	LoadShaders();
 
-	// Create a scene for the purposes of testing
+	// Load the initial scene
+	// GameManager.LoadScene
 	CreateMazeScene();
 
 	// Main loop
@@ -179,7 +192,11 @@ int main() {
 		// Tell GLFW to keep track of input events
 		glfwPollEvents();
 
-		RunEngine();
+		//RunEngine();
+		PhysicsUpdate();
+		gameManager->Update();
+
+		GraphicsUpdate();
 	}
 
 	// Cleanup objects and destroy/exit window when done

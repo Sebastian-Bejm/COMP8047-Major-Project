@@ -21,7 +21,6 @@ Transform::Transform(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) {
 	originalPos = position;
 	originalRotation = rotation;
 	originalScale = scale;
-	std::cout << originalPos.x << " " << originalPos.y << std::endl;
 }
 
 void Transform::SetPosition(glm::vec3 newPosition) {
