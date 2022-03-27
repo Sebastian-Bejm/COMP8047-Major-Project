@@ -71,7 +71,6 @@ void LoadShaders() {
 void CreateMazeScene() {
 
 	std::vector<std::vector<MazeCell>> maze = mazeGenerator.GetMazeCells();
-	//mazeGenerator.PrintMaze();
 
 	// Create the maze using game objects
 	// Row: y, Col: x;
@@ -92,8 +91,6 @@ void CreateMazeScene() {
 
 				objectTracker->AddObject(agent);
 				physicsWorld->AddObject(&agent);
-
-				randomAgent.AttachAgentObject(&agent);
 			}
 
 			// Only create objects when a maze cell is a wall
@@ -135,7 +132,9 @@ void HandleInputs() {
 		velY = -speed;
 	}
 
-	agent->GetRigidBody()->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));
+	if (agent != nullptr) {
+		agent->GetRigidBody()->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));
+	}
 }
 
 void PhysicsUpdate() {
@@ -149,11 +148,11 @@ void GraphicsUpdate() {
 }
 
 int RunEngine() {
-	//obsGenerator.RunGenerator(objectTracker, physicsWorld);
-	randomAgent.MoveUpdate();
-
 	// physics update comes first
 	PhysicsUpdate();
+
+	randomAgent.MoveUpdate();
+	gameManager->Update();
 
 	// graphics comes after physics
 	GraphicsUpdate();
@@ -192,8 +191,9 @@ int main() {
 		// Tell GLFW to keep track of input events
 		glfwPollEvents();
 
-		//RunEngine();
+		// Run the engine and its updates
 		PhysicsUpdate();
+		//randomAgent.MoveUpdate();
 		gameManager->Update();
 
 		GraphicsUpdate();

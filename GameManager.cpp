@@ -22,6 +22,7 @@ void GameManager::ClearScene() {
 
 }
 
+// Updates the game logic
 void GameManager::Update() {
 	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
 
@@ -31,6 +32,8 @@ void GameManager::Update() {
 	}
 }
 
+// Checks if the game is in a terminal state:
+// The agent has reached the end goal, or the agent is stuck (should not happen but it is rare)
 bool GameManager::InTerminalState(GameObject* agent) {
 	std::vector<int> endPoint = mazeGenerator->GetEndCoordinates();
 
@@ -42,7 +45,6 @@ bool GameManager::InTerminalState(GameObject* agent) {
 	int roundY = (int)round(yPos);
 
 	if (endPoint[0] == roundX && endPoint[1] == roundY) {
-		std::cout << "agent in end point" << std::endl;
 		return true;
 	}
 	return false;

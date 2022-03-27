@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "MazeCell.h"
-#include "GameObject.h"
+#include "ObjectTracker.h"
 
 class Agent
 {
@@ -11,16 +11,14 @@ public:
 
 	Agent();
 	
-	void AttachAgentObject(GameObject* agentObject);
 	void AttachNetwork();
 
 	void MoveUpdate();
-	void Move(GameObject* agent, float destX, float destY);
+	void RandomMove(float destX, float destY);
 	
 private:
 
-	GameObject* agent;
+	bool network = false;
 	float speed = 0.35f;
-	std::vector<std::vector<MazeCell>> maze;
 };
 

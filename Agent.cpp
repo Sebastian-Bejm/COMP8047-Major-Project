@@ -2,15 +2,17 @@
 
 Agent::Agent() {}
 
-void Agent::AttachAgentObject(GameObject* agentObject) {
-	agent = agentObject;
+void Agent::AttachNetwork() {
+
 }
 
 void Agent::MoveUpdate() {
-
+	//RandomMove(5, -5);
 }
 
-void Agent::Move(GameObject* agent, float destX, float destY) {
+void Agent::RandomMove(float destX, float destY) {
+	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
+
 	float velX = 0.0f, velY = 0.0f;
 
 	RigidBody* agentRb = agent->GetRigidBody();
@@ -31,9 +33,8 @@ void Agent::Move(GameObject* agent, float destX, float destY) {
 		velY = -speed;
 	}
 	
-	// Testing (loop while game is going?)
-	// The agent will be able to move every step, so a loop may not be neccesary
-	//for (int i = 0; i < 2; i++) {
-		//agentRb->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));
-	//}
+	// The agent should be able to move every step, so a loop may not be neccesary
+	for (int i = 0; i < 2; i++) {
+		agentRb->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));
+	}
 }
