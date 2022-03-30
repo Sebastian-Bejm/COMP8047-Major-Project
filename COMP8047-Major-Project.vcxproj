@@ -148,6 +148,8 @@
     <ClCompile Include="Agent.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ContactListener.cpp" />
+    <ClCompile Include="ELM.cpp" />
+    <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="FPSCounter.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -163,6 +165,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="stb.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TimeTracker.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -179,6 +182,8 @@
     <ClInclude Include="Character.h" />
     <ClInclude Include="ContactListener.h" />
     <ClInclude Include="EBO.h" />
+    <ClInclude Include="ELM.h" />
+    <ClInclude Include="FileSystem.h" />
     <ClInclude Include="FPSCounter.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameObject.h" />
@@ -195,6 +200,7 @@
     <ClInclude Include="ShapeDetails.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Time.h" />
+    <ClInclude Include="TimeTracker.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="VAO.h" />
     <ClInclude Include="VBO.h" />

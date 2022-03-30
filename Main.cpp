@@ -14,9 +14,9 @@
 #include "FPSCounter.h"
 
 const int screenWidth = 1200;
-const int screenHeight = 900;
+const int screenHeight = 1000;
 
-const float timeStep = 1.0f / 60.0f;
+const int mazeRows = 15, mazeCols = 15;
 
 ObjectTracker* objectTracker;
 Renderer* renderer;
@@ -29,6 +29,7 @@ Camera camera;
 Agent randomAgent;
 
 // TODO:
+// TimeTracker => hook up with game manager and renderer
 // obstruction generator proper algorithm for random objects
 // game manager load and reset/clear scenes
 // find textures to use for start and end cells
@@ -43,7 +44,7 @@ int Initialize() {
 	physicsWorld = &PhysicsWorld::GetInstance();
 
 	// Generate a maze of size m x n (medium/large size, use odd numbers)
-	mazeGenerator.InitMaze(15, 15);
+	mazeGenerator.InitMaze(mazeRows, mazeCols);
 	mazeGenerator.Generate();
 
 	obsGenerator.AttachMazeGenerator(&mazeGenerator);
@@ -54,7 +55,7 @@ int Initialize() {
 
 	randomAgent = Agent(false);
 
-	camera = Camera(screenWidth, screenHeight, glm::vec3(6.5f, -6.5f, 19.0f));
+	camera = Camera(screenWidth, screenHeight, glm::vec3((float)(mazeCols/2), (float)(-mazeRows/2), 19.0f));
 	renderer->SetCamera(camera);
 
 	return 0;

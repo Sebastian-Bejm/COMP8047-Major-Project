@@ -24,15 +24,6 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	// Get our monitor information
-	/*GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-	const GLFWvidmode* monitorInfo = glfwGetVideoMode(monitor);
-
-	glfwWindowHint(GLFW_RED_BITS, monitorInfo->redBits);
-	glfwWindowHint(GLFW_GREEN_BITS, monitorInfo->greenBits);
-	glfwWindowHint(GLFW_BLUE_BITS, monitorInfo->blueBits);
-	glfwWindowHint(GLFW_REFRESH_RATE, monitorInfo->refreshRate);*/
-
 	// Setup our window for OpenGL
 	window = glfwCreateWindow(windowWidth, windowHeight, "COMP8047 Major Project", NULL, NULL);
 	if (window == NULL) {
@@ -65,7 +56,6 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	// Load the freetype library font
 	LoadFreetype();
 
-	//textProjectionMatrix = glm::ortho(-(float)windowWidth / 2, (float)windowWidth / 2, -(float)windowHeight / 2, (float)windowHeight / 2);
 	textProjectionMatrix = glm::ortho(0.0f, (float)windowWidth, 0.0f, (float)windowHeight);
 	textShader = Shader("FTTextVertShader.vs", "FTTextFragShader.fs");
 
@@ -303,7 +293,8 @@ int Renderer::Update(ObjectTracker* tracker) {
 
 	// the text placement must be dynamic based on window size
 	// when updating text make sure its updated at least once per second, and converted to string correctly
-	RenderText(textShader, "Default Time text", (float)windowWidth - 500, (float)windowHeight - 100, 1.1f, glm::vec3(0.3f, 0.7f, 0.9f));
+	RenderText(textShader, "Current Time: ", (float)windowWidth - 500, (float)windowHeight - 100, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+	RenderText(textShader, "Best Time: ", (float)windowWidth - 500, (float)windowHeight - 200, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	glfwSwapBuffers(window);
 
