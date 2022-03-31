@@ -29,10 +29,8 @@ Camera camera;
 Agent randomAgent;
 
 // TODO:
-// TimeTracker => hook up with game manager and renderer
 // obstruction generator proper algorithm for random objects
-// game manager load and reset/clear scenes
-// find textures to use for start and end cells
+// find textures to use for start and end cells so agent is actually visible
 
 int Initialize() {
 	glm::fvec4 backgroundColour(180.0f / 255.0f, 240.0f / 255.0f, 239.0f / 255.0f, 1.0f);
@@ -166,7 +164,7 @@ int Teardown() {
 	// Deletes pointers that is stored in game objects
 	objectTracker->DeleteAllObjects();
 	
-	// Clean up the scene and delete ob
+	// Clean up the scene and delete objects
 	gameManager->ClearScene();
 
 	// Destroys the window on exit

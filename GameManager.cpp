@@ -26,33 +26,47 @@ void GameManager::LoadScene() {
 	// Row: y, Col: x;
 	for (size_t r = 0; r < maze.size(); r++) {
 		for (size_t c = 0; c < maze[r].size(); c++) {
+			int x = c;
+			int y = r;
+			// rotation stays the same for each object
+			glm::vec3 rotation = glm::vec3(0.0f);
+			glm::vec3 generalScale = glm::vec3(1.0f);
+
 			// Create agent if cell is the start point
 			if (maze[r][c].IsStart()) {
-				int x = c;
-				int y = r;
-
 				glm::vec3 startPos = glm::vec3(x, -y, 0.0f);
-				glm::vec3 agentRotation = glm::vec3(0.0f);
-				glm::vec3 agentScale = glm::vec3(0.6f, 0.6f, 0.6f);
+				// Agent scale is different so it doesn't get stuck in the maze
+				glm::vec3 agentScale = glm::vec3(0.6f, 0.6f, 1.0f);
 
 				// The agent is the first object added to the object tracker
-				GameObject agent("agent", "crate.jpg", shaderStorage[0], startPos, agentRotation, agentScale);
+				GameObject agent("agent", "crate.jpg", shaderStorage[0], startPos, rotation, agentScale);
 				agent.SetBodyType(b2_dynamicBody);
 
 				ObjectTracker::GetInstance().AddObject(agent);
 				PhysicsWorld::GetInstance().AddObject(&agent);
+
+				// Render an object representing the entrance
+				glm::vec3 startPointPos = glm::vec3(x, -y, -1.0f);
+				GameObject startingPoint("point", "crate.jpg", shaderStorage[0], startPointPos, rotation, generalScale);
+
+				ObjectTracker::GetInstance().AddObject(startingPoint);
+				PhysicsWorld::GetInstance().AddObject(&startingPoint);
 			}
 
-			// Only create objects when a maze cell is a wall
+			// Render an object representing the exit
+			if (maze[r][c].IsExit()) {
+				glm::vec3 endPointPos = glm::vec3(x, -y, -1.0f);
+				GameObject endingPoint("point", "crate.jpg", shaderStorage[0], endPointPos, rotation, generalScale);
+
+				ObjectTracker::GetInstance().AddObject(endingPoint);
+				PhysicsWorld::GetInstance().AddObject(&endingPoint);
+			}
+
+			// Create the wall objects
 			if (maze[r][c].IsWall()) {
-				int x = c;
-				int y = r;
-
 				glm::vec3 position = glm::vec3(x, -y, 0.0f);
-				glm::vec3 rotation = glm::vec3(0.0f);
-				glm::vec3 scale = glm::vec3(1.0f);
 
-				GameObject wall("wall", "brick.png", shaderStorage[1], position, rotation, scale);
+				GameObject wall("wall", "brick.png", shaderStorage[1], position, rotation, generalScale);
 
 				ObjectTracker::GetInstance().AddObject(wall);
 				PhysicsWorld::GetInstance().AddObject(&wall);

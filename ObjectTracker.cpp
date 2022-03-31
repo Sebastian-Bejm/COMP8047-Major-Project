@@ -13,14 +13,14 @@ void ObjectTracker::AddObject(GameObject& gameObject) {
 
 // Deletes all the memory used for the GameObjects
 void ObjectTracker::DeleteAllObjects() {
-	for (int i = 0; i < staticObjects.size(); i++) {
+	for (size_t i = 0; i < staticObjects.size(); i++) {
 		staticObjects[i].Delete();
 	}
 }
 
 // Returns a GameObject by its tag
 GameObject& ObjectTracker::GetObjectByTag(std::string objectTag) {
-	for (int i = 0; i < staticObjects.size(); i++) {
+	for (size_t i = 0; i < staticObjects.size(); i++) {
 		if (staticObjects[i].GetTag() == objectTag) {
 			return staticObjects[i];
 		}
