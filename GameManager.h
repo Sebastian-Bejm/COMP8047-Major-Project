@@ -28,6 +28,8 @@ private:
 	std::vector<Shader> shaderStorage;
 
 	bool reachedGoal = false;
+	int timeAfterGoal = 0;
+	const int graceTime = 1000;
 
 	bool InTerminalState(GameObject* agent);
 };

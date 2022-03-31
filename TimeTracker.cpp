@@ -6,13 +6,14 @@ TimeTracker& TimeTracker::GetInstance() {
 }
 
 void TimeTracker::StartTimer() {
+	stopped = false;
 	startTime = std::chrono::system_clock::now();
 }
 
 void TimeTracker::StopTimer() {
 	if (!stopped) {
-		stopped = true;
 		endTime = std::chrono::system_clock::now();
+		stopped = true;
 	}
 }
 
@@ -22,6 +23,7 @@ std::string TimeTracker::GetCurrentTime() {
 	double elapsedTimeSec = elapsedTimeMS / 1000;
 
 	currentTimeStr = "Current Time: " + ConvertTimeToStr(elapsedTimeSec);
+
 	return currentTimeStr;
 }
 
@@ -34,7 +36,6 @@ std::string TimeTracker::GetLastBestTime() {
 
 		tempLast = "Best Time: " + ConvertTimeToStr(elapsedTimeSec);
 		lastBestTimeStr = tempLast;
-		stopped = false;
 	}
 
 	return lastBestTimeStr;

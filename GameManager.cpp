@@ -66,7 +66,12 @@ void GameManager::LoadScene() {
 
 // Resets the scene by resetting the Agent to its original location, and removes obstructions
 void GameManager::ResetScene() {
-	
+	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
+	agent->ResetTransform();
+
+	reachedGoal = false;
+	timeAfterGoal = 0;
+	TimeTracker::GetInstance().StartTimer();
 }
 
 // Clear the scene and properly delete the objects currently in the scene
@@ -79,21 +84,22 @@ void GameManager::ClearScene() {
 	}
 }
 
-// Updates the game logic and checks when the game has finished
+// Updates the game logic and checks when the current game has finished
 void GameManager::Update() {
 	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
-
-	//std::string time = TimeTracker::GetInstance().GetCurrentTime();
-	//std::cout << time << std::endl;
 
 	bool terminalState = InTerminalState(agent);
 	if (terminalState) {
 		TimeTracker::GetInstance().StopTimer();
-		//std::string lastBestTime = TimeTracker::GetInstance().GetLastBestTime();
-		//std::cout << lastBestTime << std::endl;
-
-		reachedGoal = true;
+		reachedGoal = true;	
 	}
+	if (reachedGoal) {
+		timeAfterGoal++;
+		if (timeAfterGoal >= graceTime) {
+			ResetScene();
+		}
+	}
+
 }
 
 // Checks if the game is in a terminal state:
@@ -108,8 +114,10 @@ bool GameManager::InTerminalState(GameObject* agent) {
 	int roundX = (int)round(xPos);
 	int roundY = (int)round(yPos);
 
-	if (endPoint[0] == roundX && endPoint[1] == roundY) {
-		return true;
+	if (!reachedGoal) {
+		if (endPoint[0] == roundX && endPoint[1] == roundY) {
+			return true;
+		}
 	}
 	return false;
 }

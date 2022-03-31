@@ -39,6 +39,7 @@ void GameObject::ResetTransform() {
 		rigidBody->box2dBody->GetPosition().y, transform->GetPosition().z));
 }
 
+// Set the rigidbody for this object
 void GameObject::SetRigidBody(RigidBody* rigidBody) {
 	this->rigidBody = rigidBody;
 }
@@ -65,17 +66,13 @@ std::string GameObject::GetTag() {
 
 // Get the ID of the texture image passed into the object
 int GameObject::GetTextureID() {
-	int texID;
 	if (imageFile == "crate.jpg") {
-		texID = 0;
+		return 0;
 	}
 	else if (imageFile == "brick.png") {
-		texID = 1;
+		return 1;
 	}
-	else {
-		texID = -1;
-	}
-	return texID;
+	return -1;
 }
 
 // Update this GameObject's matrices. 

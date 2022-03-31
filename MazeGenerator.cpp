@@ -80,7 +80,6 @@ void MazeGenerator::Generate() {
 
 	EncodeMaze();
 
-	WriteMazeData();
 }
 
 // Print the generated maze. Mainly used for debugging.
@@ -124,7 +123,6 @@ void MazeGenerator::ReadMazeData() {
 		lines.push_back(line);
 	}
 
-	// TODO: handle strings and reconstruct here...
 }
 
 // Get the starting cell where the agent is first spawned in the maze
