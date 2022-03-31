@@ -293,8 +293,11 @@ int Renderer::Update(ObjectTracker* tracker) {
 
 	// the text placement must be dynamic based on window size
 	// when updating text make sure its updated at least once per second, and converted to string correctly
-	RenderText(textShader, "Current Time: ", (float)windowWidth - 500, (float)windowHeight - 100, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
-	RenderText(textShader, "Best Time: ", (float)windowWidth - 500, (float)windowHeight - 200, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+	std::string currentTime = TimeTracker::GetInstance().GetCurrentTime();
+	std::string lastBest = TimeTracker::GetInstance().GetLastBestTime();
+
+	RenderText(textShader, currentTime, (float)windowWidth - 500, (float)windowHeight - 100, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+	RenderText(textShader, lastBest, (float)windowWidth - 500, (float)windowHeight - 200, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	glfwSwapBuffers(window);
 

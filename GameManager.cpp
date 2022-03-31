@@ -59,15 +59,20 @@ void GameManager::LoadScene() {
 			}
 		}
 	}
+
+	// start the timer for this run
+	TimeTracker::GetInstance().StartTimer();
 }
 
+// Resets the scene by resetting the Agent to its original location, and removes obstructions
 void GameManager::ResetScene() {
-	// reset the scene by setting everything back in original positions
-	// and removing obstructions (or have a reset function in obstruction generator)
+	
 }
 
+// Clear the scene and properly delete the objects currently in the scene
 void GameManager::ClearScene() {
 	// clear the whole scene to prepare for a new scene
+	
 	// temp: deleting shaders
 	for (auto& shader : shaderStorage) {
 		shader.Delete();
@@ -78,9 +83,16 @@ void GameManager::ClearScene() {
 void GameManager::Update() {
 	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
 
+	//std::string time = TimeTracker::GetInstance().GetCurrentTime();
+	//std::cout << time << std::endl;
+
 	bool terminalState = InTerminalState(agent);
 	if (terminalState) {
-		resetGame = true;
+		TimeTracker::GetInstance().StopTimer();
+		//std::string lastBestTime = TimeTracker::GetInstance().GetLastBestTime();
+		//std::cout << lastBestTime << std::endl;
+
+		reachedGoal = true;
 	}
 }
 

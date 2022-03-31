@@ -13,6 +13,7 @@
 #include "Camera.h"
 #include "ObjectTracker.h"
 #include "ShapeDetails.h"
+#include "TimeTracker.h"
 
 extern GLFWwindow* window;
 
@@ -34,7 +35,6 @@ private:
 
 	VAO vao;
 	VBO textVBO;
-	unsigned int VBO2; // temporary
 
 	// Vectors for the vertices and indices of each game object
 	std::vector<Vertex> vertices;

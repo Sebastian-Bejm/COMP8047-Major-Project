@@ -4,6 +4,7 @@
 #include "MazeGenerator.h"
 #include "ObjectTracker.h"
 #include "PhysicsWorld.h"
+#include "TimeTracker.h"
 
 class GameManager
 {
@@ -26,7 +27,7 @@ private:
 
 	std::vector<Shader> shaderStorage;
 
-	bool resetGame = false;
+	bool reachedGoal = false;
 
 	bool InTerminalState(GameObject* agent);
 };

@@ -33,7 +33,6 @@ Agent randomAgent;
 // obstruction generator proper algorithm for random objects
 // game manager load and reset/clear scenes
 // find textures to use for start and end cells
-// maze generator changes required to use with network
 
 int Initialize() {
 	glm::fvec4 backgroundColour(180.0f / 255.0f, 240.0f / 255.0f, 239.0f / 255.0f, 1.0f);
@@ -59,14 +58,6 @@ int Initialize() {
 	renderer->SetCamera(camera);
 
 	return 0;
-}
-
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
-	{
-		
-	}
 }
 
 // Load the shaders to be used for objects in the scene
@@ -175,7 +166,7 @@ int Teardown() {
 	// Deletes pointers that is stored in game objects
 	objectTracker->DeleteAllObjects();
 	
-	// Delete shaders used
+	// Clean up the scene and delete ob
 	gameManager->ClearScene();
 
 	// Destroys the window on exit
