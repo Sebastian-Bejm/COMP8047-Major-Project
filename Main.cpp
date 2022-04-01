@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <Eigen/Dense>
+#include <Eigen/Core>
 
 #include "GameObject.h"
 #include "ObjectTracker.h"
@@ -32,6 +33,7 @@ Agent randomAgent;
 // TODO:
 // obstruction generator proper algorithm for random objects
 // find textures to use for start and end cells so agent is actually visible
+// ELM
 
 int Initialize() {
 	glm::fvec4 backgroundColour(180.0f / 255.0f, 240.0f / 255.0f, 239.0f / 255.0f, 1.0f);
@@ -176,15 +178,8 @@ int Teardown() {
 
 int main() {
 
-	Eigen::MatrixXd m(2, 2);
-	m(0, 0) = 3;
-	m(1, 0) = 2.5;
-	m(0, 1) = -1;
-	m(1, 1) = m(1, 0) + m(0, 1);
-	std::cout << m << std::endl;
-
 	// Initalize everything required for engine
-	/*Initialize();
+	Initialize();
 
 	// Load the initial scene
 	gameManager->LoadScene();
@@ -204,7 +199,7 @@ int main() {
 	}
 
 	// Cleanup objects and destroy/exit window when done
-	Teardown();*/
+	Teardown();
 
 	return 0;
 }

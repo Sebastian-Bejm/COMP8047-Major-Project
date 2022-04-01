@@ -47,7 +47,7 @@ void GameManager::LoadScene() {
 
 				// Render an object representing the entrance
 				glm::vec3 startPointPos = glm::vec3(x, -y, -1.0f);
-				GameObject startingPoint("point", "crate.jpg", shaderStorage[0], startPointPos, rotation, generalScale);
+				GameObject startingPoint("point", "start_tex.jpg", shaderStorage[0], startPointPos, rotation, generalScale);
 
 				ObjectTracker::GetInstance().AddObject(startingPoint);
 				PhysicsWorld::GetInstance().AddObject(&startingPoint);
@@ -56,7 +56,7 @@ void GameManager::LoadScene() {
 			// Render an object representing the exit
 			if (maze[r][c].IsExit()) {
 				glm::vec3 endPointPos = glm::vec3(x, -y, -1.0f);
-				GameObject endingPoint("point", "crate.jpg", shaderStorage[0], endPointPos, rotation, generalScale);
+				GameObject endingPoint("point", "end_tex.jpg", shaderStorage[0], endPointPos, rotation, generalScale);
 
 				ObjectTracker::GetInstance().AddObject(endingPoint);
 				PhysicsWorld::GetInstance().AddObject(&endingPoint);

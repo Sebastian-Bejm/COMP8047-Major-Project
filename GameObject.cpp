@@ -72,6 +72,15 @@ int GameObject::GetTextureID() {
 	else if (imageFile == "brick.png") {
 		return 1;
 	}
+	else if (imageFile == "start_tex.jpg") {
+		return 2;
+	}
+	else if (imageFile == "end_tex.jpg") {
+		return 3;
+	}
+	else if (imageFile == "lava.png") {
+		return 4;
+	}
 	return -1;
 }
 

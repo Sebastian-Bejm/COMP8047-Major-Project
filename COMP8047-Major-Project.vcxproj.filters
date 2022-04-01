@@ -246,6 +246,15 @@
     <Image Include="brick.png">
       <Filter>Resource Files\Textures</Filter>
     </Image>
+    <Image Include="lava.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="end_tex.jpg">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="start_tex.jpg">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="maze.txt">

@@ -18,6 +18,6 @@ public:
 
 private:
 
-	std::vector<GameObject> staticObjects;
+	std::vector<GameObject> objectStorage;
 
 };
