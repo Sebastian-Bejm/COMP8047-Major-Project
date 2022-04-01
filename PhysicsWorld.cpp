@@ -55,7 +55,6 @@ void PhysicsWorld::AddObject(GameObject* gameObject) {
 			fixtureDef.filter.maskBits = C_OBSTRUCTION | C_WALL;
 		}
 		else if (objectTag == "point") {
-			std::cout << "is being set" << std::endl;
 			fixtureDef.filter.categoryBits = C_POINT;
 			fixtureDef.filter.maskBits = C_OBSTRUCTION | C_WALL;
 		}
