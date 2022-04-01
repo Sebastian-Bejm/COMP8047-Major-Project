@@ -24,15 +24,6 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	// Get our monitor information
-	/*GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-	const GLFWvidmode* monitorInfo = glfwGetVideoMode(monitor);
-
-	glfwWindowHint(GLFW_RED_BITS, monitorInfo->redBits);
-	glfwWindowHint(GLFW_GREEN_BITS, monitorInfo->greenBits);
-	glfwWindowHint(GLFW_BLUE_BITS, monitorInfo->blueBits);
-	glfwWindowHint(GLFW_REFRESH_RATE, monitorInfo->refreshRate);*/
-
 	// Setup our window for OpenGL
 	window = glfwCreateWindow(windowWidth, windowHeight, "COMP8047 Major Project", NULL, NULL);
 	if (window == NULL) {
@@ -65,7 +56,6 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	// Load the freetype library font
 	LoadFreetype();
 
-	//textProjectionMatrix = glm::ortho(-(float)windowWidth / 2, (float)windowWidth / 2, -(float)windowHeight / 2, (float)windowHeight / 2);
 	textProjectionMatrix = glm::ortho(0.0f, (float)windowWidth, 0.0f, (float)windowHeight);
 	textShader = Shader("FTTextVertShader.vs", "FTTextFragShader.fs");
 
@@ -116,7 +106,7 @@ void Renderer::PrepareGLBuffers() {
 
 void Renderer::LoadTextures() {
 	// Order image according to enum in GameObject
-	std::vector<std::string> images = { "crate.jpg", "brick.png" };
+	std::vector<std::string> images = { "crate.jpg", "brick.png", "start_tex.jpg", "end_tex.jpg", "lava.png"};
 
 	for (std::string image : images) {
 		GLenum format = NULL;
@@ -271,14 +261,14 @@ int Renderer::Update(ObjectTracker* tracker) {
 	// This fixes the fast movement over time on the machine
 	float deltaTime = Time::GetInstance().DeltaTime();
 
-	// Specify the color of the background (silver)
+	// Specify the color of the background
 	glClearColor(backgroundColour.r, backgroundColour.g, backgroundColour.b, backgroundColour.a);
 
 	// Clean the back buffer and assign the new color to it, and depth buffer for correct 3D rendering
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	camera.ProcessInput(window, deltaTime);
-	//camera.SetPerspectiveMatrix(45.0f, 0.1f, 100.0f); // 0.1f, 100.0f
+	//camera.SetPerspectiveMatrix(45.0f, 0.1f, 100.0f);
 	camera.SetOrthoMatrix(-8.0f, 11.0f, -11.0f, 8.0f, 0.1f, 100.0f);
 
 	// Draw the game objects here with a reference to the camera
@@ -298,10 +288,16 @@ int Renderer::Update(ObjectTracker* tracker) {
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
 	}
 
-	// Draw the text - placeholder text for the time being
+	// Activate the freetype text shader
 	textShader.Activate();
+
 	// the text placement must be dynamic based on window size
-	RenderText(textShader, "Placeholder text", (float)windowWidth - 500, (float)windowHeight - 100, 1.2f, glm::vec3(0.3f, 0.7f, 0.9f));
+	// when updating text make sure its updated at least once per second, and converted to string correctly
+	std::string currentTime = TimeTracker::GetInstance().GetCurrentTime();
+	std::string lastBest = TimeTracker::GetInstance().GetLastBestTime();
+
+	RenderText(textShader, currentTime, (float)windowWidth - 500, (float)windowHeight - 100, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+	RenderText(textShader, lastBest, (float)windowWidth - 500, (float)windowHeight - 200, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	glfwSwapBuffers(window);
 
@@ -325,37 +321,4 @@ int Renderer::Teardown() {
 
 void Renderer::SetCamera(Camera& camera) {
 	this->camera = camera;
-}
-
-GLFWwindow* Renderer::SetupGLFW() {
-	// Setup GLFW
-	// Get the main monitor for the screen size
-	/*GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-	const GLFWvidmode* monitorInfo = glfwGetVideoMode(monitor);
-	GLFWmonitor* fullScreenMonitor;
-
-	glfwWindowHint(GLFW_RED_BITS, monitorInfo->redBits);
-	glfwWindowHint(GLFW_GREEN_BITS, monitorInfo->greenBits);
-	glfwWindowHint(GLFW_BLUE_BITS, monitorInfo->blueBits);
-	glfwWindowHint(GLFW_REFRESH_RATE, monitorInfo->refreshRate);
-
-	// Get the width and height of our monitor
-	// We want to make it full screen
-	windowWidth = monitorInfo->width;
-	windowHeight = monitorInfo->height;
-	fullScreenMonitor = monitor;
-
-	// Create window with reference to the monitor in full size
-	GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "COMP8047 Major Project", fullScreenMonitor, NULL);
-	if (window == NULL) {
-		std::cerr << "Failed to create window" << std::endl;
-		return NULL;
-	}
-
-	glfwMakeContextCurrent(window);
-
-	delete monitor;
-	delete monitorInfo;*/
-
-	return window;
 }

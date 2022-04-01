@@ -4,9 +4,12 @@
 #include <queue>
 #include <algorithm>
 #include <iostream>
+#include <string>
+#include <fstream>
 #include <random>
 
 #include "MazeCell.h"
+#include "FileSystem.h"
 
 class MazeGenerator
 {
@@ -15,14 +18,16 @@ public:
 	MazeGenerator();
 
 	void InitMaze(int rows, int cols);
+	void InitWalledEmptyMaze(int rows, int cols);
 	void Generate();
-	//void WriteToFile(); // this may be used later for the neural network
 	void PrintMaze();
-	
+
 	MazeCell& GetStartCell();
 	MazeCell& GetEndCell();
+	std::vector<int> GetStartCoordinates();
+	std::vector<int> GetEndCoordinates();
 
-	std::vector<std::vector<MazeCell>> GetMazeCells();
+	std::vector<std::vector<MazeCell>>& GetMazeCells();
 
 private:
 
@@ -43,12 +48,9 @@ private:
 
 	bool IsValidPosition(int row, int col);
 
-	MazeCell& GetRandom(std::deque<MazeCell>& cells);
 	MazeCell& GetRandom(std::vector<MazeCell>& cells);
-
+	
 	void PadOuterWalls();
 	void CreateMazePositions();
-	
-	std::deque<MazeCell> ConvertToDeque(std::vector<MazeCell> cells);
-};
 
+};

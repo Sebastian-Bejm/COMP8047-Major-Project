@@ -26,6 +26,9 @@ public:
 	bool IsEqual(const MazeCell& mc);
 	std::string str();
 
+	int GetCode();
+
+
 	friend bool operator==(const MazeCell& lhs, const MazeCell& rhs) {
 		return lhs.row == rhs.row && lhs.col == rhs.col && lhs.isWall == rhs.isWall;
 	}
@@ -33,7 +36,8 @@ public:
 private:
 
 	int row, col;
-	bool isWall; // represented as '*'
+	int code;
+	bool isWall;
 	bool obstructed;
 	bool start, exit;
 };

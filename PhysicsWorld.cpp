@@ -1,5 +1,13 @@
 #include "PhysicsWorld.h"
 
+enum CollisionCategory {
+	C_NONE = 0x0000,
+	C_AGENT = 0x0001,
+	C_POINT = 0x0002,
+	C_WALL = 0x0004,
+	C_OBSTRUCTION = 0x0008
+};
+
 PhysicsWorld::PhysicsWorld() {
 	// Gravity is set to 0 because it will not be used here
 	world = new b2World(b2Vec2(0.0f, 0.0f));
@@ -34,34 +42,49 @@ void PhysicsWorld::AddObject(GameObject* gameObject) {
 	rigidBody->box2dBody = world->CreateBody(&bodyDef);
 
 	if (rigidBody->box2dBody) {
-		// The dynamic moving body will remain a 1x1 cube but use a circle fixture
-		// This fixes the ghost collisions for now
+
+		b2FixtureDef fixtureDef;
+		fixtureDef.density = rigidBody->density;
+		fixtureDef.friction = rigidBody->friction;
+		fixtureDef.restitution = 0;
+
+		// Set collision filter based on tag
+		std::string objectTag = gameObject->GetTag();
+		if (objectTag == "agent") {
+			fixtureDef.filter.categoryBits = C_AGENT;
+			fixtureDef.filter.maskBits = C_OBSTRUCTION | C_WALL;
+		}
+		else if (objectTag == "point") {
+			fixtureDef.filter.categoryBits = C_POINT;
+			fixtureDef.filter.maskBits = C_OBSTRUCTION | C_WALL;
+		}
+		else if (objectTag == "wall") {
+			fixtureDef.filter.categoryBits = C_WALL;
+			fixtureDef.filter.maskBits = C_OBSTRUCTION | C_AGENT;
+		}
+		else if (objectTag == "obstruction") {
+			fixtureDef.filter.categoryBits = C_OBSTRUCTION;
+			fixtureDef.filter.maskBits = C_AGENT | C_WALL;
+		}
+
+		// The Agent body will remain a 1x1 cube but use a circle fixture
+		// This resolves the ghost collisions on corners
 		if (rigidBody->bodyType == b2_dynamicBody) {
 			b2CircleShape bodyShape;
 			bodyShape.m_radius = rigidBody->halfWidth;
 
-			b2FixtureDef fixtureDef;
 			fixtureDef.shape = &bodyShape;
-			fixtureDef.density = rigidBody->density;
-			fixtureDef.friction = rigidBody->friction;
-			fixtureDef.restitution = 0;
 
 			rigidBody->box2dBody->CreateFixture(&fixtureDef);
-			//gameObject->SetRigidBody(rigidBody);
 		}
-		// For all other bodies they are made with box polygon shape
+		// For all other bodies they are made with a regular box polygon shape
 		else if (rigidBody->bodyType == b2_staticBody) {
 			b2PolygonShape staticBox;
 			staticBox.SetAsBox(rigidBody->halfWidth, rigidBody->halfHeight);
 
-			b2FixtureDef fixtureDef;
 			fixtureDef.shape = &staticBox;
-			fixtureDef.density = rigidBody->density;
-			fixtureDef.friction = rigidBody->friction;
-			fixtureDef.restitution = 0;
 
 			rigidBody->box2dBody->CreateFixture(&fixtureDef);
-			//gameObject->SetRigidBody(rigidBody);
 		}
 
 	}

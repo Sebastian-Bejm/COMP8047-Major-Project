@@ -1,6 +1,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <Eigen/Dense>
+#include <Eigen/Core>
 
 #include "GameObject.h"
 #include "ObjectTracker.h"
@@ -8,82 +10,89 @@
 #include "PhysicsWorld.h"
 #include "MazeGenerator.h"
 #include "ObstructionGenerator.h"
+#include "GameManager.h"
 
 #include "Agent.h"
 #include "FPSCounter.h"
 
 const int screenWidth = 1200;
-const int screenHeight = 900;
+const int screenHeight = 1000;
 
-const float timeStep = 1.0f / 60.0f;
+const int mazeRows = 15, mazeCols = 15;
 
 ObjectTracker* objectTracker;
 Renderer* renderer;
 PhysicsWorld* physicsWorld;
-
 MazeGenerator mazeGenerator;
-//ObstructionGenerator obsGenerator;
+ObstructionGenerator obsGenerator;
+GameManager* gameManager;
 
 Camera camera;
+Agent randomAgent;
 
-Shader crateShader, brickShader;
-
-//Agent dummyAgent;
-//FPSCounter fpsCounter = FPSCounter();
+// TODO:
+// obstruction generator proper algorithm for random objects
+// find textures to use for start and end cells so agent is actually visible
+// ELM
 
 int Initialize() {
+	glm::fvec4 backgroundColour(180.0f / 255.0f, 240.0f / 255.0f, 239.0f / 255.0f, 1.0f);
 	renderer = Renderer::GetInstance();
-
-	glm::fvec4 backgroundColour(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f, 1.0f);
 	renderer->Init(backgroundColour, screenWidth, screenHeight);
 
-	objectTracker = &(ObjectTracker::GetInstance());
-	physicsWorld = &(PhysicsWorld::GetInstance());
+	objectTracker = &ObjectTracker::GetInstance();
+	physicsWorld = &PhysicsWorld::GetInstance();
 
 	// Generate a maze of size m x n (medium/large size, use odd numbers)
-	mazeGenerator.InitMaze(15, 15);
+	mazeGenerator.InitMaze(mazeRows, mazeCols);
 	mazeGenerator.Generate();
 
-	//obsGenerator.AttachMaze(mazeGenerator.GetMazeCells());
+	obsGenerator.AttachMazeGenerator(&mazeGenerator);
 
-	camera = Camera(screenWidth, screenHeight, glm::vec3(6.5f, -6.5f, 19.0f));
+	gameManager = &GameManager::GetInstance();
+	gameManager->Attach(&obsGenerator, &mazeGenerator);
+	gameManager->LoadShaders();
+
+	randomAgent = Agent(false);
+
+	camera = Camera(screenWidth, screenHeight, glm::vec3((float)(mazeCols/2), (float)(-mazeRows/2), 19.0f));
 	renderer->SetCamera(camera);
 
 	return 0;
 }
 
 // Load the shaders to be used for objects in the scene
-void LoadShaders() {
+/*void LoadShaders() {
+	// Create a new shader when using a different texture
 	crateShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
 	brickShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
 }
 
-// Create the scene which includes the generated maze as well as the agent object
+// Create the scene that includes the maze and agent object at the start
 void CreateMazeScene() {
 
-	LoadShaders();
-
 	std::vector<std::vector<MazeCell>> maze = mazeGenerator.GetMazeCells();
-
-	// Set the agent object at the starting cell
-	MazeCell startCell = mazeGenerator.GetStartCell();
-	int startColX = startCell.GetColumn();
-	int startRowY = -startCell.GetRow();
-
-	glm::vec3 startPos = glm::vec3(startColX, startRowY, 0.0f);
-	glm::vec3 agentScale = glm::vec3(0.6f, 0.6f, 0.6f);
-
-	// The agent is the first object added to the object tracker
-	GameObject agent("agent", "crate.jpg", crateShader, startPos, glm::vec3(0.0f, 0.0f, 0.0f), agentScale);
-	agent.SetBodyType(b2_dynamicBody);
-
-	objectTracker->AddObject(agent);
-	physicsWorld->AddObject(&agent);
 
 	// Create the maze using game objects
 	// Row: y, Col: x;
 	for (size_t r = 0; r < maze.size(); r++) {
 		for (size_t c = 0; c < maze[r].size(); c++) {
+			// Create agent if cell is the start point
+			if (maze[r][c].IsStart()) {
+				int x = c;
+				int y = r;
+
+				glm::vec3 startPos = glm::vec3(x, -y, 0.0f);
+				glm::vec3 agentRotation = glm::vec3(0.0f);
+				glm::vec3 agentScale = glm::vec3(0.6f, 0.6f, 0.6f);
+
+				// The agent is the first object added to the object tracker
+				GameObject agent("agent", "crate.jpg", crateShader, startPos, agentRotation, agentScale);
+				agent.SetBodyType(b2_dynamicBody);
+
+				objectTracker->AddObject(agent);
+				physicsWorld->AddObject(&agent);
+			}
 
 			// Only create objects when a maze cell is a wall
 			if (maze[r][c].IsWall()) {
@@ -102,10 +111,11 @@ void CreateMazeScene() {
 		}
 	}
 
-}
+}*/
 
+// This will remain here until everything is finished and Agent properly works
 void HandleInputs() {
-	GameObject* go = &objectTracker->GetAllObjects()[0];
+	GameObject* agent = &objectTracker->GetObjectByTag("agent");
 
 	float velX = 0.0f, velY = 0.0f;
 	float speed = 0.35f;
@@ -123,7 +133,9 @@ void HandleInputs() {
 		velY = -speed;
 	}
 
-	go->GetRigidBody()->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));
+	if (agent != nullptr) {
+		agent->GetRigidBody()->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));
+	}
 }
 
 void PhysicsUpdate() {
@@ -137,11 +149,11 @@ void GraphicsUpdate() {
 }
 
 int RunEngine() {
-
-	//obsGenerator.RunGenerator(objectTracker, physicsWorld);
-
 	// physics update comes first
 	PhysicsUpdate();
+
+	randomAgent.MoveUpdate();
+	gameManager->Update();
 
 	// graphics comes after physics
 	GraphicsUpdate();
@@ -149,14 +161,14 @@ int RunEngine() {
 	return 0;
 }
 
+// Delete objects and free any memory that has been used
 int Teardown() {
 
 	// Deletes pointers that is stored in game objects
 	objectTracker->DeleteAllObjects();
 	
-	// Delete shaders used
-	crateShader.Delete();
-	brickShader.Delete();
+	// Clean up the scene and delete objects
+	gameManager->ClearScene();
 
 	// Destroys the window on exit
 	renderer->Teardown();
@@ -169,8 +181,8 @@ int main() {
 	// Initalize everything required for engine
 	Initialize();
 
-	// Create a scene for the purposes of testing
-	CreateMazeScene();
+	// Load the initial scene
+	gameManager->LoadScene();
 
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {
@@ -178,7 +190,12 @@ int main() {
 		// Tell GLFW to keep track of input events
 		glfwPollEvents();
 
-		RunEngine();
+		// Run the engine and its updates
+		PhysicsUpdate();
+		//randomAgent.MoveUpdate();
+		gameManager->Update();
+
+		GraphicsUpdate();
 	}
 
 	// Cleanup objects and destroy/exit window when done

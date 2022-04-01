@@ -2,14 +2,14 @@
 
 ObstructionGenerator::ObstructionGenerator() {
 	prevTime = clock();
+	mazeGenerator = nullptr;
 }
 
-void ObstructionGenerator::AttachMaze(std::vector<std::vector<MazeCell>> maze) {
-	this->maze = maze;
+void ObstructionGenerator::AttachMazeGenerator(MazeGenerator* mazeGenerator) {
+	this->mazeGenerator = mazeGenerator;
 }
 
 void ObstructionGenerator::RunGenerator(ObjectTracker* tracker, PhysicsWorld* physicsWorld) {
-
 	// if time interval is met
 	// create new object
 	// check if theres a valid spot where the object can be generated

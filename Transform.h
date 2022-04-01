@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <tuple>
 
 #include "GLMHeader.h"
 
@@ -13,10 +14,9 @@ public:
 
 	void SetPosition(glm::vec3 newPosition);
 	void Translate(glm::vec3 translate, float speed);
-	void Rotate(glm::vec3 rotate);
-	void ResetTransform();
 
 	glm::mat4 GetModelMatrix();
+	glm::vec3 GetOriginalPosition();
 
 	glm::vec3 GetPosition();
 	glm::vec3 GetRotation();

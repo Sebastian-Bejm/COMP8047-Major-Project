@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <map>
+#include <chrono>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <ft2build.h>
@@ -12,6 +13,7 @@
 #include "Camera.h"
 #include "ObjectTracker.h"
 #include "ShapeDetails.h"
+#include "TimeTracker.h"
 
 extern GLFWwindow* window;
 
@@ -33,7 +35,6 @@ private:
 
 	VAO vao;
 	VBO textVBO;
-	unsigned int VBO2; // temporary
 
 	// Vectors for the vertices and indices of each game object
 	std::vector<Vertex> vertices;
@@ -51,8 +52,6 @@ private:
 	int windowWidth, windowHeight;
 	glm::vec4 backgroundColour;
 
-	int test = 0;
-
 	void PrepareGLBuffers();
 	void LoadTextures();
 	void LoadFreetype();
@@ -60,5 +59,4 @@ private:
 
 	std::string GetTextureFileExtension(const std::string& textureFile);
 
-	GLFWwindow* SetupGLFW();
 };

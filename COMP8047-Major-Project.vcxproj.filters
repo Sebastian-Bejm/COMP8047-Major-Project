@@ -49,11 +49,20 @@
     <Filter Include="Source Files\Utility">
       <UniqueIdentifier>{5ecbc8a2-1ec2-4293-a1a7-426fefec51fa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Systems">
-      <UniqueIdentifier>{ed14e745-131e-4e88-b809-e40a1cf0c42c}</UniqueIdentifier>
+    <Filter Include="Resource Files\MazeData">
+      <UniqueIdentifier>{2a371245-9887-45a4-b13f-254e26d05b9b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Systems">
+    <Filter Include="Source Files\Network">
+      <UniqueIdentifier>{a6a8ac78-dc4d-42d7-8839-9b12e5be8063}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Network">
+      <UniqueIdentifier>{7fe8f00b-857d-448f-b59d-b5b19d045a4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\MainSystems">
       <UniqueIdentifier>{b81d5aae-ec5c-43b0-86b6-db021ddd202c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\MainSystems">
+      <UniqueIdentifier>{ed14e745-131e-4e88-b809-e40a1cf0c42c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -74,9 +83,6 @@
     </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>Source Files\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectTracker.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsWorld.cpp">
       <Filter>Source Files\Physics</Filter>
@@ -102,14 +108,38 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="ObstructionGenerator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="stb.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="FPSCounter.cpp">
       <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="ELM.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="QELM.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="QLearn.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Field.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSystem.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>Source Files\MainSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectTracker.cpp">
+      <Filter>Source Files\MainSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="ObstructionGenerator.cpp">
+      <Filter>Source Files\MainSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeTracker.cpp">
+      <Filter>Source Files\MainSystems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -157,9 +187,6 @@
     <ClInclude Include="Vertex.h">
       <Filter>Header Files\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectTracker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PhysicsWorld.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
@@ -190,9 +217,6 @@
     <ClInclude Include="Texture.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="ObstructionGenerator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="FPSCounter.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
@@ -205,6 +229,33 @@
     <ClInclude Include="Character.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="ELM.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="QELM.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="QLearn.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Field.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSystem.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>Header Files\MainSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectTracker.h">
+      <Filter>Header Files\MainSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="ObstructionGenerator.h">
+      <Filter>Header Files\MainSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeTracker.h">
+      <Filter>Header Files\MainSystems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="crate.jpg">
@@ -213,5 +264,19 @@
     <Image Include="brick.png">
       <Filter>Resource Files\Textures</Filter>
     </Image>
+    <Image Include="lava.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="end_tex.jpg">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="start_tex.jpg">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="maze.txt">
+      <Filter>Resource Files\MazeData</Filter>
+    </Text>
   </ItemGroup>
 </Project>

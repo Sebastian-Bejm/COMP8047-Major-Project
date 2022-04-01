@@ -2,27 +2,25 @@
 
 #include <vector>
 
-// include neural network later
 #include "MazeCell.h"
-#include "GameObject.h"
+#include "ObjectTracker.h"
 
 class Agent
 {
 public:
 
 	Agent();
+	Agent(bool usingNetwork);
+	
+	void AttachNetwork();
 
-	void Receive();
-	void Actuate();
-
-	void Move(GameObject* agent, float destX, float destY);
-	void UpdateMaze(std::vector<std::vector<MazeCell>>& maze);
-
+	void MoveUpdate();
+	void RandomMove(float destX, float destY);
+	void NetworkMove();
+	
 private:
 
-	bool MazeUpdated(bool update);
-
+	bool usingNetwork;
 	float speed = 0.35f;
-	std::vector<std::vector<MazeCell>> maze;
 };
 

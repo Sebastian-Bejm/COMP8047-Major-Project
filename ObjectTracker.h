@@ -13,14 +13,11 @@ public:
 	void AddObject(GameObject& gameObject);
 	void DeleteAllObjects();
 
+	GameObject& GetObjectByTag(std::string objectTag);
 	std::vector<GameObject>& GetAllObjects();
-
-	GameObject& FindByTag(std::string objectTag);
 
 private:
 
-	GameObject* agentObject;
-	std::vector<GameObject> staticObjects;
+	std::vector<GameObject> objectStorage;
 
 };
-

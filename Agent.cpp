@@ -1,18 +1,29 @@
 #include "Agent.h"
 
 Agent::Agent() {
+	usingNetwork = false;
+}
+
+Agent::Agent(bool usingNetwork) {
+	this->usingNetwork = usingNetwork;
+}
+
+void Agent::AttachNetwork() {
 
 }
 
-void Agent::Receive() {
-
+void Agent::MoveUpdate() {
+	if (usingNetwork) {
+		NetworkMove();
+	}
+	else {
+		//RandomMove(5, -5);
+	}
 }
 
-void Agent::Actuate() {
+void Agent::RandomMove(float destX, float destY) {
+	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
 
-}
-
-void Agent::Move(GameObject* agent, float destX, float destY) {
 	float velX = 0.0f, velY = 0.0f;
 
 	RigidBody* agentRb = agent->GetRigidBody();
@@ -25,27 +36,20 @@ void Agent::Move(GameObject* agent, float destX, float destY) {
 	else if (destX < xPos) {
 		velX = -speed;
 	}
+
 	if (destY > yPos) {
 		velY = speed;
 	}
 	else if (destY < yPos) {
 		velY = -speed;
 	}
-
-	// Testing (loop while game is going?)
-	// The agent will be able to move every step, so a loop may not be neccesary
-	//for (int i = 0; i < 2; i++) {
+	
+	// The agent should be able to move every step, so a loop may not be neccesary
+	for (int i = 0; i < 2; i++) {
 		agentRb->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));
-	//}
+	}
 }
 
-void Agent::UpdateMaze(std::vector<std::vector<MazeCell>>& maze) {
-	this->maze = maze;
-	// if maze is updated with an obstruction in front of agent, switch direction
-	// the agent SHOULD know that there is now an object in the new spot and try to avoid that
+void Agent::NetworkMove() {
 
-}
-
-bool Agent::MazeUpdated(bool update) {
-	return false;
 }

@@ -33,21 +33,15 @@ void Transform::Translate(glm::vec3 translate, float speed) {
 	position.z += translate.z * speed;
 }
 
-void Transform::Rotate(glm::vec3 rotate) {
-
-}
-
-void Transform::ResetTransform() {
-	std::cout << "Before reset: " << position.x << " " << position.y << std::endl;
-	SetPosition(originalPos);
-	std::cout << "After reset: " << position.x << " " << position.y << std::endl;
-}
-
 glm::mat4 Transform::GetModelMatrix() {
 	modelMatrix = glm::translate(position);
 	// rotation later
 	modelMatrix = glm::scale(modelMatrix, scale);
 	return modelMatrix;
+}
+
+glm::vec3 Transform::GetOriginalPosition() {
+	return originalPos;
 }
 
 glm::vec3 Transform::GetPosition() {

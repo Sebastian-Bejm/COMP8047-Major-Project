@@ -30,10 +30,16 @@ Transform* GameObject::GetTransform() {
 	return transform;
 }
 
+// Reset the rigidbody to the original position of the transform
 void GameObject::ResetTransform() {
+	glm::vec3 originalPos = transform->GetOriginalPosition();
 
+	rigidBody->box2dBody->SetTransform(b2Vec2(originalPos.x, originalPos.y), rigidBody->box2dBody->GetAngle());
+	transform->SetPosition(glm::vec3(rigidBody->box2dBody->GetPosition().x, 
+		rigidBody->box2dBody->GetPosition().y, transform->GetPosition().z));
 }
 
+// Set the rigidbody for this object
 void GameObject::SetRigidBody(RigidBody* rigidBody) {
 	this->rigidBody = rigidBody;
 }
@@ -60,17 +66,22 @@ std::string GameObject::GetTag() {
 
 // Get the ID of the texture image passed into the object
 int GameObject::GetTextureID() {
-	int texID;
 	if (imageFile == "crate.jpg") {
-		texID = 0;
+		return 0;
 	}
 	else if (imageFile == "brick.png") {
-		texID = 1;
+		return 1;
 	}
-	else {
-		texID = -1;
+	else if (imageFile == "start_tex.jpg") {
+		return 2;
 	}
-	return texID;
+	else if (imageFile == "end_tex.jpg") {
+		return 3;
+	}
+	else if (imageFile == "lava.png") {
+		return 4;
+	}
+	return -1;
 }
 
 // Update this GameObject's matrices. 
