@@ -1,5 +1,6 @@
 #include "FileSystem.h"
 
+// Writes the current maze structure to a file
 void FileSystem::WriteMazeDataToFile(std::vector<std::vector<MazeCell>> mazeCells) {
 	std::string compactStr = "";
 	std::ofstream out("maze.txt");
@@ -15,6 +16,7 @@ void FileSystem::WriteMazeDataToFile(std::vector<std::vector<MazeCell>> mazeCell
 	out.close();
 }
 
+// Read maze data structure from a file and reconstruct it for rendering
 std::vector<std::vector<MazeCell>> FileSystem::ReadMazeDataFile(std::string filename) {
 	std::ifstream in(filename);
 	std::string templine;
@@ -31,6 +33,7 @@ std::vector<std::vector<MazeCell>> FileSystem::ReadMazeDataFile(std::string file
 		fullMaze[i].resize(lines[i].size());
 	}
 
+	// TODO: code the maze based on each str here before returning
 	for (size_t r = 0; r < lines.size(); r++) {
 		for (size_t c = 0; c < lines[r].size(); c++) {
 			if (lines[r][c] == '#') {
@@ -46,18 +49,17 @@ std::vector<std::vector<MazeCell>> FileSystem::ReadMazeDataFile(std::string file
 				fullMaze[r][c].SetAsExit(true);
 			}
 		}
-		//std::cout << std::endl;
 	}
-
-	// TODO: code the maze based on each str here before returning
 
 	return fullMaze;
 }
 
+// Writes a trained model to a file
 void FileSystem::WriteModelToFile(std::string filename) {
 
 }
 
+// Read a model file and reconstruct the trained model
 void FileSystem::ReadModelFile(std::string filename) {
 
 }

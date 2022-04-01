@@ -78,11 +78,11 @@ void MazeGenerator::Generate() {
 
 	CreateMazePositions();
 
-	FileSystem::WriteMazeDataToFile(mazeCells);
+	//FileSystem::WriteMazeDataToFile(mazeCells);
 
-	mazeCells = FileSystem::ReadMazeDataFile("maze.txt");
+	//mazeCells = FileSystem::ReadMazeDataFile("maze.txt");
 
-	PrintMaze();
+	//PrintMaze();
 }
 
 // Print the generated maze. Mainly used for debugging.

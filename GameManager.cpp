@@ -19,6 +19,7 @@ void GameManager::LoadShaders() {
 	shaderStorage.push_back(brickShader);
 }
 
+// Load a scene given a generated maze, and position the rendered objects in the scene
 void GameManager::LoadScene() {
 	std::vector<std::vector<MazeCell>> maze = mazeGenerator->GetMazeCells();
 
@@ -82,6 +83,8 @@ void GameManager::LoadScene() {
 void GameManager::ResetScene() {
 	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
 	agent->ResetTransform();
+
+	// TODO: remove the obstructions after timer is stopped
 
 	reachedGoal = false;
 	timeAfterGoal = 0;
