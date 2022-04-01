@@ -1,31 +1,57 @@
 #include "FileSystem.h"
 
-void FileSystem::WriteMazeDataToFile(std::string filename, std::string compact, std::string coded) {
+void FileSystem::WriteMazeDataToFile(std::vector<std::vector<MazeCell>> mazeCells) {
+	std::string compactStr = "";
 	std::ofstream out("maze.txt");
 
-	out << compact << std::endl;
-	out << coded << std::endl;
+	for (size_t row = 0; row < mazeCells.size(); row++) {
+		for (size_t col = 0; col < mazeCells[row].size(); col++) {
+			compactStr += mazeCells[row][col].str();
+		}
+		compactStr += "\n";
+	}
+
+	out << compactStr;
 	out.close();
 }
 
-std::pair<std::vector<std::vector<std::string>>, std::vector<std::vector<int>>> FileSystem::ReadMazeDataFile(std::string filename) {
+std::vector<std::vector<MazeCell>> FileSystem::ReadMazeDataFile(std::string filename) {
 	std::ifstream in(filename);
-	std::string line;
+	std::string templine;
 	std::vector<std::string> lines;
 
-	std::vector<std::vector<std::string>> stringRepMaze;
-	std::vector<std::vector<int>> codedRepMaze;
-
-	// every 1st line in a set is compact string, reconstruct it as string 2d vector
-	// every 2nd second line is coded string, reconstruct it as int 2d vector
-
-	while (std::getline(in, line)) {
-		lines.push_back(line);
+	while (std::getline(in, templine)) {
+		lines.push_back(templine);
 	}
 
-	// TODO: handle a 64 char string as 8 x 8
 
-	return std::make_pair(stringRepMaze, codedRepMaze);
+	std::vector<std::vector<MazeCell>> fullMaze;
+	fullMaze.resize(lines.size());
+	for (size_t i = 0; i < lines.size(); i++) {
+		fullMaze[i].resize(lines[i].size());
+	}
+
+	for (size_t r = 0; r < lines.size(); r++) {
+		for (size_t c = 0; c < lines[r].size(); c++) {
+			if (lines[r][c] == '#') {
+				fullMaze[r][c].SetWall(true);
+			}
+			else if (lines[r][c] == '.') {
+				fullMaze[r][c].SetWall(false);
+			}
+			else if (lines[r][c] == 'S') {
+				fullMaze[r][c].SetAsStart(true);
+			}
+			else if (lines[r][c] == 'E') {
+				fullMaze[r][c].SetAsExit(true);
+			}
+		}
+		//std::cout << std::endl;
+	}
+
+	// TODO: code the maze based on each str here before returning
+
+	return fullMaze;
 }
 
 void FileSystem::WriteModelToFile(std::string filename) {

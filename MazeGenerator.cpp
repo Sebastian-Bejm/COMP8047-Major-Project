@@ -43,8 +43,8 @@ void MazeGenerator::Generate() {
 	std::uniform_int_distribution<> yDistr(0, mazeCells[0].size()-1);
 
 	// Initialize a grid with all cells set as walls with no path
-	for (int row = 0; row < mazeCells.size(); row++) {
-		for (int col = 0; col < mazeCells[0].size(); col++) {
+	for (size_t row = 0; row < mazeCells.size(); row++) {
+		for (size_t col = 0; col < mazeCells[row].size(); col++) {
 			mazeCells[row][col].SetWall(true);
 		}
 	}
@@ -78,8 +78,11 @@ void MazeGenerator::Generate() {
 
 	CreateMazePositions();
 
-	EncodeMaze();
+	FileSystem::WriteMazeDataToFile(mazeCells);
 
+	mazeCells = FileSystem::ReadMazeDataFile("maze.txt");
+
+	PrintMaze();
 }
 
 // Print the generated maze. Mainly used for debugging.
@@ -87,8 +90,8 @@ void MazeGenerator::PrintMaze() {
 	if (mazeCells.size() <= 1 || mazeCells[0].size() <= 1) {
 		return;
 	}
-	for (int row = 0; row < mazeCells.size(); row++) {
-		for (int col = 0; col < mazeCells[0].size(); col++) {
+	for (size_t row = 0; row < mazeCells.size(); row++) {
+		for (size_t col = 0; col < mazeCells[0].size(); col++) {
 			std::cout << mazeCells[row][col].str() << " ";
 		}
 		std::cout << std::endl;
@@ -96,39 +99,10 @@ void MazeGenerator::PrintMaze() {
 
 }
 
-// Write the current maze to a file to be read on another run
-void MazeGenerator::WriteMazeData() {
-	std::string compactStr = "";
-	std::string codedStr = "";
-	std::ofstream out("maze.txt");
-
-	for (size_t row = 0; row < mazeCells.size(); row++) {
-		for (size_t col = 0; col < mazeCells[row].size(); col++) {
-			compactStr += mazeCells[row][col].str();
-			codedStr += std::to_string(encodedMaze[row][col]);
-		}
-	}
-
-	out << compactStr << std::endl;
-	out << codedStr << std::endl;
-	out.close();
-}
-
-// Read the maze data from a file to be reconstructed and also used by the network
-void MazeGenerator::ReadMazeData() {
-	std::ifstream in("maze.txt");
-	std::string line;
-	std::vector<std::string> lines;
-	while (std::getline(in, line)) {
-		lines.push_back(line);
-	}
-
-}
-
 // Get the starting cell where the agent is first spawned in the maze
 MazeCell& MazeGenerator::GetStartCell() {
-	for (int row = 0; row < mazeCells.size(); row++) {
-		for (int col = 0; col < mazeCells[0].size(); col++) {
+	for (size_t row = 0; row < mazeCells.size(); row++) {
+		for (size_t col = 0; col < mazeCells[0].size(); col++) {
 			if (mazeCells[row][col].IsStart()) {
 				return mazeCells[row][col];
 			}
@@ -138,8 +112,8 @@ MazeCell& MazeGenerator::GetStartCell() {
 
 // Get the exit cell of the maze
 MazeCell& MazeGenerator::GetEndCell() {
-	for (int row = 0; row < mazeCells.size(); row++) {
-		for (int col = 0; col < mazeCells[0].size(); col++) {
+	for (size_t row = 0; row < mazeCells.size(); row++) {
+		for (size_t col = 0; col < mazeCells[0].size(); col++) {
 			if (mazeCells[row][col].IsExit()) {
 				return mazeCells[row][col];
 			}
@@ -150,8 +124,8 @@ MazeCell& MazeGenerator::GetEndCell() {
 // Get the starting point coordinates of the maze
 std::vector<int> MazeGenerator::GetStartCoordinates() {
 	std::vector<int> coords(2);
-	for (int row = 0; row < mazeCells.size(); row++) {
-		for (int col = 0; col < mazeCells[0].size(); col++) {
+	for (size_t row = 0; row < mazeCells.size(); row++) {
+		for (size_t col = 0; col < mazeCells[0].size(); col++) {
 			if (mazeCells[row][col].IsStart()) {
 				coords[0] = col;
 				coords[1] = row;
@@ -164,11 +138,11 @@ std::vector<int> MazeGenerator::GetStartCoordinates() {
 // Get the end point coordinates of the maze
 std::vector<int> MazeGenerator::GetEndCoordinates() {
 	std::vector<int> coords(2);
-	for (int row = 0; row < mazeCells.size(); row++) {
-		for (int col = 0; col < mazeCells[0].size(); col++) {
+	for (size_t row = 0; row < mazeCells.size(); row++) {
+		for (size_t col = 0; col < mazeCells[0].size(); col++) {
 			if (mazeCells[row][col].IsExit()) {
 				coords[0] = col;
-				coords[1] = -row;
+				coords[1] = -(int)(row);
 			}
 		}
 	}
@@ -231,25 +205,6 @@ MazeCell& MazeGenerator::GetRandom(std::vector<MazeCell>& cells) {
 	return chosen;
 }
 
-// Encode the maze as 1's and 0's required for finding shortest path
-void MazeGenerator::EncodeMaze() {
-	encodedMaze.resize(mazeCells.size());
-	for (size_t i = 0; i < mazeCells.size(); i++) {
-		encodedMaze[i].resize(mazeCells[0].size());
-	}
-
-	for (size_t row = 0; row < mazeCells.size(); row++) {
-		for (size_t col = 0; col < mazeCells[row].size(); col++) {
-			if (mazeCells[row][col].IsWall()) {
-				encodedMaze[row][col] = 1;
-			}
-			else {
-				encodedMaze[row][col] = 0;
-			}
-		}
-	}
-}
-
 // Helper function to create the outer walls if the generated maze does not have the correct walls
 void MazeGenerator::PadOuterWalls() {
 	// Check the corners of the maze if there is already an outer wall in place
@@ -298,8 +253,8 @@ void MazeGenerator::PadOuterWalls() {
 	size_t addCol = colsAdded ? 1 : 0;
 
 	// Copy the maze to the padded maze
-	for (int row = 0; row < paddedMaze.size(); row++) {
-		for (int col = 0; col < paddedMaze[row].size(); col++) {
+	for (size_t row = 0; row < paddedMaze.size(); row++) {
+		for (size_t col = 0; col < paddedMaze[row].size(); col++) {
 			if (row >= mazeCells.size() || col >= mazeCells[0].size()) {
 				continue;
 			}

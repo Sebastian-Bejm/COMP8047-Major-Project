@@ -49,12 +49,6 @@
     <Filter Include="Source Files\Utility">
       <UniqueIdentifier>{5ecbc8a2-1ec2-4293-a1a7-426fefec51fa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Systems">
-      <UniqueIdentifier>{ed14e745-131e-4e88-b809-e40a1cf0c42c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Systems">
-      <UniqueIdentifier>{b81d5aae-ec5c-43b0-86b6-db021ddd202c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\MazeData">
       <UniqueIdentifier>{2a371245-9887-45a4-b13f-254e26d05b9b}</UniqueIdentifier>
     </Filter>
@@ -63,6 +57,12 @@
     </Filter>
     <Filter Include="Header Files\Network">
       <UniqueIdentifier>{7fe8f00b-857d-448f-b59d-b5b19d045a4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\MainSystems">
+      <UniqueIdentifier>{b81d5aae-ec5c-43b0-86b6-db021ddd202c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\MainSystems">
+      <UniqueIdentifier>{ed14e745-131e-4e88-b809-e40a1cf0c42c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -130,6 +130,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ELM.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="QELM.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Field.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -236,6 +242,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ELM.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="QELM.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Field.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

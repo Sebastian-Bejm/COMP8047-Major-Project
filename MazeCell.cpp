@@ -75,17 +75,37 @@ bool MazeCell::IsEqual(const MazeCell& mc) {
 }
 
 std::string MazeCell::str() {
-	if (isWall) {
-		return "#";
-	}
 	if (obstructed) {
 		return "X";
 	}
-	if (start) {
+	else if (start) {
 		return "S";
 	}
-	if (exit) {
+	else if (exit) {
 		return "E";
 	}
-	return ".";
+	else if (isWall) {
+		return "#";
+	}
+	else {
+		return ".";
+	}
+}
+
+int MazeCell::GetCode() {
+	if (obstructed) {
+		return -20;
+	}
+	else if (start) {
+		return 0;
+	}
+	else if (exit) {
+		return 10;
+	}
+	else if (isWall) {
+		return -10;
+	}
+	else {
+		return 1;
+	}
 }

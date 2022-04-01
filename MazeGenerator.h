@@ -9,6 +9,7 @@
 #include <random>
 
 #include "MazeCell.h"
+#include "FileSystem.h"
 
 class MazeGenerator
 {
@@ -20,9 +21,6 @@ public:
 	void InitWalledEmptyMaze(int rows, int cols);
 	void Generate();
 	void PrintMaze();
-	
-	void WriteMazeData();
-	void ReadMazeData();
 
 	MazeCell& GetStartCell();
 	MazeCell& GetEndCell();
@@ -41,7 +39,6 @@ private:
 	};
 
 	std::vector<std::vector<MazeCell>> mazeCells;
-	std::vector<std::vector<int>> encodedMaze;
 
 	std::vector<MazeCell> FrontierCellsOf(MazeCell& cell);
 	std::vector<MazeCell> PassageCellsOf(MazeCell& cell);
@@ -53,7 +50,7 @@ private:
 
 	MazeCell& GetRandom(std::vector<MazeCell>& cells);
 	
-	void EncodeMaze();
 	void PadOuterWalls();
 	void CreateMazePositions();
+
 };
