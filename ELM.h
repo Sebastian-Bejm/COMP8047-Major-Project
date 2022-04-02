@@ -17,8 +17,8 @@ public:
 
 	ELM(int inputSize, int hiddenSize, int outputSize);
 
-	void Train(Eigen::MatrixXf features, Eigen::MatrixXf labels);
-	void Predict(Eigen::MatrixXf X);
+	Eigen::MatrixXf Train(Eigen::MatrixXf X, Eigen::MatrixXf Y);
+	Eigen::MatrixXf Predict(Eigen::MatrixXf X);
 	void Score();
 
 private:
@@ -28,6 +28,5 @@ private:
 	Eigen::MatrixXf H, beta;
 
 	Eigen::MatrixXf SigmoidActivation(Eigen::MatrixXf X);
-	Eigen::MatrixXf RELUActivation(Eigen::MatrixXf X);
 
 };

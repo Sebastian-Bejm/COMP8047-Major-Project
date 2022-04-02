@@ -14,24 +14,37 @@ ELM::ELM(int inputSize, int hiddenSize, int outputSize) {
 	auto bias_uniform = [&](float) {return bias_distr(gen); };
 
 	// may have to change this, doesnt seem uniform
+	// initialize random weight with range (-0.5, 0.5)
 	weights = Eigen::MatrixXf::Zero(this->hiddenSize, this->inputSize).unaryExpr(weights_uniform);
-	//std::cout << weights << std::endl;
-
+	// initialize random bias with range (0, 1)
 	bias = Eigen::MatrixXf::Zero(1, this->hiddenSize).unaryExpr(bias_uniform);
 
-	SigmoidActivation(bias);
-
-	//std::cout << bias << std::endl;
 }
 
-void ELM::Train(Eigen::MatrixXf features, Eigen::MatrixXf labels) {
-	
+// Extreme Learning Machine training process
+Eigen::MatrixXf ELM::Train(Eigen::MatrixXf X, Eigen::MatrixXf Y) {
+	// calculate the hidden layer output matrix
+	H = (X * weights.transpose()) + bias;
+
+	H = SigmoidActivation(H);
+
+	// calculate the Moore-Penrose psuedoinverse matrix
+	Eigen::MatrixXf moorePenrose = H.transpose() * H;
+	moorePenrose = moorePenrose.inverse();
+	moorePenrose = moorePenrose * H.transpose();
+
+	beta = moorePenrose * Y;
+
+	return H * beta;
 }
 
-void ELM::Predict(Eigen::MatrixXf X) {
-
+// Predict the results of the training process using test data
+Eigen::MatrixXf ELM::Predict(Eigen::MatrixXf X) {
+	Eigen::MatrixXf prod = (X * weights.transpose()) + bias;
+	Eigen::MatrixXf y = SigmoidActivation(prod) * beta;
 }
 
+// Sigmoid activation function
 Eigen::MatrixXf ELM::SigmoidActivation(Eigen::MatrixXf X) {
 	for (size_t i = 0; i < X.rows(); i++) {
 		for (size_t j = 0; j < X.cols(); j++) {
@@ -40,10 +53,6 @@ Eigen::MatrixXf ELM::SigmoidActivation(Eigen::MatrixXf X) {
 	}
 
 	return X;
-}
-
-Eigen::MatrixXf ELM::RELUActivation(Eigen::MatrixXf X) {
-
 }
 
 void ELM::Score() {
