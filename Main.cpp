@@ -11,7 +11,7 @@
 #include "GameManager.h"
 #include "Agent.h"
 #include "FPSCounter.h"
-#include "ELM.h"
+#include "QLearn.h"
 
 const int screenWidth = 1200;
 const int screenHeight = 1000;
@@ -42,8 +42,9 @@ int Initialize() {
 	physicsWorld = &PhysicsWorld::GetInstance();
 
 	// Generate a maze of size m x n (medium/large size, use odd numbers)
-	mazeGenerator.InitMaze(mazeRows, mazeCols);
-	mazeGenerator.Generate();
+	//mazeGenerator.InitMaze(mazeRows, mazeCols);
+	//mazeGenerator.Generate();
+	mazeGenerator.InitMaze("maze.txt");
 
 	obsGenerator.AttachMazeGenerator(&mazeGenerator);
 
@@ -58,58 +59,6 @@ int Initialize() {
 
 	return 0;
 }
-
-// Load the shaders to be used for objects in the scene
-/*void LoadShaders() {
-	// Create a new shader when using a different texture
-	crateShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
-	brickShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
-}
-
-// Create the scene that includes the maze and agent object at the start
-void CreateMazeScene() {
-
-	std::vector<std::vector<MazeCell>> maze = mazeGenerator.GetMazeCells();
-
-	// Create the maze using game objects
-	// Row: y, Col: x;
-	for (size_t r = 0; r < maze.size(); r++) {
-		for (size_t c = 0; c < maze[r].size(); c++) {
-			// Create agent if cell is the start point
-			if (maze[r][c].IsStart()) {
-				int x = c;
-				int y = r;
-
-				glm::vec3 startPos = glm::vec3(x, -y, 0.0f);
-				glm::vec3 agentRotation = glm::vec3(0.0f);
-				glm::vec3 agentScale = glm::vec3(0.6f, 0.6f, 0.6f);
-
-				// The agent is the first object added to the object tracker
-				GameObject agent("agent", "crate.jpg", crateShader, startPos, agentRotation, agentScale);
-				agent.SetBodyType(b2_dynamicBody);
-
-				objectTracker->AddObject(agent);
-				physicsWorld->AddObject(&agent);
-			}
-
-			// Only create objects when a maze cell is a wall
-			if (maze[r][c].IsWall()) {
-				int x = c;
-				int y = r;
-
-				glm::vec3 position = glm::vec3(x, -y, 0.0f);
-				glm::vec3 rotation = glm::vec3(0.0f);
-				glm::vec3 scale = glm::vec3(1.0f);
-
-				GameObject wall("wall", "brick.png", brickShader, position, rotation, scale);
-
-				objectTracker->AddObject(wall);
-				physicsWorld->AddObject(&wall);
-			}
-		}
-	}
-
-}*/
 
 // This will remain here until everything is finished and Agent properly works
 void HandleInputs() {
@@ -174,11 +123,55 @@ int Teardown() {
 	return 0;
 }
 
+void ReadCSV(std::string filename, std::vector<Eigen::RowVectorXf>& data) {
+	data.clear();
+	std::ifstream file(filename);
+	std::string line, word;
+	// determine number of columns in file
+	std::getline(file, line, '\n');
+	std::stringstream ss(line);
+	std::vector<float> parsed_vec;
+	
+	while (std::getline(ss, word, ',')) {
+		parsed_vec.push_back(float(std::stof(&word[0])));
+	}
+	unsigned int cols = parsed_vec.size();
+	data.push_back(Eigen::RowVectorXf(cols));
+	for (int i = 0; i < cols; i++) {
+		data.back().coeffRef(1, i) = parsed_vec[i];
+	}
+
+	// read the file
+	if (file.is_open()) {
+		while (std::getline(file, line, '\n')) {
+			std::stringstream ss(line);
+			data.push_back(Eigen::RowVectorXf(1, cols));
+			unsigned int i = 0;
+			while (std::getline(ss, word, ',')) {
+				data.back().coeffRef(i) = float(std::stof(&word[0]));
+				i++;
+			}
+		}
+	}
+}
+
+void GenData(std::string filename) {
+	std::ofstream file1(filename + "-in");
+	std::ofstream file2(filename + "-out");
+	for (int r = 0; r < 1000; r++) {
+		float x = rand() / float(RAND_MAX);
+		float y = rand() / float(RAND_MAX);
+		file1 << x << "," << y << std::endl;
+		file2 << 2 * x + 10 + y << std::endl;
+	}
+	file1.close();
+	file2.close();
+}
+
 int main() {
 
-	ELM elm(10, 10, 10);
-
-
+	// Initalize the QLearn
+	QLearn qLearn = QLearn("maze.txt", 0.5, 0.95, 0.999, 0.8, 250);
 
 	// Initalize everything required for engine
 	/*Initialize();

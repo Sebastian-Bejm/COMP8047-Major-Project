@@ -26,14 +26,12 @@ std::vector<std::vector<MazeCell>> FileSystem::ReadMazeDataFile(std::string file
 		lines.push_back(templine);
 	}
 
-
 	std::vector<std::vector<MazeCell>> fullMaze;
 	fullMaze.resize(lines.size());
 	for (size_t i = 0; i < lines.size(); i++) {
 		fullMaze[i].resize(lines[i].size());
 	}
 
-	// TODO: code the maze based on each str here before returning
 	for (size_t r = 0; r < lines.size(); r++) {
 		for (size_t c = 0; c < lines[r].size(); c++) {
 			if (lines[r][c] == '#') {

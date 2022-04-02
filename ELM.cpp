@@ -55,6 +55,18 @@ Eigen::MatrixXf ELM::SigmoidActivation(Eigen::MatrixXf X) {
 	return X;
 }
 
-void ELM::Score() {
+// Calculate the accuracy and loss based on predictions
+void ELM::Score(Eigen::MatrixXf X, Eigen::MatrixXf Y) {
+	/*def score(self, x, y) :
+        self.prediction = self.predict(x)
+        if self.elm_type == 'clf':
+            self.correct = 0
+            for i in range(y.shape[0]):
+                if self.prediction[i] == y[i]:
+                    self.correct += 1
+            self.test_score = self.correct/y.shape[0]
+        if self.elm_type == 'reg':
+            self.test_score = np.sqrt(np.sum((self.result - self.y) * (self.result - self.y))/self.y.shape[0])
 
+        return self.test_score*/
 }

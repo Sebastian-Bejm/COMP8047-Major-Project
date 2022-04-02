@@ -17,6 +17,12 @@ void MazeGenerator::InitMaze(int rows, int cols) {
 	}
 }
 
+// Initialize a maze from file
+void MazeGenerator::InitMaze(std::string filename) {
+	mazeCells = FileSystem::ReadMazeDataFile(filename);
+}
+
+
 // Initializes an empty maze with walls
 void MazeGenerator::InitWalledEmptyMaze(int rows, int cols) {
 	mazeCells.resize(rows);
@@ -75,14 +81,7 @@ void MazeGenerator::Generate() {
 	}
 
 	PadOuterWalls(); 
-
 	CreateMazePositions();
-
-	//FileSystem::WriteMazeDataToFile(mazeCells);
-
-	//mazeCells = FileSystem::ReadMazeDataFile("maze.txt");
-
-	//PrintMaze();
 }
 
 // Print the generated maze. Mainly used for debugging.

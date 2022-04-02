@@ -18,6 +18,7 @@ public:
 	MazeGenerator();
 
 	void InitMaze(int rows, int cols);
+	void InitMaze(std::string filename);
 	void InitWalledEmptyMaze(int rows, int cols);
 	void Generate();
 	void PrintMaze();

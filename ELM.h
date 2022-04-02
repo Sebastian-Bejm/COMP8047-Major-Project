@@ -6,9 +6,7 @@
 #include <Eigen/Dense>
 
 // Misc stuff:
-// https://www.delftstack.com/howto/cpp/cpp-dot-product/
 // https://medium.datadriveninvestor.com/extreme-learning-machine-for-simple-classification-e776ad797a3c
-// https://www.geeksforgeeks.org/ml-neural-network-implementation-in-c-from-scratch/
 // https://github.com/5663015/elm
 
 class ELM
@@ -19,7 +17,7 @@ public:
 
 	Eigen::MatrixXf Train(Eigen::MatrixXf X, Eigen::MatrixXf Y);
 	Eigen::MatrixXf Predict(Eigen::MatrixXf X);
-	void Score();
+	void Score(Eigen::MatrixXf X, Eigen::MatrixXf Y);
 
 private:
 
