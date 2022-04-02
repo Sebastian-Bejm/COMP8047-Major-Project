@@ -17,7 +17,8 @@
 const int screenWidth = 1200;
 const int screenHeight = 1000;
 
-const int mazeRows = 15, mazeCols = 15;
+const int mazeRows = 13, mazeCols = 13;
+const int cameraDepth = 19.0f;
 
 ObjectTracker* objectTracker;
 Renderer* renderer;
@@ -29,10 +30,6 @@ GameManager* gameManager;
 Camera camera;
 Agent randomAgent;
 
-// TODO:
-// obstruction generator proper algorithm for random objects
-// find textures to use for start and end cells so agent is actually visible
-// ELM
 
 int Initialize() {
 	glm::fvec4 backgroundColour(180.0f / 255.0f, 240.0f / 255.0f, 239.0f / 255.0f, 1.0f);
@@ -55,7 +52,7 @@ int Initialize() {
 
 	randomAgent = Agent(false);
 
-	camera = Camera(screenWidth, screenHeight, glm::vec3((float)(mazeCols/2), (float)(-mazeRows/2), 19.0f));
+	camera = Camera(screenWidth, screenHeight, glm::vec3((float)(mazeCols/2), (float)(-mazeRows/2), cameraDepth));
 	renderer->SetCamera(camera);
 
 	return 0;
@@ -171,11 +168,11 @@ void GenData(std::string filename) {
 
 int main() {
 
-	https://github.com/SohamBhure/Q-Learning-In-C/blob/master/QLearningInC.c
-
 	// Initalize the QLearn
-	QLearn qLearn = QLearn("maze.txt", 0.5f, 0.90f, 0.999f, 0.8f, 10);
+	//QLearn qLearn = QLearn("maze.txt", 0.5f, 0.90f, 0.999f, 0.8f, 10);
 	//Eigen::MatrixXf qTable = qLearn.Learn();
+
+	//QLearn2 qLearnELM("maze.txt", 0.1f, 0.8f, 10);
 
 
 	// Initalize everything required for engine

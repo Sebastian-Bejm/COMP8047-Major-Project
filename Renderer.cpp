@@ -269,7 +269,7 @@ int Renderer::Update(ObjectTracker* tracker) {
 
 	camera.ProcessInput(window, deltaTime);
 	//camera.SetPerspectiveMatrix(45.0f, 0.1f, 100.0f);
-	camera.SetOrthoMatrix(-8.0f, 11.0f, -11.0f, 8.0f, 0.1f, 100.0f);
+	camera.SetOrthoMatrix(-8.0f, 10.0f, -10.0f, 8.0f, 0.1f, 100.0f);
 
 	// Draw the game objects here with a reference to the camera
 	std::vector<GameObject> objects = tracker->GetAllObjects();
