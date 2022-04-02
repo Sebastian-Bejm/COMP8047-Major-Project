@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+#include <random>
+#include <iostream>
 #include <Eigen/Dense>
 
 // Misc stuff:
@@ -13,17 +15,19 @@ class ELM
 {
 public:
 
-	ELM();
 	ELM(int inputSize, int hiddenSize, int outputSize);
 
-	void Fit();
-
-	void SigmoidActivation();
-	void RELUActivation();
-
-	void Predict();
+	void Train(Eigen::MatrixXf features, Eigen::MatrixXf labels);
+	void Predict(Eigen::MatrixXf X);
 	void Score();
 
 private:
+
 	int inputSize, hiddenSize, outputSize;
+	Eigen::MatrixXf weights, bias;
+	Eigen::MatrixXf H, beta;
+
+	Eigen::MatrixXf SigmoidActivation(Eigen::MatrixXf X);
+	Eigen::MatrixXf RELUActivation(Eigen::MatrixXf X);
+
 };

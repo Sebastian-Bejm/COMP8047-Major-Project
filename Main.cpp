@@ -1,8 +1,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include <Eigen/Dense>
-#include <Eigen/Core>
 
 #include "GameObject.h"
 #include "ObjectTracker.h"
@@ -11,9 +9,9 @@
 #include "MazeGenerator.h"
 #include "ObstructionGenerator.h"
 #include "GameManager.h"
-
 #include "Agent.h"
 #include "FPSCounter.h"
+#include "ELM.h"
 
 const int screenWidth = 1200;
 const int screenHeight = 1000;
@@ -178,8 +176,12 @@ int Teardown() {
 
 int main() {
 
+	ELM elm(10, 10, 10);
+
+
+
 	// Initalize everything required for engine
-	Initialize();
+	/*Initialize();
 
 	// Load the initial scene
 	gameManager->LoadScene();
@@ -199,7 +201,7 @@ int main() {
 	}
 
 	// Cleanup objects and destroy/exit window when done
-	Teardown();
+	Teardown();*/
 
 	return 0;
 }
