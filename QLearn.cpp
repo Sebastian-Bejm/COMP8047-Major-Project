@@ -18,33 +18,25 @@ QLearn::QLearn(std::string filename, float discountFactor, float epsilon, float 
 	this->numEpisodes = numEpisodes;
 
 	CreateQTable();
+	InitMazeRewardValues();
 }
 
-
+// Perform the QLearn algorithm (no network)
 Eigen::MatrixXf QLearn::Learn() {
-
-	std::random_device rand_dev;
-	std::mt19937 gen(rand_dev());
-	std::uniform_real_distribution<float> ep_distr(0, 1);
-	std::uniform_int_distribution<> action_distr(1, 4);
-
 	for (int i = 0; i < numEpisodes; i++) {
-
 		currentPosition = GetStartingPosition();
-		epsilon *= epsDecayFactor;
 
 		bool done = false;
-		while (!done || !IsTerminalCell(currentPosition)) {
-			int action = 0;
+		while (!done) {			
+			std::string action = EpsilonGreedy(currentPosition);
+			//std::cout << action << std::endl;
 
-			if (ep_distr(gen) < epsilon) {
-				action = action_distr(gen);
-			}
-			else {
-				// action = max(qTable[state])
-			}
-			
+			currentPosition = GetCellAfterAction(currentPosition, action);
+			//std::cout << currentPosition.x << ", " << currentPosition.y << std::endl;
 
+			if (IsTerminalCell(currentPosition)) {
+				break;
+			}
 			done = true;
 		}
 	}
@@ -52,70 +44,70 @@ Eigen::MatrixXf QLearn::Learn() {
 	return qTable;
 }
 
-void QLearn::EncodeMaze() {
+void QLearn::CreateQTable() {
+	qTable = Eigen::MatrixXf::Zero(NUM_STATES, NUM_ACTIONS);
 
-	codedMaze.resize(maze.size());
-	for (size_t i = 0; i < codedMaze.size(); i++) {
-		codedMaze[i].resize(maze[i].size());
-	}	
-
-	for (size_t r = 0; r < maze.size(); r++) {
+	/*for (size_t r = 0; r < maze.size(); r++) {
 		for (size_t c = 0; c < maze[r].size(); c++) {
-			codedMaze[r][c] = maze[r][c].GetCode();
+			State cell = State{ (int)c, (int)r };
+
+			for (std::string action : ACTIONS) {
+				if (IsValidCell(cell, action)) {
+
+				}
+			}
+		}
+	}*/
+}
+
+void QLearn::InitMazeRewardValues() {
+	mazeValues.resize(maze.size());
+	for (size_t i = 0; i < maze.size(); i++) {
+		mazeValues[i].resize(maze[i].size());
+	}
+
+	for (size_t r = 0; r < mazeValues.size(); r++) {
+		for (size_t c = 0; c < mazeValues[r].size(); c++) {
+			if (maze[r][c].str() == "#") {
+				mazeValues[r][c] = -10;
+			}
+			else if (maze[r][c].str() == ".") {
+				mazeValues[r][c] = -1;
+			}
+			else if (maze[r][c].str() == "S") {
+				mazeValues[r][c] = 0;
+			}
+			else if (maze[r][c].str() == "E") {
+				mazeValues[r][c] = 100;
+			}
 		}
 	}
 }
 
-void QLearn::CreateQTable() {
-	qTable = Eigen::MatrixXf::Zero(numStates, numActions);
-}
 
-std::tuple<int, bool> QLearn::TakeAction(int action) {
-	State newPosition = currentPosition;
-
+std::string QLearn::EpsilonGreedy(State state) {
 	std::random_device rand_dev;
 	std::mt19937 gen(rand_dev());
-	std::uniform_int_distribution<> distr(1, 4);
+	std::uniform_real_distribution<float> ep_distr(0, 1);
+	std::uniform_int_distribution<> action_distr(1, NUM_ACTIONS);
 
-	bool done = false;
+	std::string action = "";
 
-	int action = distr(gen);
+	if (ep_distr(gen) < epsilon) {
+		action = action_distr(gen);
 
-	if (action == 1) { // move south
-		if (newPosition.y == maze.size() + 1) {
-			return std::make_tuple(-10, false);
+		std::vector<State> validActions;
+
+		for (int i = 0; i < NUM_ACTIONS; i++) {
+
 		}
-		else {
-			currentPosition = { newPosition.x, newPosition.y + 1 };
-			//return std::make_tuple(GetCellValue(currentPosition), false);
-		}
+
 	}
-	else if (action == 2) { // move north
-		if (newPosition.y == 0) {
-			return std::make_tuple(-10, false);
-		}
-		else {
-			currentPosition = { newPosition.x, newPosition.y - 1 };
-			//return std::make_tuple(GetCellValue(currentPosition), false);
-		}
-	}
-	else if (action == 3) { // move east
-		if (newPosition.x == maze[0].size() - 1) {
-			return std::make_tuple(-10, false);
-		}
-		else {
-			currentPosition = { newPosition.x + 1, newPosition.y };
-		}
-	}
-	else if (action == 4) { // move west
-		if (newPosition.x == 0) {
-			return std::make_tuple(-10, false);
-		}
-		else {
-			currentPosition = { newPosition.x - 1, newPosition.y };
-		}
+	else {
+		
 	}
 
+	return action;
 }
 
 State QLearn::GetStartingPosition() {
@@ -128,31 +120,37 @@ State QLearn::GetStartingPosition() {
 	}
 }
 
+// Check if the current state is in a terminal state
 bool QLearn::IsTerminalCell(State state) {
 	if (maze[state.y][state.x].str() == "E") {
-
+		return true;
 	}
+	return false;
+}
+
+bool QLearn::IsValidCell(State coordinate, std::string action) {
+	State cell = GetCellAfterAction(coordinate, action);
+	return 0 <= cell.x < maze.size() && 0 <= cell.y < maze[0].size();
+}
+
+State QLearn::GetCellAfterAction(State coordinate, std::string action) {
+	State newState = coordinate;
+	if (action == "up") { // north
+		newState.y -= 1;
+	}
+	else if (action == "down") { // south
+		newState.y += 1;
+	}
+	else if (action == "right") { // east
+		newState.x += 1;
+	}
+	else if (action == "left") { // west
+		newState.x -= 1;
+	}
+
+	return newState;
 }
 
 int QLearn::GetCellValue(State state) {
-	// empty space
-	if (maze[state.y][state.x].str() == ".") {
-		return 0;
-	}
-	// wall
-	else if (maze[state.y][state.x].str() == "#") {
-		return -1;
-	}
-	// start
-	else if (maze[state.y][state.x].str() == "S") {
-		return 0;
-	}
-	// end / exit
-	else if (maze[state.y][state.x].str() == "E") {
-		return 1;
-	}
-	// obstruction
-	else if (maze[state.y][state.x].str() == "X") {
-		return -2;
-	}
+	return mazeValues[state.y][state.x];
 }

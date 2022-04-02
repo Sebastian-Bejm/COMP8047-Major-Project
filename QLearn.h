@@ -5,6 +5,9 @@
 #include "ELM.h"
 #include "FileSystem.h"
 
+// https://github.com/stschoberg/mazeGame
+// https://github.com/jinfagang/Q-Learning/blob/master/main.cpp
+
 struct State {
 	int x;
 	int y;
@@ -21,26 +24,32 @@ public:
 
 private:
 
-	const int numActions = 4;
-	const int numStates = 4; // for now the number of states is 4 since we don't include the obstruction
+	const int NUM_STATES = 4; // for now the number of states is 4 since we don't include the obstruction
+	const int NUM_ACTIONS = 4;
+	std::vector<std::string> ACTIONS = { "left", "right", "up", "down" };
+
 	int numEpisodes;
 	float discountFactor, epsilon, epsDecayFactor, learningRate;
 
 	std::vector<std::vector<MazeCell>> maze;
-	std::vector<std::vector<int>> codedMaze;
+	std::vector<std::vector<int>> mazeValues;
 	Eigen::MatrixXf qTable;
 
 	State currentPosition = State{ -1, -1 };
 
 	std::vector<std::pair<int, int>> bestPath;
 
-	void EncodeMaze();
 	void CreateQTable();
-	void EpsilonGreedy();
+	void InitMazeRewardValues();
+	std::string EpsilonGreedy(State state);
+
+	void EvaluateQ(State position, std::string action);
+
+	bool IsTerminalCell(State state);
+	bool IsValidCell(State coordinate, std::string action);
+
+	int GetCellValue(State state);
 
 	State GetStartingPosition();
-	bool IsTerminalCell(State state);
-
-	std::tuple<int, bool> TakeAction(int action);
-	int GetCellValue(State state);
+	State GetCellAfterAction(State coordinate, std::string action);
 };

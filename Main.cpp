@@ -12,6 +12,7 @@
 #include "Agent.h"
 #include "FPSCounter.h"
 #include "QLearn.h"
+#include "QLearn2.h"
 
 const int screenWidth = 1200;
 const int screenHeight = 1000;
@@ -170,11 +171,12 @@ void GenData(std::string filename) {
 
 int main() {
 
-	// Initalize the QLearn
-	QLearn qLearn = QLearn("maze.txt", 0.5f, 0.95f, 0.999f, 0.8f, 20);
-	Eigen::MatrixXf qTable = qLearn.Learn();
+	https://github.com/SohamBhure/Q-Learning-In-C/blob/master/QLearningInC.c
 
-	// handle logic for movement here...
+	// Initalize the QLearn
+	QLearn qLearn = QLearn("maze.txt", 0.5f, 0.90f, 0.999f, 0.8f, 10);
+	//Eigen::MatrixXf qTable = qLearn.Learn();
+
 
 	// Initalize everything required for engine
 	/*Initialize();
