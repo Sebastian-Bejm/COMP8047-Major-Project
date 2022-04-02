@@ -171,7 +171,10 @@ void GenData(std::string filename) {
 int main() {
 
 	// Initalize the QLearn
-	QLearn qLearn = QLearn("maze.txt", 0.5, 0.95, 0.999, 0.8, 250);
+	QLearn qLearn = QLearn("maze.txt", 0.5f, 0.95f, 0.999f, 0.8f, 20);
+	Eigen::MatrixXf qTable = qLearn.Learn();
+
+	// handle logic for movement here...
 
 	// Initalize everything required for engine
 	/*Initialize();
