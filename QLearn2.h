@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ELM.h"
+#include "QMaze.h"
 #include "FileSystem.h"
 
 // https://github.com/SohamBhure/Q-Learning-In-C/blob/master/QLearningInC.c
@@ -14,6 +15,32 @@ public:
 
 	QLearn2(std::string filename, float epsilon, float learningRate, int numEpisodes) {
 		this->maze = FileSystem::ReadMazeDataFile(filename);
+
+		Position startPos = {};
+		Position endPos = {};
+
+		std::vector<std::vector<float>> mazeNumRep(maze.size(), std::vector<float>(maze[0].size()));
+
+		for (size_t i = 0; i < maze.size(); i++) {
+			for (size_t j = 0; j < maze[i].size(); j++) {
+				if (maze[i][j].IsStart()) {
+					startPos.x = j;
+					startPos.y = i;
+				}
+				else if (maze[i][j].IsExit()) {
+					endPos.x = j;
+					endPos.y = i;
+				}
+				if (maze[i][j].IsWall()) {
+					mazeNumRep[i][j] = 0.0;
+				}
+				else {
+					mazeNumRep[i][j] = 1.0;
+				}
+			}
+		}
+
+		qMaze = QMaze(mazeNumRep, startPos, endPos);
 
 		this->epsilon;
 		this->learningRate = learningRate;
@@ -33,7 +60,6 @@ public:
 
 private:
 
-	std::vector<std::string> ACTIONS = { "LEFT", "RIGHT", "UP", "DOWN" };
 	const int NUM_ACTIONS = 4;
 	const int NUM_STATES = 4;
 
@@ -41,5 +67,7 @@ private:
 	int numEpisodes;
 
 	std::vector<std::vector<MazeCell>> maze;
+	QMaze qMaze;
+
 	Eigen::MatrixXf qMatrix, rMatrix;
 };

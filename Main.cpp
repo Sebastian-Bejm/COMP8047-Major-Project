@@ -11,7 +11,6 @@
 #include "GameManager.h"
 #include "Agent.h"
 #include "FPSCounter.h"
-#include "QLearn.h"
 #include "QLearn2.h"
 
 const int screenWidth = 1200;
@@ -30,6 +29,11 @@ GameManager* gameManager;
 Camera camera;
 Agent randomAgent;
 
+// TODO:
+// Agent update movement (smoothly)
+// Obstruction Generator just random generate possible spots within a limit
+// Q-learning and connect ELM => then handle the randomness
+// DOCUMENTATION SHIT
 
 int Initialize() {
 	glm::fvec4 backgroundColour(180.0f / 255.0f, 240.0f / 255.0f, 239.0f / 255.0f, 1.0f);
@@ -169,10 +173,7 @@ void GenData(std::string filename) {
 int main() {
 
 	// Initalize the QLearn
-	//QLearn qLearn = QLearn("maze.txt", 0.5f, 0.90f, 0.999f, 0.8f, 10);
-	//Eigen::MatrixXf qTable = qLearn.Learn();
-
-	//QLearn2 qLearnELM("maze.txt", 0.1f, 0.8f, 10);
+	QLearn2 qLearnELM("maze.txt", 0.1f, 0.8f, 10);
 
 
 	// Initalize everything required for engine
