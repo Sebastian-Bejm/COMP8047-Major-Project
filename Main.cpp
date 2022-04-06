@@ -29,12 +29,6 @@ GameManager* gameManager;
 Camera camera;
 Agent randomAgent;
 
-// TODO:
-// Agent update movement (smoothly)
-// Obstruction Generator just random generate possible spots within a limit
-// Q-learning and connect ELM => then handle the randomness
-// DOCUMENTATION SHIT
-
 int Initialize() {
 	glm::fvec4 backgroundColour(180.0f / 255.0f, 240.0f / 255.0f, 239.0f / 255.0f, 1.0f);
 	renderer = Renderer::GetInstance();
@@ -172,9 +166,15 @@ void GenData(std::string filename) {
 
 int main() {
 
-	// Initalize the QLearn
-	QLearn2 qLearnELM("maze.txt", 0.1f, 0.8f, 10);
+	float discountFactor = 0.95f;
+	float eps = 0.1f;
+	float epsDecayFactor = 0.999f;
+	float learningRate = 0.8f;
+	int numEpisodes = 50;
 
+	// Initalize the QLearn
+	QLearn2 qLearn("maze.txt", discountFactor, eps, epsDecayFactor, learningRate, numEpisodes);
+	qLearn.RunTrainSession();
 
 	// Initalize everything required for engine
 	/*Initialize();
