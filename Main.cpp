@@ -11,7 +11,7 @@
 #include "GameManager.h"
 #include "Agent.h"
 #include "FPSCounter.h"
-#include "QLearn2.h"
+#include "QLearn.h"
 
 const int screenWidth = 1200;
 const int screenHeight = 1000;
@@ -166,18 +166,25 @@ void GenData(std::string filename) {
 
 int main() {
 
-	float discountFactor = 0.95f;
-	float eps = 0.1f;
-	float epsDecayFactor = 0.999f;
-	float learningRate = 0.8f;
-	int numEpisodes = 50;
+	// IDEA!! if Q-learning doesn't take that long, retrain and get new path each time when the maze is updated
+	// pass the current agent position to a Q-learning instance, get new path
+	// also demonstrate on larger mazes (will take longer)
+	// TODO: Get the path, Agent movement => obstruction generator => ELM change => real-time movement
+
+	double discountFactor = 0.8;
+	double eps = 0.5;
+	double epsDecayFactor = 0.998;
+	double learningRate = 0.1;
+	int numEpisodes = 2000;
 
 	// Initalize the QLearn
-	QLearn2 qLearn("maze.txt", discountFactor, eps, epsDecayFactor, learningRate, numEpisodes);
-	qLearn.RunTrainSession();
+	QLearn qLearn("maze.txt", discountFactor, eps, epsDecayFactor, learningRate, numEpisodes);
+	qLearn.RunTrainSession(true);
+
+	std::vector<MazeCell> bestPath = qLearn.GetPath();
 
 	// Initalize everything required for engine
-	/*Initialize();
+	Initialize();
 
 	// Load the initial scene
 	gameManager->LoadScene();

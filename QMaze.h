@@ -24,11 +24,6 @@ class QMaze
 {
 public:
 
-	QMaze() {
-		this->numRows = 0;
-		this->numCols = 0;
-	}
-
 	QMaze(std::vector<std::vector<double>> maze, State agentPos, State endPos) {
 		this->maze = maze;
 		this->endPos = endPos;
@@ -36,13 +31,15 @@ public:
 
 		this->numRows = maze.size();
 		this->numCols = maze[0].size();
-		//PrintMaze();
 	}
 
 	int Reset() {
 		this->agentPos = startPos;
-		//this->minReward = -0.5 * numRows * numCols;
-		//this->totalReward = 0;
+		path.clear();
+
+		MazeCell startCell = MazeCell(agentPos.y, agentPos.x);
+		path.push_back(startCell);
+
 		return GetState();
 	}
 
@@ -51,18 +48,12 @@ public:
 		float reward = std::get<0>(result);
 		bool status = std::get<1>(result);
 		int newState = GetState();
-		//std::cout << newState << std::endl;
-		//std::cout << status << std::endl;
 
 		return std::make_tuple(newState, reward, status);
 	}
 
 	std::tuple<double, bool> UpdateState(int action) {
-		//State currentState = agentPos;
 		std::vector<int> validActions = GetValidActions(agentPos);
-
-		// if action is in valid actions, then do the below:
-		// if action is NOT in valid actions then its an invalid move, punish with -0.75
 
 		// check if action is in valid actions
 		if (std::find(validActions.begin(), validActions.end(), action) != validActions.end()) {
@@ -92,19 +83,26 @@ public:
 				agentPos.y += 1;
 			}
 		}
+		// if action wasn't in valid actions then penalize 
 		else {
 			return std::make_tuple(WALL_PENALTY, false);
 		}
 
 		// we reach the terminal point
 		if (agentPos.x == endPos.x && agentPos.y == endPos.y) {
+			UpdatePath(agentPos);
 			return std::make_tuple(TARGET_REWARD, true);
 		}
 		// we haven't reached terminal point, still walking around
 		else {
+			UpdatePath(agentPos);
 			return std::make_tuple(VALID_PENALTY, false);
 		}
 
+	}
+
+	std::vector<MazeCell> GetPath() {
+		return path;
 	}
 
 	int GetState() {
@@ -112,17 +110,18 @@ public:
 		int col = agentPos.x;
 
 		int finalState = -1;
-		finalState = (row * numCols) + col; // current row * row size
+		// the state as a single num
+		finalState = (row * numCols) + col;
 
 		return finalState;
 	}
 
-	MazeCell StateToCell(int state) {
-
-		return MazeCell(0, 0);
-	}
-
 private:
+
+	void UpdatePath(State currentState) {
+		MazeCell cell = MazeCell(currentState.y, currentState.x);
+		path.push_back(cell);
+	}
 
 	std::vector<int> GetValidActions(State state) {
 		int row = state.y;
@@ -178,8 +177,8 @@ private:
 	}
 
 	std::vector<std::vector<double>> maze;
+	std::vector<MazeCell> path;
 	int numRows, numCols;
-	//float minReward, totalReward;
 
 	const double WALL_PENALTY = -0.75, VALID_PENALTY = -0.04, BOUNDS_PENALTY = -0.8;
 	const double TARGET_REWARD = 1.0;

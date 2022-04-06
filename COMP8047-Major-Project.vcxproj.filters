@@ -120,9 +120,6 @@
     <ClCompile Include="QELM.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
-    <ClCompile Include="QLearn.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
     <ClCompile Include="QMaze.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
@@ -141,7 +138,7 @@
     <ClCompile Include="TimeTracker.cpp">
       <Filter>Source Files\MainSystems</Filter>
     </ClCompile>
-    <ClCompile Include="QLearn2.cpp">
+    <ClCompile Include="QLearn.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
   </ItemGroup>
@@ -238,9 +235,6 @@
     <ClInclude Include="QELM.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
-    <ClInclude Include="QLearn.h">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
     <ClInclude Include="QMaze.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
@@ -259,7 +253,7 @@
     <ClInclude Include="TimeTracker.h">
       <Filter>Header Files\MainSystems</Filter>
     </ClInclude>
-    <ClInclude Include="QLearn2.h">
+    <ClInclude Include="QLearn.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
   </ItemGroup>
