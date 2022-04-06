@@ -27,7 +27,7 @@ ObstructionGenerator obsGenerator;
 GameManager* gameManager;
 
 Camera camera;
-Agent randomAgent;
+Agent agent;
 
 int Initialize() {
 	glm::fvec4 backgroundColour(180.0f / 255.0f, 240.0f / 255.0f, 239.0f / 255.0f, 1.0f);
@@ -48,7 +48,7 @@ int Initialize() {
 	gameManager->Attach(&obsGenerator, &mazeGenerator);
 	gameManager->LoadShaders();
 
-	randomAgent = Agent(false);
+	agent = Agent();
 
 	camera = Camera(screenWidth, screenHeight, glm::vec3((float)(mazeCols/2), (float)(-mazeRows/2), cameraDepth));
 	renderer->SetCamera(camera);
@@ -57,7 +57,7 @@ int Initialize() {
 }
 
 // This will remain here until everything is finished and Agent properly works
-void HandleInputs() {
+/*void HandleInputs() {
 	GameObject* agent = &objectTracker->GetObjectByTag("agent");
 
 	float velX = 0.0f, velY = 0.0f;
@@ -79,10 +79,10 @@ void HandleInputs() {
 	if (agent != nullptr) {
 		agent->GetRigidBody()->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));
 	}
-}
+}*/
 
 void PhysicsUpdate() {
-	HandleInputs();
+	//HandleInputs();
 
 	physicsWorld->Update(objectTracker);
 }
@@ -95,7 +95,7 @@ int RunEngine() {
 	// physics update comes first
 	PhysicsUpdate();
 
-	randomAgent.MoveUpdate();
+	agent.MoveUpdate();
 	gameManager->Update();
 
 	// graphics comes after physics
@@ -197,14 +197,14 @@ int main() {
 
 		// Run the engine and its updates
 		PhysicsUpdate();
-		//randomAgent.MoveUpdate();
+		agent.MoveUpdate();
 		gameManager->Update();
 
 		GraphicsUpdate();
 	}
 
 	// Cleanup objects and destroy/exit window when done
-	Teardown();*/
+	Teardown();
 
 	return 0;
 }

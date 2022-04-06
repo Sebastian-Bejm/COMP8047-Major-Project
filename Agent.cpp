@@ -1,27 +1,16 @@
 #include "Agent.h"
 
-Agent::Agent() {
-	usingNetwork = false;
-}
+Agent::Agent() {}
 
-Agent::Agent(bool usingNetwork) {
-	this->usingNetwork = usingNetwork;
-}
-
-void Agent::AttachNetwork() {
+void Agent::AttachNetwork(QLearn* instance) {
 
 }
 
 void Agent::MoveUpdate() {
-	if (usingNetwork) {
-		NetworkMove();
-	}
-	else {
-		//RandomMove(5, -5);
-	}
+	
 }
 
-void Agent::RandomMove(float destX, float destY) {
+void Agent::Move(float destX, float destY) {
 	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
 
 	float velX = 0.0f, velY = 0.0f;
@@ -48,8 +37,4 @@ void Agent::RandomMove(float destX, float destY) {
 	for (int i = 0; i < 2; i++) {
 		agentRb->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));
 	}
-}
-
-void Agent::NetworkMove() {
-
 }
