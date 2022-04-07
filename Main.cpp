@@ -162,14 +162,10 @@ void GenData(std::string filename) {
 }
 
 int main() {
-
-	// IDEA!! Q-learning doesn't take that long, retrain and get new path each time when the maze is updated
-	// pass the current agent position to a Q-learning instance, get new path
-	// also demonstrate on larger mazes (will take longer)
-	// TODO: Get the path, Agent movement => obstruction generator => ELM change => real-time movement
-
-	// TODO later: Agent movement => beginner documentation 
-	// tomorrow: replace with ELM (morning) => obstruction generator => just update by passing current maze state - pass back to agent
+	// TODO: 
+	// ObstructionGenerator => change so it generates walls that are marked as the obstructions
+	// ELM in Q-Learning
+	// Proper updating: Get Maze => Agent => Train => Move => if maze is updated then repeat
 
 	/*double discountFactor = 0.8;
 	double eps = 0.5;

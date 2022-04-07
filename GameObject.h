@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Mesh.h"
+#include "Shader.h"
+#include "Camera.h"
 #include "Transform.h"
 #include "RigidBody.h"
 
@@ -13,6 +14,9 @@ public:
 	
 	Transform* GetTransform();
 	void ResetTransform();
+
+	void SetPosition(float x, float y);
+	void SetVelocity(float velX, float velY);
 
 	void SetRigidBody(RigidBody* rigidBody);
 	void SetBodyType(b2BodyType type);

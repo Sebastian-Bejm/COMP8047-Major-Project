@@ -7,7 +7,11 @@
 #include <GLFW/glfw3.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
-
+#include "VAO.h"
+#include "VBO.h"
+#include "EBO.h"
+#include "Shader.h"
+#include "Texture.h"
 #include "Character.h"
 #include "Time.h"
 #include "Camera.h"
@@ -43,7 +47,7 @@ private:
 	// Vector for loading textures on initialization
 	std::vector<Texture> textures; 
 
-	// Store the freetype characters
+	// Variables for handling freetype text
 	std::map<char, Character> characters;
 	glm::mat4 textProjectionMatrix;
 	Shader textShader;
@@ -51,6 +55,9 @@ private:
 	// Variables for window size and color
 	int windowWidth, windowHeight;
 	glm::vec4 backgroundColour;
+
+	const int TEXT_WIDTH_OFFSET = 500;
+	const int TEXT_HEIGHT_OFFSET = 80;
 
 	void PrepareGLBuffers();
 	void LoadTextures();

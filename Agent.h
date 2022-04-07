@@ -29,6 +29,6 @@ private:
 	QLearn instance;
 	float speed = 0.25f;
 
-	std::chrono::system_clock::time_point startTime, endTime;
+	std::chrono::system_clock::time_point start, current, end;
 };
 

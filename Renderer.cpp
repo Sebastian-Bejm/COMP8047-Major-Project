@@ -268,7 +268,6 @@ int Renderer::Update(ObjectTracker* tracker) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	camera.ProcessInput(window, deltaTime);
-	//camera.SetPerspectiveMatrix(45.0f, 0.1f, 100.0f);
 	camera.SetOrthoMatrix(-8.0f, 10.0f, -10.0f, 8.0f, 0.1f, 100.0f);
 
 	// Draw the game objects here with a reference to the camera
@@ -296,8 +295,11 @@ int Renderer::Update(ObjectTracker* tracker) {
 	std::string currentTime = TimeTracker::GetInstance().GetCurrentTime();
 	std::string lastBest = TimeTracker::GetInstance().GetLastBestTime();
 
-	RenderText(textShader, currentTime, (float)windowWidth - 500, (float)windowHeight - 100, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
-	RenderText(textShader, lastBest, (float)windowWidth - 500, (float)windowHeight - 200, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+	RenderText(textShader, currentTime, (float)windowWidth - TEXT_WIDTH_OFFSET*2,
+		(float)windowHeight - TEXT_HEIGHT_OFFSET, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+
+	RenderText(textShader, lastBest, (float)windowWidth - TEXT_WIDTH_OFFSET, 
+		(float)windowHeight - TEXT_HEIGHT_OFFSET, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	glfwSwapBuffers(window);
 
