@@ -6,17 +6,18 @@
 #include "QMaze.h"
 #include "FileSystem.h"
 
-// https://www.samyzaf.com/ML/rl/qmaze.html
-// https://www.analyticsvidhya.com/blog/2021/04/q-learning-algorithm-with-step-by-step-implementation-using-python/
-
 class QLearn
 {
 public:
 
 	QLearn();
-	QLearn(std::string filename, float discountFactor, float epsilon, float epsDecayFactor, float learningRate, int numEpisodes);
+	void InitHyperparameters(double discountFactor, double epsilon, double epsDecayFactor, double learningRate, int numEpisodes);
 
-	void RunTrainSession(bool verbose = false);
+	void AttachMazeFromFile(std::string filename);
+	void AttachMazeFromGame(std::vector<std::vector<MazeCell>> maze);
+
+	void TrainQLearn(bool verbose = false);
+	void TrainQELM(bool verbose = false);
 
 	std::vector<MazeCell> GetPath();
 
@@ -34,4 +35,6 @@ private:
 	State startPos, endPos;
 
 	Eigen::MatrixXf qTable;
+
+	void CreateMazeNumRep();
 };

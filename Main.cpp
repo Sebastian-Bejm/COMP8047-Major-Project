@@ -27,7 +27,6 @@ ObstructionGenerator obsGenerator;
 GameManager* gameManager;
 
 Camera camera;
-Agent agent;
 
 int Initialize() {
 	glm::fvec4 backgroundColour(180.0f / 255.0f, 240.0f / 255.0f, 239.0f / 255.0f, 1.0f);
@@ -37,18 +36,16 @@ int Initialize() {
 	objectTracker = &ObjectTracker::GetInstance();
 	physicsWorld = &PhysicsWorld::GetInstance();
 
-	// Generate a maze of size m x n (medium/large size, use odd numbers)
-	//mazeGenerator.InitMaze(mazeRows, mazeCols);
-	//mazeGenerator.Generate();
-	mazeGenerator.InitMaze("maze.txt");
+	// Generate a maze of size m x n (use odd numbers to avoid wall issue)
+	mazeGenerator.InitMaze(mazeRows, mazeCols);
+	mazeGenerator.Generate();
+	//mazeGenerator.InitMaze("maze.txt");
 
 	obsGenerator.AttachMazeGenerator(&mazeGenerator);
 
 	gameManager = &GameManager::GetInstance();
 	gameManager->Attach(&obsGenerator, &mazeGenerator);
 	gameManager->LoadShaders();
-
-	agent = Agent();
 
 	camera = Camera(screenWidth, screenHeight, glm::vec3((float)(mazeCols/2), (float)(-mazeRows/2), cameraDepth));
 	renderer->SetCamera(camera);
@@ -95,7 +92,7 @@ int RunEngine() {
 	// physics update comes first
 	PhysicsUpdate();
 
-	agent.MoveUpdate();
+	//agent.MoveUpdate();
 	gameManager->Update();
 
 	// graphics comes after physics
@@ -166,22 +163,31 @@ void GenData(std::string filename) {
 
 int main() {
 
-	// IDEA!! if Q-learning doesn't take that long, retrain and get new path each time when the maze is updated
+	// IDEA!! Q-learning doesn't take that long, retrain and get new path each time when the maze is updated
 	// pass the current agent position to a Q-learning instance, get new path
 	// also demonstrate on larger mazes (will take longer)
 	// TODO: Get the path, Agent movement => obstruction generator => ELM change => real-time movement
 
-	double discountFactor = 0.8;
+	// TODO later: Agent movement => beginner documentation 
+	// tomorrow: replace with ELM (morning) => obstruction generator => just update by passing current maze state - pass back to agent
+
+	/*double discountFactor = 0.8;
 	double eps = 0.5;
 	double epsDecayFactor = 0.998;
 	double learningRate = 0.1;
 	int numEpisodes = 2000;
 
-	// Initalize the QLearn
-	QLearn qLearn("maze.txt", discountFactor, eps, epsDecayFactor, learningRate, numEpisodes);
-	qLearn.RunTrainSession(true);
+	// Initalize the QLearn with hyperparameters
+	QLearn qLearn(discountFactor, eps, epsDecayFactor, learningRate, numEpisodes);
+	qLearn.AttachMazeFromFile("maze.txt");
+	qLearn.TrainQLearn(true);
 
-	std::vector<MazeCell> bestPath = qLearn.GetPath();
+	std::vector<MazeCell> bestPath = qLearn.GetPath();*/
+
+	Agent agent = Agent();
+
+	agent.InitializeQLearn();
+	agent.Train(Mode::QLEARN, false);
 
 	// Initalize everything required for engine
 	Initialize();
@@ -197,7 +203,7 @@ int main() {
 
 		// Run the engine and its updates
 		PhysicsUpdate();
-		agent.MoveUpdate();
+		//agent.MoveUpdate();
 		gameManager->Update();
 
 		GraphicsUpdate();

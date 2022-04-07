@@ -2,12 +2,36 @@
 
 Agent::Agent() {}
 
-void Agent::AttachNetwork(QLearn* instance) {
+// Initialize the QLearn class with the hyperparameters
+void Agent::InitializeQLearn() {
+	double discountFactor = 0.8;
+	double eps = 0.5;
+	double epsDecayFactor = 0.998;
+	double learningRate = 0.1;
+	int numEpisodes = 2000;
 
+	// Initalize the QLearn class with hyperparameters
+	instance.InitHyperparameters(discountFactor, eps, epsDecayFactor, learningRate, numEpisodes);
+	instance.AttachMazeFromFile("maze.txt");
+}
+
+void Agent::AttachCurrentMaze(std::vector<std::vector<MazeCell>> currentMaze) {
+	instance.AttachMazeFromGame(currentMaze);
+}
+
+// Train the QLearn internally, then the Agent will have access to path information
+void Agent::Train(Mode mode, bool verbose) {
+	if (mode == Mode::QLEARN) {
+		instance.TrainQLearn(verbose);
+	}
+	else if (mode == Mode::QELM) {
+		instance.TrainQELM(verbose);
+	}
+	std::vector<MazeCell> bestPath = instance.GetPath();
 }
 
 void Agent::MoveUpdate() {
-	
+	//std::vector<MazeCell> path = instance->GetPath();
 }
 
 void Agent::Move(float destX, float destY) {
