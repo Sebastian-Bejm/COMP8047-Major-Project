@@ -17,21 +17,9 @@ void MazeGenerator::InitMaze(int rows, int cols) {
 	}
 }
 
-// Initializes an empty maze with walls
-void MazeGenerator::InitWalledEmptyMaze(int rows, int cols) {
-	mazeCells.resize(rows);
-	for (size_t i = 0; i < rows; i++) {
-		mazeCells[i].resize(cols);
-	}
-
-	for (size_t row = 0; row < mazeCells.size(); row++) {
-		for (size_t col = 0; col < mazeCells[row].size(); col++) {
-			mazeCells[row][col] = MazeCell(row, col);
-			if (row == 0 || col == 0 || row == mazeCells.size()-1 || col == mazeCells.size()-1) {
-				mazeCells[row][col].SetWall(true);
-			}
-		}
-	}
+// Initialize a maze from file
+void MazeGenerator::InitMaze(std::string filename) {
+	mazeCells = FileSystem::ReadMazeDataFile(filename);
 }
 
 // https://stackoverflow.com/questions/29739751/implementing-a-randomly-generated-maze-using-prims-algorithm
@@ -75,14 +63,8 @@ void MazeGenerator::Generate() {
 	}
 
 	PadOuterWalls(); 
-
 	CreateMazePositions();
 
-	//FileSystem::WriteMazeDataToFile(mazeCells);
-
-	//mazeCells = FileSystem::ReadMazeDataFile("maze.txt");
-
-	//PrintMaze();
 }
 
 // Print the generated maze. Mainly used for debugging.

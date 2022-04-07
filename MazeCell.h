@@ -36,7 +36,6 @@ public:
 private:
 
 	int row, col;
-	int code;
 	bool isWall;
 	bool obstructed;
 	bool start, exit;

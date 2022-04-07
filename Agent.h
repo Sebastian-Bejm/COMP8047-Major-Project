@@ -2,25 +2,35 @@
 
 #include <vector>
 
-#include "MazeCell.h"
 #include "ObjectTracker.h"
+#include "QLearn.h"
+
+enum Mode {
+	QLEARN,
+	QELM
+};
 
 class Agent
 {
 public:
 
 	Agent();
-	Agent(bool usingNetwork);
 	
-	void AttachNetwork();
+	void InitializeQLearn();
+	void AttachCurrentMaze(std::vector<std::vector<MazeCell>> currentMaze);
+	void Train(Mode mode, bool verbose);
 
 	void MoveUpdate();
-	void RandomMove(float destX, float destY);
-	void NetworkMove();
-	
+	void Move(float destX, float destY);
+	void TeleportMove();
+
 private:
 
-	bool usingNetwork;
-	float speed = 0.35f;
+	QLearn instance;
+	float speed = 0.25f;
+
+	std::chrono::system_clock::time_point start, current, end;
+
+	void NextFrame();
 };
 

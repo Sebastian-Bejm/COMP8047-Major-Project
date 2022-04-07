@@ -26,6 +26,7 @@ void Camera::SetPosition(glm::vec3 newPosition) {
 	this->position = newPosition;
 }
 
+// Set the view and orthographic projection matrices
 void Camera::SetOrthoMatrix(float left, float right, float bottom, float top, float nearPlane, float farPlane) {
 	viewMatrix = glm::lookAt(position, position + front, up);
 	projectionMatrix = glm::ortho(left, right, bottom, top, nearPlane, farPlane);
@@ -33,7 +34,7 @@ void Camera::SetOrthoMatrix(float left, float right, float bottom, float top, fl
 	cameraMatrix = projectionMatrix * viewMatrix;
 }
 
-// Set our view and projection matrices
+// Set our view and perspective projection matrices
 void Camera::SetPerspectiveMatrix(float fovDeg, float nearPlane, float farPlane) {
 	isPerspective = true;
 	viewMatrix = glm::lookAt(position, position + front, up);
@@ -45,15 +46,14 @@ void Camera::SetPerspectiveMatrix(float fovDeg, float nearPlane, float farPlane)
 // Processes key and mouse inputs
 // This is mainly used to look around our scene to ensure everything looks correct
 void Camera::ProcessInput(GLFWwindow* window, float deltaTime) {
-
 	float speed = 2.0f * deltaTime;
 
 	// Key inputs
 	if (isPerspective) {
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
 			position += speed * front;
 		}
-		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
 			position += speed * -front;
 		}
 	}
@@ -63,10 +63,10 @@ void Camera::ProcessInput(GLFWwindow* window, float deltaTime) {
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 		position += speed * glm::normalize(glm::cross(front, up));
 	}
-	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 		position += speed * up;
 	}
-	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		position += speed * -up;
 	}
 

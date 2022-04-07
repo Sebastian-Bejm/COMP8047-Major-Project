@@ -157,7 +157,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ContactListener.cpp" />
     <ClCompile Include="ELM.cpp" />
-    <ClCompile Include="Field.cpp" />
+    <ClCompile Include="QMaze.cpp" />
     <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="FPSCounter.cpp" />
     <ClCompile Include="GameManager.cpp" />
@@ -194,7 +194,7 @@
     <ClInclude Include="ContactListener.h" />
     <ClInclude Include="EBO.h" />
     <ClInclude Include="ELM.h" />
-    <ClInclude Include="Field.h" />
+    <ClInclude Include="QMaze.h" />
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="FPSCounter.h" />
     <ClInclude Include="GameManager.h" />

@@ -1,8 +1,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include <Eigen/Dense>
-#include <Eigen/Core>
 
 #include "GameObject.h"
 #include "ObjectTracker.h"
@@ -11,14 +9,15 @@
 #include "MazeGenerator.h"
 #include "ObstructionGenerator.h"
 #include "GameManager.h"
-
 #include "Agent.h"
 #include "FPSCounter.h"
+#include "QLearn.h"
 
 const int screenWidth = 1200;
 const int screenHeight = 1000;
 
-const int mazeRows = 15, mazeCols = 15;
+const int mazeRows = 13, mazeCols = 13;
+const int cameraDepth = 19.0f;
 
 ObjectTracker* objectTracker;
 Renderer* renderer;
@@ -28,12 +27,6 @@ ObstructionGenerator obsGenerator;
 GameManager* gameManager;
 
 Camera camera;
-Agent randomAgent;
-
-// TODO:
-// obstruction generator proper algorithm for random objects
-// find textures to use for start and end cells so agent is actually visible
-// ELM
 
 int Initialize() {
 	glm::fvec4 backgroundColour(180.0f / 255.0f, 240.0f / 255.0f, 239.0f / 255.0f, 1.0f);
@@ -43,9 +36,10 @@ int Initialize() {
 	objectTracker = &ObjectTracker::GetInstance();
 	physicsWorld = &PhysicsWorld::GetInstance();
 
-	// Generate a maze of size m x n (medium/large size, use odd numbers)
+	// Generate a maze of size m x n (use odd numbers to avoid wall issue)
 	mazeGenerator.InitMaze(mazeRows, mazeCols);
 	mazeGenerator.Generate();
+	//mazeGenerator.InitMaze("maze.txt");
 
 	obsGenerator.AttachMazeGenerator(&mazeGenerator);
 
@@ -53,69 +47,22 @@ int Initialize() {
 	gameManager->Attach(&obsGenerator, &mazeGenerator);
 	gameManager->LoadShaders();
 
-	randomAgent = Agent(false);
-
-	camera = Camera(screenWidth, screenHeight, glm::vec3((float)(mazeCols/2), (float)(-mazeRows/2), 19.0f));
+	camera = Camera(screenWidth, screenHeight, glm::vec3((float)(mazeCols/2), (float)(-mazeRows/2), cameraDepth));
 	renderer->SetCamera(camera);
 
 	return 0;
 }
 
-// Load the shaders to be used for objects in the scene
-/*void LoadShaders() {
-	// Create a new shader when using a different texture
-	crateShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
-	brickShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
-}
-
-// Create the scene that includes the maze and agent object at the start
-void CreateMazeScene() {
-
-	std::vector<std::vector<MazeCell>> maze = mazeGenerator.GetMazeCells();
-
-	// Create the maze using game objects
-	// Row: y, Col: x;
-	for (size_t r = 0; r < maze.size(); r++) {
-		for (size_t c = 0; c < maze[r].size(); c++) {
-			// Create agent if cell is the start point
-			if (maze[r][c].IsStart()) {
-				int x = c;
-				int y = r;
-
-				glm::vec3 startPos = glm::vec3(x, -y, 0.0f);
-				glm::vec3 agentRotation = glm::vec3(0.0f);
-				glm::vec3 agentScale = glm::vec3(0.6f, 0.6f, 0.6f);
-
-				// The agent is the first object added to the object tracker
-				GameObject agent("agent", "crate.jpg", crateShader, startPos, agentRotation, agentScale);
-				agent.SetBodyType(b2_dynamicBody);
-
-				objectTracker->AddObject(agent);
-				physicsWorld->AddObject(&agent);
-			}
-
-			// Only create objects when a maze cell is a wall
-			if (maze[r][c].IsWall()) {
-				int x = c;
-				int y = r;
-
-				glm::vec3 position = glm::vec3(x, -y, 0.0f);
-				glm::vec3 rotation = glm::vec3(0.0f);
-				glm::vec3 scale = glm::vec3(1.0f);
-
-				GameObject wall("wall", "brick.png", brickShader, position, rotation, scale);
-
-				objectTracker->AddObject(wall);
-				physicsWorld->AddObject(&wall);
-			}
-		}
-	}
-
-}*/
-
 // This will remain here until everything is finished and Agent properly works
 void HandleInputs() {
-	GameObject* agent = &objectTracker->GetObjectByTag("agent");
+	// REMOVE OBJECTS THROUGH RemoveAllObjects() this way:
+	/*if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+		objectTracker->RemoveAllObjects();
+		objectTracker->DeleteAllObjects();
+		gameManager->LoadNewScene();
+	}*/
+
+	/*GameObject* agent = &objectTracker->GetObjectByTag("agent");
 
 	float velX = 0.0f, velY = 0.0f;
 	float speed = 0.35f;
@@ -134,8 +81,8 @@ void HandleInputs() {
 	}
 
 	if (agent != nullptr) {
-		agent->GetRigidBody()->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));
-	}
+		agent->SetVelocity(velX, velY);
+	}*/
 }
 
 void PhysicsUpdate() {
@@ -152,7 +99,7 @@ int RunEngine() {
 	// physics update comes first
 	PhysicsUpdate();
 
-	randomAgent.MoveUpdate();
+	//agent.MoveUpdate();
 	gameManager->Update();
 
 	// graphics comes after physics
@@ -167,8 +114,8 @@ int Teardown() {
 	// Deletes pointers that is stored in game objects
 	objectTracker->DeleteAllObjects();
 	
-	// Clean up the scene and delete objects
-	gameManager->ClearScene();
+	// Clean up the scene and delete all objects
+	gameManager->CleanScene();
 
 	// Destroys the window on exit
 	renderer->Teardown();
@@ -176,7 +123,61 @@ int Teardown() {
 	return 0;
 }
 
+void ReadCSV(std::string filename, std::vector<Eigen::RowVectorXf>& data) {
+	data.clear();
+	std::ifstream file(filename);
+	std::string line, word;
+	// determine number of columns in file
+	std::getline(file, line, '\n');
+	std::stringstream ss(line);
+	std::vector<float> parsed_vec;
+	
+	while (std::getline(ss, word, ',')) {
+		parsed_vec.push_back(float(std::stof(&word[0])));
+	}
+	unsigned int cols = parsed_vec.size();
+	data.push_back(Eigen::RowVectorXf(cols));
+	for (int i = 0; i < cols; i++) {
+		data.back().coeffRef(1, i) = parsed_vec[i];
+	}
+
+	// read the file
+	if (file.is_open()) {
+		while (std::getline(file, line, '\n')) {
+			std::stringstream ss(line);
+			data.push_back(Eigen::RowVectorXf(1, cols));
+			unsigned int i = 0;
+			while (std::getline(ss, word, ',')) {
+				data.back().coeffRef(i) = float(std::stof(&word[0]));
+				i++;
+			}
+		}
+	}
+}
+
+void GenData(std::string filename) {
+	std::ofstream file1(filename + "-in");
+	std::ofstream file2(filename + "-out");
+	for (int r = 0; r < 1000; r++) {
+		float x = rand() / float(RAND_MAX);
+		float y = rand() / float(RAND_MAX);
+		file1 << x << "," << y << std::endl;
+		file2 << 2 * x + 10 + y << std::endl;
+	}
+	file1.close();
+	file2.close();
+}
+
 int main() {
+	// TODO: 
+	// ObstructionGenerator => change so it generates walls that are marked as the obstructions
+	// ELM in Q-Learning
+	// Proper updating: Get Maze => Agent => Train => Move => if maze is updated then repeat
+
+	Agent agent = Agent();
+
+	agent.InitializeQLearn();
+	agent.Train(Mode::QLEARN, false);
 
 	// Initalize everything required for engine
 	Initialize();
@@ -192,7 +193,7 @@ int main() {
 
 		// Run the engine and its updates
 		PhysicsUpdate();
-		//randomAgent.MoveUpdate();
+		agent.MoveUpdate();
 		gameManager->Update();
 
 		GraphicsUpdate();

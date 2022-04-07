@@ -35,8 +35,22 @@ void GameObject::ResetTransform() {
 	glm::vec3 originalPos = transform->GetOriginalPosition();
 
 	rigidBody->box2dBody->SetTransform(b2Vec2(originalPos.x, originalPos.y), rigidBody->box2dBody->GetAngle());
+
 	transform->SetPosition(glm::vec3(rigidBody->box2dBody->GetPosition().x, 
 		rigidBody->box2dBody->GetPosition().y, transform->GetPosition().z));
+}
+
+// Set this object's position to
+void GameObject::SetPosition(float posX, float posY) {
+	rigidBody->box2dBody->SetTransform(b2Vec2(posX, posY), rigidBody->box2dBody->GetAngle());
+
+	transform->SetPosition(glm::vec3(rigidBody->box2dBody->GetPosition().x,
+		rigidBody->box2dBody->GetPosition().y, transform->GetPosition().z));
+}	
+
+// Set the linear velocity for this object's rigidbody
+void GameObject::SetVelocity(float velX, float velY) {
+	rigidBody->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));
 }
 
 // Set the rigidbody for this object

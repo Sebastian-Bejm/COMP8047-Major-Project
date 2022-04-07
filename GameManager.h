@@ -15,8 +15,10 @@ public:
 
 	void LoadShaders();
 	void LoadScene();
+	void LoadNewScene();
+
 	void ResetScene();
-	void ClearScene();
+	void CleanScene();
 
 	void Update();
 

@@ -72,9 +72,6 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Source Files\GameObject</Filter>
     </ClCompile>
@@ -95,9 +92,6 @@
     </ClCompile>
     <ClCompile Include="MazeGenerator.cpp">
       <Filter>Source Files\Maze</Filter>
-    </ClCompile>
-    <ClCompile Include="Agent.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp">
       <Filter>Source Files\Rendering</Filter>
@@ -120,10 +114,7 @@
     <ClCompile Include="QELM.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
-    <ClCompile Include="QLearn.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Field.cpp">
+    <ClCompile Include="QMaze.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
     <ClCompile Include="FileSystem.cpp">
@@ -139,6 +130,15 @@
       <Filter>Source Files\MainSystems</Filter>
     </ClCompile>
     <ClCompile Include="TimeTracker.cpp">
+      <Filter>Source Files\MainSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="QLearn.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Agent.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
       <Filter>Source Files\MainSystems</Filter>
     </ClCompile>
   </ItemGroup>
@@ -163,9 +163,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="EBO.h">
       <Filter>Header Files\GameObject</Filter>
     </ClInclude>
@@ -202,9 +199,6 @@
     <ClInclude Include="MazeGenerator.h">
       <Filter>Header Files\Maze</Filter>
     </ClInclude>
-    <ClInclude Include="Agent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
@@ -235,10 +229,7 @@
     <ClInclude Include="QELM.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
-    <ClInclude Include="QLearn.h">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Field.h">
+    <ClInclude Include="QMaze.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
     <ClInclude Include="FileSystem.h">
@@ -254,6 +245,15 @@
       <Filter>Header Files\MainSystems</Filter>
     </ClInclude>
     <ClInclude Include="TimeTracker.h">
+      <Filter>Header Files\MainSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="QLearn.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Agent.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
       <Filter>Header Files\MainSystems</Filter>
     </ClInclude>
   </ItemGroup>

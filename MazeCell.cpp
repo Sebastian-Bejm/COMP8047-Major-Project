@@ -94,18 +94,18 @@ std::string MazeCell::str() {
 
 int MazeCell::GetCode() {
 	if (obstructed) {
-		return -20;
+		return 2;
 	}
 	else if (start) {
 		return 0;
 	}
 	else if (exit) {
-		return 10;
+		return 0;
 	}
 	else if (isWall) {
-		return -10;
+		return 1;
 	}
 	else {
-		return 1;
+		return 0;
 	}
 }

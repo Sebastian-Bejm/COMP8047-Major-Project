@@ -20,7 +20,7 @@ void ObstructionGenerator::RunGenerator(ObjectTracker* tracker, PhysicsWorld* ph
 GameObject& ObstructionGenerator::GenerateObstruction(glm::vec3 targetPosition) {
 	Shader obstacleShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
 
-	GameObject obstacle("obstruction", "crate.jpg", obstacleShader, 
+	GameObject obstacle("obstruction", "lava.png", obstacleShader, 
 		targetPosition, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f));
 
 	return obstacle;
