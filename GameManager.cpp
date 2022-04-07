@@ -14,9 +14,11 @@ void GameManager::Attach(ObstructionGenerator* obsGenerator, MazeGenerator* maze
 void GameManager::LoadShaders() {
 	Shader crateShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
 	Shader brickShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
+	Shader lavaShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
 
 	shaderStorage.push_back(crateShader);
 	shaderStorage.push_back(brickShader);
+	shaderStorage.push_back(lavaShader);
 }
 
 // Load a scene given a generated maze, and position the rendered objects in the scene
@@ -79,6 +81,14 @@ void GameManager::LoadScene() {
 	TimeTracker::GetInstance().StartTimer();
 }
 
+// Loads a new scene: generates a new maze, start/end point, and agent in new positions
+void GameManager::LoadNewScene() {
+	GameObject agent("agent", "lava.png", shaderStorage[2], glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
+
+	ObjectTracker::GetInstance().AddObject(agent);
+	PhysicsWorld::GetInstance().AddObject(&agent);
+}
+
 // Resets the scene by resetting the Agent to its original location, and removes obstructions
 void GameManager::ResetScene() {
 	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
@@ -89,13 +99,12 @@ void GameManager::ResetScene() {
 	reachedGoal = false;
 	timeAfterGoal = 0;
 	TimeTracker::GetInstance().StartTimer();
+
+	LoadNewScene();
 }
 
 // Clear the scene and properly delete the objects currently in the scene
-void GameManager::ClearScene() {
-	// clear the whole scene to prepare for a new scene
-	
-	// temp: deleting shaders
+void GameManager::CleanScene() {	
 	for (auto& shader : shaderStorage) {
 		shader.Delete();
 	}
@@ -105,15 +114,17 @@ void GameManager::ClearScene() {
 void GameManager::Update() {
 	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
 
-	bool terminalState = InTerminalState(agent);
-	if (terminalState) {
-		TimeTracker::GetInstance().StopTimer();
-		reachedGoal = true;	
-	}
-	if (reachedGoal) {
-		timeAfterGoal++;
-		if (timeAfterGoal >= graceTime) {
-			ResetScene();
+	if (agent != nullptr) {
+		bool terminalState = InTerminalState(agent);
+		if (terminalState) {
+			TimeTracker::GetInstance().StopTimer();
+			reachedGoal = true;
+		}
+		if (reachedGoal) {
+			timeAfterGoal++;
+			if (timeAfterGoal >= graceTime) {
+				ResetScene();
+			}
 		}
 	}
 

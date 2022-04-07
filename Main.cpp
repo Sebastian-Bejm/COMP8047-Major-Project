@@ -54,8 +54,15 @@ int Initialize() {
 }
 
 // This will remain here until everything is finished and Agent properly works
-/*void HandleInputs() {
-	GameObject* agent = &objectTracker->GetObjectByTag("agent");
+void HandleInputs() {
+	// REMOVE OBJECTS THROUGH RemoveAllObjects() this way:
+	/*if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+		objectTracker->RemoveAllObjects();
+		objectTracker->DeleteAllObjects();
+		gameManager->LoadNewScene();
+	}*/
+
+	/*GameObject* agent = &objectTracker->GetObjectByTag("agent");
 
 	float velX = 0.0f, velY = 0.0f;
 	float speed = 0.35f;
@@ -74,12 +81,12 @@ int Initialize() {
 	}
 
 	if (agent != nullptr) {
-		agent->GetRigidBody()->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));
-	}
-}*/
+		agent->SetVelocity(velX, velY);
+	}*/
+}
 
 void PhysicsUpdate() {
-	//HandleInputs();
+	HandleInputs();
 
 	physicsWorld->Update(objectTracker);
 }
@@ -107,8 +114,8 @@ int Teardown() {
 	// Deletes pointers that is stored in game objects
 	objectTracker->DeleteAllObjects();
 	
-	// Clean up the scene and delete objects
-	gameManager->ClearScene();
+	// Clean up the scene and delete all objects
+	gameManager->CleanScene();
 
 	// Destroys the window on exit
 	renderer->Teardown();
@@ -167,19 +174,6 @@ int main() {
 	// ELM in Q-Learning
 	// Proper updating: Get Maze => Agent => Train => Move => if maze is updated then repeat
 
-	/*double discountFactor = 0.8;
-	double eps = 0.5;
-	double epsDecayFactor = 0.998;
-	double learningRate = 0.1;
-	int numEpisodes = 2000;
-
-	// Initalize the QLearn with hyperparameters
-	QLearn qLearn(discountFactor, eps, epsDecayFactor, learningRate, numEpisodes);
-	qLearn.AttachMazeFromFile("maze.txt");
-	qLearn.TrainQLearn(true);
-
-	std::vector<MazeCell> bestPath = qLearn.GetPath();*/
-
 	Agent agent = Agent();
 
 	agent.InitializeQLearn();
@@ -199,7 +193,7 @@ int main() {
 
 		// Run the engine and its updates
 		PhysicsUpdate();
-		//agent.MoveUpdate();
+		agent.MoveUpdate();
 		gameManager->Update();
 
 		GraphicsUpdate();

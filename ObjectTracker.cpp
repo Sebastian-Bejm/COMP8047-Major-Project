@@ -11,6 +11,12 @@ void ObjectTracker::AddObject(GameObject& gameObject) {
 	objectStorage.push_back(gameObject);
 }
 
+// Removes the objects, but does not delete the memory
+void ObjectTracker::RemoveAllObjects() {
+	objectStorage.clear();
+}
+
+
 // Deletes all the memory used for the GameObjects
 void ObjectTracker::DeleteAllObjects() {
 	for (size_t i = 0; i < objectStorage.size(); i++) {

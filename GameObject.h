@@ -15,7 +15,7 @@ public:
 	Transform* GetTransform();
 	void ResetTransform();
 
-	void SetPosition(float x, float y);
+	void SetPosition(float posX, float posY);
 	void SetVelocity(float velX, float velY);
 
 	void SetRigidBody(RigidBody* rigidBody);

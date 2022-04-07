@@ -30,8 +30,13 @@ void Agent::Train(Mode mode, bool verbose) {
 	std::vector<MazeCell> bestPath = instance.GetPath();
 }
 
+void Agent::NextFrame() {
+	current = std::chrono::system_clock::now();
+}
+
 void Agent::MoveUpdate() {
 	//std::vector<MazeCell> path = instance->GetPath();
+	NextFrame();
 }
 
 void Agent::Move(float destX, float destY) {
@@ -57,8 +62,8 @@ void Agent::Move(float destX, float destY) {
 		velY = -speed;
 	}
 	
-	// The agent should be able to move every step, so a loop may not be neccesary
+	// The agent should be able to move every "step", so a loop may not be neccesary
 	for (int i = 0; i < 2; i++) {
-		agentRb->box2dBody->SetLinearVelocity(b2Vec2(velX, velY));
+		agent->SetVelocity(velX, velY);
 	}
 }

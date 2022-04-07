@@ -11,6 +11,7 @@ public:
 	static ObjectTracker& GetInstance();
 
 	void AddObject(GameObject& gameObject);
+	void RemoveAllObjects();
 	void DeleteAllObjects();
 
 	GameObject& GetObjectByTag(std::string objectTag);
