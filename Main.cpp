@@ -41,16 +41,6 @@ int Initialize() {
 	mazeGenerator->InitMaze(mazeRows, mazeCols);
 	mazeGenerator->Generate();
 
-	std::vector<std::vector<MazeCell>> currentMaze = mazeGenerator->GetMazeCells();
-	std::cout << currentMaze.size() << ", " << currentMaze[0].size();
-	for (int i = 0; i < currentMaze.size(); i++) {
-		for (int j = 0; j < currentMaze[i].size(); j++) {
-			std::cout << currentMaze[i][j].str() << " ";
-		}
-		std::cout << std::endl;
-	}
-
-	//mazeGenerator.InitMaze("maze.txt");
 	//obsGenerator.AttachMazeGenerator(&mazeGenerator);
 
 	gameManager = &GameManager::GetInstance();
@@ -183,14 +173,14 @@ int main() {
 	// fix the update cycle
 	// agent movement
 
-	Agent agent = Agent();
-
-	//agent.InitializeQLearn();
-	//agent.AttachCurrentMaze(mazeGenerator.GetMazeCells());
-	//agent.Train(Mode::QLEARN, false);
-
 	// Initalize everything required for engine
 	Initialize();
+
+	// Initialize agent
+	Agent agent = Agent();
+
+	agent.InitializeQLearn();
+	agent.Train(Mode::QLEARN, false);
 
 	// Load the initial scene
 	gameManager->LoadScene();

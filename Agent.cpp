@@ -12,15 +12,6 @@ void Agent::InitializeQLearn() {
 
 	// Initalize the QLearn class with hyperparameters
 	instance.InitHyperparameters(discountFactor, eps, epsDecayFactor, learningRate, numEpisodes);
-
-	std::vector<std::vector<MazeCell>> currentMaze = MazeGenerator::GetInstance().GetMazeCells();
-	std::cout << currentMaze.size() << ", " << currentMaze[0].size();
-	for (int i = 0; i < currentMaze.size(); i++) {
-		for (int j = 0; j < currentMaze[i].size(); j++) {
-			std::cout << currentMaze[i][j].str() << " ";
-		}
-		std::cout << std::endl;
-	}
 }
 
 void Agent::AttachCurrentMaze(std::vector<std::vector<MazeCell>> currentMaze) {
@@ -29,6 +20,9 @@ void Agent::AttachCurrentMaze(std::vector<std::vector<MazeCell>> currentMaze) {
 
 // Train the QLearn internally, then the Agent will have access to path information
 void Agent::Train(Mode mode, bool verbose) {
+	// Get the current maze
+	instance.AttachMazeFromGame(MazeGenerator::GetInstance().GetMazeCells());
+
 	if (mode == Mode::QLEARN) {
 		instance.TrainQLearn(verbose);
 	}
@@ -37,9 +31,11 @@ void Agent::Train(Mode mode, bool verbose) {
 	}
 
 	std::vector<MazeCell> bestPath = instance.GetPath();
-	for (MazeCell mc : bestPath) {
-		std::cout << mc.GetColumn() << "," << -mc.GetRow() << std::endl;
-	}
+
+
+	//for (MazeCell mc : bestPath) {
+	//	std::cout << mc.GetColumn() << "," << -mc.GetRow() << std::endl;
+	//}
 }
 
 void Agent::NextFrame() {
