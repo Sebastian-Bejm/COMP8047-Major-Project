@@ -193,7 +193,7 @@ int main() {
 
 		// Run the engine and its updates
 		PhysicsUpdate();
-		//agent.MoveUpdate();
+		agent.MoveUpdate();
 		gameManager->Update();
 		GraphicsUpdate();
 	}

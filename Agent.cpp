@@ -4,10 +4,14 @@ Agent::Agent() {}
 
 // Initialize the QLearn class with the hyperparameters
 void Agent::InitializeQLearn() {
-	double discountFactor = 0.8;
+	// OLD PARAMS BUT KEEP
+	//double discountFactor = 0.8;
+	//double learningRate = 0.1;
+
+	double discountFactor = 0.95;
 	double eps = 0.5;
 	double epsDecayFactor = 0.998;
-	double learningRate = 0.1;
+	double learningRate = 0.8;
 	int numEpisodes = 2000;
 
 	// Initalize the QLearn class with hyperparameters
@@ -42,8 +46,6 @@ bool Agent::AtNextPosition(float curX, float curY, MazeCell nextPos, float epsil
 
 
 void Agent::MoveUpdate() {
-	//NextFrame();
-
 	if (pathDone) {
 		std::cout << "Stack empty, creating path" << std::endl;
 		std::vector<MazeCell> bestPath = instance.GetPath();
@@ -62,7 +64,7 @@ void Agent::MoveUpdate() {
 			if (agent != nullptr) {
 				if (AtNextPosition(agent->GetRigidBody()->box2dBody->GetPosition().x, agent->GetRigidBody()->box2dBody->GetPosition().y, nextMove, 0.005f)) {
 					//std::cout << "This should be the first move" << std::endl;
-					ClampPosition(agent, nextMove);
+					//ClampPosition(agent, nextMove);
 					pathStack.pop();
 				}
 				else {

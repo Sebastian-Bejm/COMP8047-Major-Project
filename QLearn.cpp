@@ -60,7 +60,6 @@ void QLearn::TrainQLearn(bool verbose) {
 
 	QMaze qMaze(mazeNumRep, startPos, endPos);
 	int currentSteps = 0;
-	int bestSteps = 0;
 
 	for (int i = 0; i < numEpisodes; i++) {
 		int state = qMaze.Reset();
@@ -70,7 +69,6 @@ void QLearn::TrainQLearn(bool verbose) {
 		int steps = 0;
 
 		while (!done) {
-
 			state = qMaze.GetState();
 
 			int action = -1;
@@ -88,8 +86,10 @@ void QLearn::TrainQLearn(bool verbose) {
 			double reward = std::get<1>(res);
 			done = std::get<2>(res);
 
-			qTable(state, action) = (1 - learningRate) * qTable(state, action) + learningRate *
-				(reward + discountFactor * qTable.row(newState).maxCoeff() - qTable(state, action));
+			//qTable(state, action) = (1 - learningRate) * qTable(state, action) + learningRate *
+			//	(reward + discountFactor * qTable.row(newState).maxCoeff() - qTable(state, action));
+
+			qTable(state, action) += reward + learningRate * (discountFactor * qTable.row(newState).maxCoeff() - qTable(state, action));
 
 			steps += 1;
 		}
