@@ -1,5 +1,8 @@
 #pragma once
 
+#include <stack>
+#include <algorithm>
+
 #include "MazeGenerator.h"
 #include "ObjectTracker.h"
 #include "QLearn.h"
@@ -16,7 +19,6 @@ public:
 	Agent();
 	
 	void InitializeQLearn();
-	void AttachCurrentMaze(std::vector<std::vector<MazeCell>> currentMaze);
 	void Train(Mode mode, bool verbose);
 
 	void MoveUpdate();
@@ -25,10 +27,15 @@ public:
 private:
 
 	QLearn instance;
-	float speed = 0.25f;
 
+	std::stack<MazeCell> pathStack;
+
+	float agentSpeed = 0.2f;
+	bool pathDone = true;
 	std::chrono::system_clock::time_point start, current, end;
 
 	void NextFrame();
+	bool AtNextPosition(float curX, float curY, MazeCell nextPos, float epsilon);
+	void ClampPosition(GameObject* agent, MazeCell nextPos);
 };
 

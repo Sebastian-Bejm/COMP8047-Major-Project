@@ -25,7 +25,6 @@ public:
 private:
 
 	ObstructionGenerator* obsGenerator = nullptr;
-	MazeGenerator* mazeGenerator = nullptr;
 
 	std::vector<Shader> shaderStorage;
 

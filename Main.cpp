@@ -172,6 +172,7 @@ int main() {
 	// TODO Saturday:
 	// fix the update cycle
 	// agent movement
+	// game manager load new scene
 
 	// Initalize everything required for engine
 	Initialize();
@@ -187,7 +188,6 @@ int main() {
 
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {
-
 		// Tell GLFW to keep track of input events
 		glfwPollEvents();
 
