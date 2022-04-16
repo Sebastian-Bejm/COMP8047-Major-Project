@@ -59,7 +59,8 @@ void QLearn::TrainQLearn(bool verbose) {
 	auto startTime = std::chrono::system_clock::now();
 
 	QMaze qMaze(mazeNumRep, startPos, endPos);
-	int finalSteps = 0;
+	int currentSteps = 0;
+	int bestSteps = 0;
 
 	for (int i = 0; i < numEpisodes; i++) {
 		int state = qMaze.Reset();
@@ -100,7 +101,7 @@ void QLearn::TrainQLearn(bool verbose) {
 			}
 			if (i == numEpisodes - 1) {
 				std::cout << "Steps on final run: " << steps << std::endl;
-				finalSteps = steps;
+				currentSteps = steps;
 			}
 		}
 

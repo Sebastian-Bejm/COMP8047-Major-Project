@@ -37,7 +37,7 @@ public:
 private:
 
 	std::vector<std::vector<double>> maze;
-	std::vector<MazeCell> path;
+	std::vector<MazeCell> currentPath, bestPath;
 	int numRows, numCols;
 
 	const double WALL_PENALTY = -0.75, VALID_PENALTY = -0.04, BOUNDS_PENALTY = -0.8;

@@ -181,7 +181,7 @@ int main() {
 	Agent agent = Agent();
 
 	agent.InitializeQLearn();
-	agent.Train(Mode::QLEARN, false);
+	agent.Train(Mode::QLEARN, true);
 
 	// Load the initial scene
 	gameManager->LoadScene();
@@ -193,7 +193,7 @@ int main() {
 
 		// Run the engine and its updates
 		PhysicsUpdate();
-		agent.MoveUpdate();
+		//agent.MoveUpdate();
 		gameManager->Update();
 		GraphicsUpdate();
 	}

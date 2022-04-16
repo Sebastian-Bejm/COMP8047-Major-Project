@@ -33,7 +33,7 @@ void Agent::NextFrame() {
 }
 
 void Agent::ClampPosition(GameObject* agent, MazeCell nextPos) {
-	agent->SetPosition(nextPos.GetColumn(), nextPos.GetRow());
+	agent->SetPosition(nextPos.GetColumn(), -nextPos.GetRow());
 }
 
 bool Agent::AtNextPosition(float curX, float curY, MazeCell nextPos, float epsilon) {
@@ -56,23 +56,19 @@ void Agent::MoveUpdate() {
 	else {
 		GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
 
-		if (agent != nullptr) {
-			RigidBody* agentRb = agent->GetRigidBody();
-			float xPos = agentRb->box2dBody->GetPosition().x;
-			float yPos = agentRb->box2dBody->GetPosition().y;
-		}
-
 		if (!pathStack.empty()) {
-			MazeCell mc = pathStack.top();
+			MazeCell nextMove = pathStack.top();
 
-			if (AtNextPosition(agent->GetRigidBody()->box2dBody->GetPosition().x, agent->GetRigidBody()->box2dBody->GetPosition().y, mc, 0.01f)) {
-				//std::cout << "This should be the first move" << std::endl;
-
-				pathStack.pop();
-			}
-			else {
-				//std::cout << mc.GetColumn() << "," << -mc.GetRow() << std::endl;
-				Move(mc.GetColumn(), -mc.GetRow());
+			if (agent != nullptr) {
+				if (AtNextPosition(agent->GetRigidBody()->box2dBody->GetPosition().x, agent->GetRigidBody()->box2dBody->GetPosition().y, nextMove, 0.005f)) {
+					//std::cout << "This should be the first move" << std::endl;
+					ClampPosition(agent, nextMove);
+					pathStack.pop();
+				}
+				else {
+					//std::cout << mc.GetColumn() << "," << -mc.GetRow() << std::endl;
+					Move(nextMove.GetColumn(), -nextMove.GetRow());
+				}
 			}
 
 		}

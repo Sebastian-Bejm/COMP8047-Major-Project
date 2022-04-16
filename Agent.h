@@ -19,7 +19,7 @@ public:
 	Agent();
 	
 	void InitializeQLearn();
-	void Train(Mode mode, bool verbose);
+	void Train(Mode mode, bool verbose=false);
 
 	void MoveUpdate();
 	void Move(float destX, float destY);

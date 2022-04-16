@@ -12,10 +12,10 @@ QMaze::QMaze(std::vector<std::vector<double>> maze, State agentPos, State endPos
 // Reset the simulation: reset the agent back to original position and reset the current path
 int QMaze::Reset() {
 	this->agentPos = startPos;
-	path.clear();
+	currentPath.clear();
 
 	MazeCell startCell = MazeCell(agentPos.y, agentPos.x);
-	path.push_back(startCell);
+	currentPath.push_back(startCell);
 
 	return GetState();
 }
@@ -82,7 +82,7 @@ std::tuple<double, bool> QMaze::UpdateState(int action) {
 
 // Return the path made from the current simulation
 std::vector<MazeCell> QMaze::GetPath() {
-	return path;
+	return bestPath;
 }
 
 // Get the state of the current agent position in the maze as an integer
@@ -100,7 +100,7 @@ int QMaze::GetState() {
 // Update the current path when the agent takes a step
 void QMaze::UpdatePath(State currentState) {
 	MazeCell cell = MazeCell(currentState.y, currentState.x);
-	path.push_back(cell);
+	currentPath.push_back(cell);
 }
 
 // Return the valid actions given the current state of the agent
