@@ -53,41 +53,7 @@ int Initialize() {
 	return 0;
 }
 
-// This will remain here until everything is finished and Agent properly works
-void HandleInputs() {
-	// REMOVE OBJECTS THROUGH RemoveAllObjects() this way:
-	/*if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-		objectTracker->RemoveAllObjects();
-		objectTracker->DeleteAllObjects();
-		gameManager->LoadNewScene();
-	}*/
-
-	/*GameObject* agent = &objectTracker->GetObjectByTag("agent");
-
-	float velX = 0.0f, velY = 0.0f;
-	float speed = 0.35f;
-
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-		velX = -speed;
-	}
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-		velX = speed;
-	}
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-		velY = speed;
-	}
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-		velY = -speed;
-	}
-
-	if (agent != nullptr) {
-		agent->SetVelocity(velX, velY);
-	}*/
-}
-
 void PhysicsUpdate() {
-	HandleInputs();
-
 	physicsWorld->Update(objectTracker);
 }
 
@@ -123,55 +89,9 @@ int Teardown() {
 	return 0;
 }
 
-void ReadCSV(std::string filename, std::vector<Eigen::RowVectorXf>& data) {
-	data.clear();
-	std::ifstream file(filename);
-	std::string line, word;
-	// determine number of columns in file
-	std::getline(file, line, '\n');
-	std::stringstream ss(line);
-	std::vector<float> parsed_vec;
-	
-	while (std::getline(ss, word, ',')) {
-		parsed_vec.push_back(float(std::stof(&word[0])));
-	}
-	unsigned int cols = parsed_vec.size();
-	data.push_back(Eigen::RowVectorXf(cols));
-	for (int i = 0; i < cols; i++) {
-		data.back().coeffRef(1, i) = parsed_vec[i];
-	}
-
-	// read the file
-	if (file.is_open()) {
-		while (std::getline(file, line, '\n')) {
-			std::stringstream ss(line);
-			data.push_back(Eigen::RowVectorXf(1, cols));
-			unsigned int i = 0;
-			while (std::getline(ss, word, ',')) {
-				data.back().coeffRef(i) = float(std::stof(&word[0]));
-				i++;
-			}
-		}
-	}
-}
-
-void GenData(std::string filename) {
-	std::ofstream file1(filename + "-in");
-	std::ofstream file2(filename + "-out");
-	for (int r = 0; r < 1000; r++) {
-		float x = rand() / float(RAND_MAX);
-		float y = rand() / float(RAND_MAX);
-		file1 << x << "," << y << std::endl;
-		file2 << 2 * x + 10 + y << std::endl;
-	}
-	file1.close();
-	file2.close();
-}
-
 int main() {
 	// TODO Saturday:
 	// fix the update cycle
-	// agent movement
 	// game manager load new scene
 
 	// Initalize everything required for engine
@@ -181,7 +101,7 @@ int main() {
 	Agent agent = Agent();
 
 	agent.InitializeQLearn();
-	agent.Train(Mode::QLEARN, true);
+	agent.Train(Mode::QLEARN);
 
 	// Load the initial scene
 	gameManager->LoadScene();

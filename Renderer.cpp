@@ -296,10 +296,13 @@ int Renderer::Update(ObjectTracker* tracker) {
 	std::string lastBest = TimeTracker::GetInstance().GetLastBestTime();
 
 	RenderText(textShader, currentTime, (float)windowWidth - TEXT_WIDTH_OFFSET*2,
-		(float)windowHeight - TEXT_HEIGHT_OFFSET, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+		(float)windowHeight - TEXT_HEIGHT_OFFSET, 0.8f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	RenderText(textShader, lastBest, (float)windowWidth - TEXT_WIDTH_OFFSET, 
-		(float)windowHeight - TEXT_HEIGHT_OFFSET, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+		(float)windowHeight - TEXT_HEIGHT_OFFSET, 0.8f, glm::vec3(0.0f, 0.0f, 0.0f));
+
+	RenderText(textShader, "Mazes completed without error: ", (float)windowWidth - TEXT_WIDTH_OFFSET * 2,
+		(float)windowHeight - TEXT_HEIGHT_OFFSET * 2, 0.8f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	glfwSwapBuffers(window);
 

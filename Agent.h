@@ -1,7 +1,6 @@
 #pragma once
 
 #include <stack>
-#include <algorithm>
 
 #include "MazeGenerator.h"
 #include "ObjectTracker.h"
@@ -32,9 +31,7 @@ private:
 
 	float agentSpeed = 0.2f;
 	bool pathDone = true;
-	std::chrono::system_clock::time_point start, current, end;
 
-	void NextFrame();
 	bool AtNextPosition(float curX, float curY, MazeCell nextPos, float epsilon);
 	void ClampPosition(GameObject* agent, MazeCell nextPos);
 };

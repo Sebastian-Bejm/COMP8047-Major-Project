@@ -41,6 +41,7 @@ void QLearn::AttachMazeFromGame(std::vector<std::vector<MazeCell>> maze) {
 }
 
 void QLearn::UpdateCurrentState(float posX, float posY, std::vector<std::vector<MazeCell>> currentMaze) {
+	// clamp to nearest pos in ints
 	startPos.x = posX;
 	startPos.y = posY;
 	maze = currentMaze;
@@ -85,9 +86,6 @@ void QLearn::TrainQLearn(bool verbose) {
 			int newState = std::get<0>(res);
 			double reward = std::get<1>(res);
 			done = std::get<2>(res);
-
-			//qTable(state, action) = (1 - learningRate) * qTable(state, action) + learningRate *
-			//	(reward + discountFactor * qTable.row(newState).maxCoeff() - qTable(state, action));
 
 			qTable(state, action) += reward + learningRate * (discountFactor * qTable.row(newState).maxCoeff() - qTable(state, action));
 
