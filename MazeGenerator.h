@@ -15,7 +15,7 @@ class MazeGenerator
 {
 public:
 
-	MazeGenerator();
+	static MazeGenerator& GetInstance();
 
 	void InitMaze(int rows, int cols);
 	void InitMaze(std::string filename);

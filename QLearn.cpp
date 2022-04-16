@@ -40,6 +40,12 @@ void QLearn::AttachMazeFromGame(std::vector<std::vector<MazeCell>> maze) {
 	CreateMazeNumRep();
 }
 
+void QLearn::UpdateCurrentState(float posX, float posY, std::vector<std::vector<MazeCell>> currentMaze) {
+	startPos.x = posX;
+	startPos.y = posY;
+	maze = currentMaze;
+}
+
 // Train using the standard Q-Learning algorithm
 void QLearn::TrainQLearn(bool verbose) {
 	// init QTable
@@ -119,9 +125,14 @@ void QLearn::TrainQELM(bool verbose) {
 	std::uniform_real_distribution<float> eps_distr(0, 1);
 	std::uniform_int_distribution<int> actions(0, NUM_ACTIONS - 1);
 
-	auto startTime = std::chrono::system_clock::now();
+	// auto startTime = std::chrono::system_clock::now();
+	// auto endTime = std::chrono::system_clock::now();
 
-	auto endTime = std::chrono::system_clock::now();
+	QMaze qMaze(mazeNumRep, startPos, endPos);
+
+	for (int i = 0; i < numEpisodes; i++) {
+		
+	}
 }
 
 // Get the path made from the last trained episode

@@ -170,7 +170,6 @@
     <ClCompile Include="ObjectTracker.cpp" />
     <ClCompile Include="ObstructionGenerator.cpp" />
     <ClCompile Include="PhysicsWorld.cpp" />
-    <ClCompile Include="QELM.cpp" />
     <ClCompile Include="QLearn.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -206,7 +205,6 @@
     <ClInclude Include="ObjectTracker.h" />
     <ClInclude Include="ObstructionGenerator.h" />
     <ClInclude Include="PhysicsWorld.h" />
-    <ClInclude Include="QELM.h" />
     <ClInclude Include="QLearn.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RigidBody.h" />

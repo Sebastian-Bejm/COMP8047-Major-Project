@@ -28,10 +28,22 @@ Eigen::MatrixXf ELM::Train(Eigen::MatrixXf X, Eigen::MatrixXf Y) {
 
 	H = SigmoidActivation(H);
 
-	// calculate the Moore-Penrose psuedoinverse matrix
-	Eigen::MatrixXf moorePenrose = H.transpose() * H;
-	moorePenrose = moorePenrose.inverse();
-	moorePenrose = moorePenrose * H.transpose();
+	constexpr double epsilon = std::numeric_limits<double>::epsilon();
+
+	// calculate the Moore-Penrose psuedoinverse matrix (NEW)
+	Eigen::JacobiSVD<Eigen::MatrixXf> svd(H, Eigen::ComputeFullU | Eigen::ComputeFullV);
+	// for a non square matrix
+	//Eigen::JacobiSVD<Eigen::MatrixXf> svd(H, Eigen::ComputeThinU | Eigen::ComputeThinV);
+	double tolerance = epsilon * std::max(H.cols(), H.rows()) * svd.singularValues().array().abs()(0);
+	Eigen::MatrixXf moorePenrose = svd.matrixV() * 
+		(svd.singularValues().array().abs() > tolerance)
+		.select(svd.singularValues().array().inverse(), 0).matrix().asDiagonal()
+		* svd.matrixU().adjoint();
+
+	// calculate the Moore-Penrose psuedoinverse matrix (OLD)
+	//Eigen::MatrixXf moorePenrose = H.transpose() * H;
+	//moorePenrose = moorePenrose.inverse();
+	//moorePenrose = moorePenrose * H.transpose();
 
 	beta = moorePenrose * Y;
 

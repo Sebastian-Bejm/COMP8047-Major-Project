@@ -12,7 +12,15 @@ void Agent::InitializeQLearn() {
 
 	// Initalize the QLearn class with hyperparameters
 	instance.InitHyperparameters(discountFactor, eps, epsDecayFactor, learningRate, numEpisodes);
-	instance.AttachMazeFromFile("maze.txt");
+
+	std::vector<std::vector<MazeCell>> currentMaze = MazeGenerator::GetInstance().GetMazeCells();
+	std::cout << currentMaze.size() << ", " << currentMaze[0].size();
+	for (int i = 0; i < currentMaze.size(); i++) {
+		for (int j = 0; j < currentMaze[i].size(); j++) {
+			std::cout << currentMaze[i][j].str() << " ";
+		}
+		std::cout << std::endl;
+	}
 }
 
 void Agent::AttachCurrentMaze(std::vector<std::vector<MazeCell>> currentMaze) {
@@ -27,7 +35,11 @@ void Agent::Train(Mode mode, bool verbose) {
 	else if (mode == Mode::QELM) {
 		instance.TrainQELM(verbose);
 	}
+
 	std::vector<MazeCell> bestPath = instance.GetPath();
+	for (MazeCell mc : bestPath) {
+		std::cout << mc.GetColumn() << "," << -mc.GetRow() << std::endl;
+	}
 }
 
 void Agent::NextFrame() {
@@ -35,7 +47,6 @@ void Agent::NextFrame() {
 }
 
 void Agent::MoveUpdate() {
-	//std::vector<MazeCell> path = instance->GetPath();
 	NextFrame();
 }
 

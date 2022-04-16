@@ -111,9 +111,6 @@
     <ClCompile Include="ELM.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
-    <ClCompile Include="QELM.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
     <ClCompile Include="QMaze.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
@@ -224,9 +221,6 @@
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="ELM.h">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="QELM.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
     <ClInclude Include="QMaze.h">

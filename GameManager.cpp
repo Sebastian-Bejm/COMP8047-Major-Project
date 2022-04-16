@@ -5,9 +5,8 @@ GameManager& GameManager::GetInstance() {
 	return instance;
 }
 
-void GameManager::Attach(ObstructionGenerator* obsGenerator, MazeGenerator* mazeGenerator) {
+void GameManager::Attach(ObstructionGenerator* obsGenerator) {
 	this->obsGenerator = obsGenerator;
-	this->mazeGenerator = mazeGenerator;	
 }
 
 // Initialize the shaders to be used
@@ -23,7 +22,7 @@ void GameManager::LoadShaders() {
 
 // Load a scene given a generated maze, and position the rendered objects in the scene
 void GameManager::LoadScene() {
-	std::vector<std::vector<MazeCell>> maze = mazeGenerator->GetMazeCells();
+	std::vector<std::vector<MazeCell>> maze = MazeGenerator::GetInstance().GetMazeCells();
 
 	// Create the maze using game objects
 	// Row: y, Col: x;
@@ -83,10 +82,10 @@ void GameManager::LoadScene() {
 
 // Loads a new scene: generates a new maze, start/end point, and agent in new positions
 void GameManager::LoadNewScene() {
-	GameObject agent("agent", "lava.png", shaderStorage[2], glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
+	/*GameObject agent("agent", "lava.png", shaderStorage[2], glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
 
 	ObjectTracker::GetInstance().AddObject(agent);
-	PhysicsWorld::GetInstance().AddObject(&agent);
+	PhysicsWorld::GetInstance().AddObject(&agent);*/
 }
 
 // Resets the scene by resetting the Agent to its original location, and removes obstructions
@@ -133,7 +132,7 @@ void GameManager::Update() {
 // Checks if the game is in a terminal state:
 // The agent has reached the end goal, or the agent is stuck (should not happen but it is rare)
 bool GameManager::InTerminalState(GameObject* agent) {
-	std::vector<int> endPoint = mazeGenerator->GetEndCoordinates();
+	std::vector<int> endPoint = MazeGenerator::GetInstance().GetEndCoordinates();
 
 	RigidBody* agentRb = agent->GetRigidBody();
 	float xPos = agentRb->box2dBody->GetPosition().x;

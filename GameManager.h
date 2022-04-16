@@ -11,7 +11,7 @@ class GameManager
 public:
 
 	static GameManager& GetInstance();
-	void Attach(ObstructionGenerator* obsGenerator, MazeGenerator* mazeGenerator);
+	void Attach(ObstructionGenerator* obsGenerator);
 
 	void LoadShaders();
 	void LoadScene();

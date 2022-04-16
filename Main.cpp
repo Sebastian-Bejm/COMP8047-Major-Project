@@ -22,7 +22,7 @@ const int cameraDepth = 19.0f;
 ObjectTracker* objectTracker;
 Renderer* renderer;
 PhysicsWorld* physicsWorld;
-MazeGenerator mazeGenerator;
+MazeGenerator* mazeGenerator;
 ObstructionGenerator obsGenerator;
 GameManager* gameManager;
 
@@ -37,14 +37,24 @@ int Initialize() {
 	physicsWorld = &PhysicsWorld::GetInstance();
 
 	// Generate a maze of size m x n (use odd numbers to avoid wall issue)
-	mazeGenerator.InitMaze(mazeRows, mazeCols);
-	mazeGenerator.Generate();
-	//mazeGenerator.InitMaze("maze.txt");
+	mazeGenerator = &MazeGenerator::GetInstance();
+	mazeGenerator->InitMaze(mazeRows, mazeCols);
+	mazeGenerator->Generate();
 
-	obsGenerator.AttachMazeGenerator(&mazeGenerator);
+	std::vector<std::vector<MazeCell>> currentMaze = mazeGenerator->GetMazeCells();
+	std::cout << currentMaze.size() << ", " << currentMaze[0].size();
+	for (int i = 0; i < currentMaze.size(); i++) {
+		for (int j = 0; j < currentMaze[i].size(); j++) {
+			std::cout << currentMaze[i][j].str() << " ";
+		}
+		std::cout << std::endl;
+	}
+
+	//mazeGenerator.InitMaze("maze.txt");
+	//obsGenerator.AttachMazeGenerator(&mazeGenerator);
 
 	gameManager = &GameManager::GetInstance();
-	gameManager->Attach(&obsGenerator, &mazeGenerator);
+	gameManager->Attach(&obsGenerator);
 	gameManager->LoadShaders();
 
 	camera = Camera(screenWidth, screenHeight, glm::vec3((float)(mazeCols/2), (float)(-mazeRows/2), cameraDepth));
@@ -169,15 +179,15 @@ void GenData(std::string filename) {
 }
 
 int main() {
-	// TODO: 
-	// ObstructionGenerator => change so it generates walls that are marked as the obstructions
-	// ELM in Q-Learning
-	// Proper updating: Get Maze => Agent => Train => Move => if maze is updated then repeat
+	// TODO Saturday:
+	// fix the update cycle
+	// agent movement
 
 	Agent agent = Agent();
 
-	agent.InitializeQLearn();
-	agent.Train(Mode::QLEARN, false);
+	//agent.InitializeQLearn();
+	//agent.AttachCurrentMaze(mazeGenerator.GetMazeCells());
+	//agent.Train(Mode::QLEARN, false);
 
 	// Initalize everything required for engine
 	Initialize();
@@ -195,7 +205,6 @@ int main() {
 		PhysicsUpdate();
 		agent.MoveUpdate();
 		gameManager->Update();
-
 		GraphicsUpdate();
 	}
 

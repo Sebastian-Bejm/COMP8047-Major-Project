@@ -1,6 +1,9 @@
 #include "MazeGenerator.h"
 
-MazeGenerator::MazeGenerator() {}
+MazeGenerator& MazeGenerator::GetInstance() {
+	static MazeGenerator instance;
+	return instance;
+}
 
 // Initialize the maze
 void MazeGenerator::InitMaze(int rows, int cols) {
@@ -64,7 +67,7 @@ void MazeGenerator::Generate() {
 
 	PadOuterWalls(); 
 	CreateMazePositions();
-
+	//PrintMaze();
 }
 
 // Print the generated maze. Mainly used for debugging.

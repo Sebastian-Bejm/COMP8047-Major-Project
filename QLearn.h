@@ -16,6 +16,8 @@ public:
 	void AttachMazeFromFile(std::string filename);
 	void AttachMazeFromGame(std::vector<std::vector<MazeCell>> maze);
 
+	void UpdateCurrentState(float posX, float posY, std::vector<std::vector<MazeCell>> currentMaze);
+
 	void TrainQLearn(bool verbose = false);
 	void TrainQELM(bool verbose = false);
 

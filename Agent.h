@@ -1,7 +1,6 @@
 #pragma once
 
-#include <vector>
-
+#include "MazeGenerator.h"
 #include "ObjectTracker.h"
 #include "QLearn.h"
 
@@ -22,7 +21,6 @@ public:
 
 	void MoveUpdate();
 	void Move(float destX, float destY);
-	void TeleportMove();
 
 private:
 
