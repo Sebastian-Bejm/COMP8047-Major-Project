@@ -11,26 +11,28 @@ class GameManager
 public:
 
 	static GameManager& GetInstance();
-	void Attach(ObstructionGenerator* obsGenerator);
 
 	void LoadShaders();
 	void LoadScene();
-	void LoadNewScene();
 
+	void Update();
+
+	void LoadNewScene();
 	void ResetScene();
 	void CleanScene();
 
-	void Update();
+	int GetMazesCompleted();
 
 private:
 
 	ObstructionGenerator* obsGenerator = nullptr;
-
 	std::vector<Shader> shaderStorage;
 
 	bool reachedGoal = false;
 	int timeAfterGoal = 0;
 	const int graceTime = 1000;
+
+	int mazesCompleted = 0;
 
 	bool InTerminalState(GameObject* agent);
 };

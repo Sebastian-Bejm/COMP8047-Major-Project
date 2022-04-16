@@ -8,13 +8,13 @@ void Agent::InitializeQLearn() {
 	double eps = 0.5;
 	double epsDecayFactor = 0.998;
 	double learningRate = 0.8;
-	int numEpisodes = 1500;
+	int numEpisodes = 1400;
 
 	// Initalize the QLearn class with hyperparameters
 	instance.InitHyperparameters(discountFactor, eps, epsDecayFactor, learningRate, numEpisodes);
 }
 
-// Train the QLearn internally, then the Agent will have access to path information
+// Train the QLearn internally, then pass path information to Agent
 void Agent::Train(Mode mode, bool verbose) {
 	// Get the current maze
 	instance.AttachMazeFromGame(MazeGenerator::GetInstance().GetMazeCells());
@@ -25,54 +25,32 @@ void Agent::Train(Mode mode, bool verbose) {
 	else if (mode == Mode::QELM) {
 		instance.TrainQELM(verbose);
 	}
-
+	// Get the path from QLearn
+	currentPath = instance.GetPath();
 }
 
-void Agent::ClampPosition(GameObject* agent, MazeCell nextPos) {
-	agent->SetPosition(nextPos.GetColumn(), -nextPos.GetRow());
-}
-
-bool Agent::AtNextPosition(float curX, float curY, MazeCell nextPos, float epsilon) {
-	return (fabs(curX - nextPos.GetColumn()) < epsilon && fabs(curY - (-nextPos.GetRow()) < epsilon));
-}
-
+// https://forum.unity.com/threads/how-can-i-move-an-object-from-point-to-point-in-an-array-of-points.945488/
+// Start performing the navigation given the path from QLearn
 void Agent::MoveUpdate() {
-	if (pathDone) {
-		std::vector<MazeCell> bestPath = instance.GetPath();
-		for (MazeCell mc : bestPath) {
-			std::cout << mc.GetColumn() << "," << -mc.GetRow() << std::endl;
-		}
+	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
+	
+	MazeCell mc = currentPath[currentPointIndex];
+	glm::vec3 destPoint = glm::vec3(mc.GetColumn(), -mc.GetRow(), 0);
 
-		std::reverse(bestPath.begin(), bestPath.end()); // reverse vector since stack goes in the opposite direction
-		//bestPath.erase(bestPath.begin());
-		pathStack = std::stack<MazeCell>(std::deque<MazeCell>(bestPath.begin(), bestPath.end()));
-		pathDone = false;
+	if (glm::distance(agent->GetTransform()->GetPosition(), destPoint) < 0.01f) {
+		currentPointIndex++;
+		std::cout << currentPointIndex << std::endl;
 	}
-	else {
-		GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
 
-		if (!pathStack.empty()) {
-			MazeCell nextMove = pathStack.top();
-
-			if (agent != nullptr) {
-				if (AtNextPosition(agent->GetRigidBody()->box2dBody->GetPosition().x, agent->GetRigidBody()->box2dBody->GetPosition().y, nextMove, 0.005f)) {
-					std::cout << pathStack.top().GetColumn() << "," << -pathStack.top().GetRow() << std::endl;
-					pathStack.pop();
-				}
-				else {
-					Move(nextMove.GetColumn(), -nextMove.GetRow());
-				}
-
-			}
-
-		}
-		else {
-			
-		}
+	if (currentPointIndex >= currentPath.size()) {
+		// something to make sure the path restarts on next run and doesnt overshoot
 	}
+
+	MoveTowards(destPoint.x, destPoint.y);
 }
 
-void Agent::Move(float destX, float destY) {
+// Move the agent towards a given destination point
+void Agent::MoveTowards(float destX, float destY) {
 	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
 
 	if (agent != nullptr) {

@@ -18,6 +18,7 @@
 #include "ObjectTracker.h"
 #include "ShapeDetails.h"
 #include "TimeTracker.h"
+#include "GameManager.h"
 
 extern GLFWwindow* window;
 

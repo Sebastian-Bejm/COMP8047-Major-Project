@@ -2,16 +2,14 @@
 
 #include "MazeGenerator.h"
 #include "ObjectTracker.h"
-#include "PhysicsWorld.h"
 
 class ObstructionGenerator
 {
 public:
 
-	ObstructionGenerator();
+	static ObstructionGenerator& GetInstance();
 
-	void AttachMazeGenerator(MazeGenerator* mazeGenerator);
-	void RunGenerator(ObjectTracker* tracker, PhysicsWorld* physicsWorld);
+	void RunGenerator();
 	GameObject& GenerateObstruction(glm::vec3 targetPosition);
 	
 private:

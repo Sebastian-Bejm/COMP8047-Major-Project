@@ -272,6 +272,7 @@ int Renderer::Update(ObjectTracker* tracker) {
 
 	// Draw the game objects here with a reference to the camera
 	std::vector<GameObject> objects = tracker->GetAllObjects();
+
 	for (int i = 0; i < objects.size(); i++) {
 
 		objects[i].GetShader().Activate();
@@ -295,14 +296,17 @@ int Renderer::Update(ObjectTracker* tracker) {
 	std::string currentTime = TimeTracker::GetInstance().GetCurrentTime();
 	std::string lastBest = TimeTracker::GetInstance().GetLastBestTime();
 
+	int mazesCompleted = GameManager::GetInstance().GetMazesCompleted();
+	std::string mazesCompStr = "Mazes completed without error: " + std::to_string(mazesCompleted);
+
 	RenderText(textShader, currentTime, (float)windowWidth - TEXT_WIDTH_OFFSET*2,
-		(float)windowHeight - TEXT_HEIGHT_OFFSET, 0.8f, glm::vec3(0.0f, 0.0f, 0.0f));
+		(float)windowHeight - TEXT_HEIGHT_OFFSET, 0.7f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	RenderText(textShader, lastBest, (float)windowWidth - TEXT_WIDTH_OFFSET, 
-		(float)windowHeight - TEXT_HEIGHT_OFFSET, 0.8f, glm::vec3(0.0f, 0.0f, 0.0f));
+		(float)windowHeight - TEXT_HEIGHT_OFFSET, 0.7f, glm::vec3(0.0f, 0.0f, 0.0f));
 
-	RenderText(textShader, "Mazes completed without error: ", (float)windowWidth - TEXT_WIDTH_OFFSET * 2,
-		(float)windowHeight - TEXT_HEIGHT_OFFSET * 2, 0.8f, glm::vec3(0.0f, 0.0f, 0.0f));
+	RenderText(textShader, mazesCompStr, (float)windowWidth - TEXT_WIDTH_OFFSET * 2,
+		(float)windowHeight - TEXT_HEIGHT_OFFSET * 2, 0.7f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	glfwSwapBuffers(window);
 

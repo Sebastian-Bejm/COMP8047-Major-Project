@@ -41,10 +41,15 @@ void QLearn::AttachMazeFromGame(std::vector<std::vector<MazeCell>> maze) {
 }
 
 void QLearn::UpdateCurrentState(float posX, float posY, std::vector<std::vector<MazeCell>> currentMaze) {
-	// clamp to nearest pos in ints
-	startPos.x = posX;
-	startPos.y = posY;
-	maze = currentMaze;
+	startPos.x = std::round(posX);
+	startPos.y = std::round(posY);
+
+	this->maze = currentMaze;
+
+	this->numRows = maze.size();
+	this->numCols = maze[0].size();
+
+	CreateMazeNumRep();
 }
 
 // Train using the standard Q-Learning algorithm

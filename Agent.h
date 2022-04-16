@@ -1,9 +1,8 @@
 #pragma once
 
-#include <stack>
-
 #include "MazeGenerator.h"
 #include "ObjectTracker.h"
+#include "Time.h"
 #include "QLearn.h"
 
 enum Mode {
@@ -21,18 +20,19 @@ public:
 	void Train(Mode mode, bool verbose=false);
 
 	void MoveUpdate();
-	void Move(float destX, float destY);
 
 private:
 
 	QLearn instance;
 
-	std::stack<MazeCell> pathStack;
+	std::vector<MazeCell> currentPath;
+	int currentPointIndex = 0;
 
-	float agentSpeed = 0.2f;
+	float agentSpeed = 0.25f;
 	bool pathDone = true;
+	bool moving = false;
 
-	bool AtNextPosition(float curX, float curY, MazeCell nextPos, float epsilon);
-	void ClampPosition(GameObject* agent, MazeCell nextPos);
+	float errorTime = 5.0f;
+
+	void MoveTowards(float destX, float destY);
 };
-

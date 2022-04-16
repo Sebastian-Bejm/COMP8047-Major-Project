@@ -23,7 +23,7 @@ ObjectTracker* objectTracker;
 Renderer* renderer;
 PhysicsWorld* physicsWorld;
 MazeGenerator* mazeGenerator;
-ObstructionGenerator obsGenerator;
+ObstructionGenerator* obsGenerator;
 GameManager* gameManager;
 
 Camera camera;
@@ -41,10 +41,9 @@ int Initialize() {
 	mazeGenerator->InitMaze(mazeRows, mazeCols);
 	mazeGenerator->Generate();
 
-	//obsGenerator.AttachMazeGenerator(&mazeGenerator);
+	// INIT OBS GENERATOR HERE
 
 	gameManager = &GameManager::GetInstance();
-	gameManager->Attach(&obsGenerator);
 	gameManager->LoadShaders();
 
 	camera = Camera(screenWidth, screenHeight, glm::vec3((float)(mazeCols/2), (float)(-mazeRows/2), cameraDepth));
@@ -64,6 +63,7 @@ void GraphicsUpdate() {
 int RunEngine() {
 	// physics update comes first
 	PhysicsUpdate();
+
 
 	//agent.MoveUpdate();
 	gameManager->Update();
@@ -90,9 +90,10 @@ int Teardown() {
 }
 
 int main() {
-	// TODO Saturday:
-	// fix the update cycle
-	// game manager load new scene
+
+	// TODO Sunday:
+	// UPDATE CYCLE => Pass QLearn when scene restarts => Pass QLearn when obstruction in range
+	// Obstruction generator
 
 	// Initalize everything required for engine
 	Initialize();
@@ -113,8 +114,10 @@ int main() {
 
 		// Run the engine and its updates
 		PhysicsUpdate();
+
 		agent.MoveUpdate();
 		gameManager->Update();
+
 		GraphicsUpdate();
 	}
 

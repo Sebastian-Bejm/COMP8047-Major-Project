@@ -1,20 +1,17 @@
 #include "ObstructionGenerator.h"
 
-ObstructionGenerator::ObstructionGenerator() {
-	prevTime = clock();
-	mazeGenerator = nullptr;
+// https://stackoverflow.com/questions/7986465/algorithm-to-generate-random-position-for-game-object
+// https://stackoverflow.com/questions/20364132/algorithm-to-spawn-objects-randomly
+ObstructionGenerator& ObstructionGenerator::GetInstance() {
+	static ObstructionGenerator instance;
+	return instance;
 }
 
-void ObstructionGenerator::AttachMazeGenerator(MazeGenerator* mazeGenerator) {
-	this->mazeGenerator = mazeGenerator;
-}
-
-void ObstructionGenerator::RunGenerator(ObjectTracker* tracker, PhysicsWorld* physicsWorld) {
+void ObstructionGenerator::RunGenerator() {
 	// if time interval is met
 	// create new object
 	// check if theres a valid spot where the object can be generated
 	// change its position if not valid
-
 }
 
 GameObject& ObstructionGenerator::GenerateObstruction(glm::vec3 targetPosition) {

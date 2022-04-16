@@ -5,10 +5,6 @@ GameManager& GameManager::GetInstance() {
 	return instance;
 }
 
-void GameManager::Attach(ObstructionGenerator* obsGenerator) {
-	this->obsGenerator = obsGenerator;
-}
-
 // Initialize the shaders to be used
 void GameManager::LoadShaders() {
 	Shader crateShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
@@ -25,7 +21,7 @@ void GameManager::LoadScene() {
 	std::vector<std::vector<MazeCell>> maze = MazeGenerator::GetInstance().GetMazeCells();
 
 	// Create the maze using game objects
-	// Row: y, Col: x;
+	// Row: -y, Col: x;
 	for (size_t r = 0; r < maze.size(); r++) {
 		for (size_t c = 0; c < maze[r].size(); c++) {
 			int x = c;
@@ -80,12 +76,46 @@ void GameManager::LoadScene() {
 	TimeTracker::GetInstance().StartTimer();
 }
 
+// Updates the game logic and checks when the current game has finished
+void GameManager::Update() {
+	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
+
+	if (agent != nullptr) {
+		bool terminalState = InTerminalState(agent);
+		if (terminalState) {
+			TimeTracker::GetInstance().StopTimer();
+			reachedGoal = true;
+
+		}
+		if (reachedGoal) {
+			timeAfterGoal++;
+			if (timeAfterGoal >= graceTime) {
+				LoadNewScene();
+
+				mazesCompleted++;
+				timeAfterGoal = 0;
+				reachedGoal = false;
+			}
+		}
+
+		// add a check if agent is stuck, there is error, so dont update mazesCompleted
+	}
+
+}
+
 // Loads a new scene: generates a new maze, start/end point, and agent in new positions
 void GameManager::LoadNewScene() {
 	/*GameObject agent("agent", "lava.png", shaderStorage[2], glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
 
 	ObjectTracker::GetInstance().AddObject(agent);
 	PhysicsWorld::GetInstance().AddObject(&agent);*/
+
+	MazeGenerator::GetInstance().InitMaze(13, 13);
+	MazeGenerator::GetInstance().Generate();
+
+	ObjectTracker::GetInstance().RemoveAllObjects();
+
+	LoadScene();
 }
 
 // Resets the scene by resetting the Agent to its original location, and removes obstructions
@@ -98,8 +128,6 @@ void GameManager::ResetScene() {
 	reachedGoal = false;
 	timeAfterGoal = 0;
 	TimeTracker::GetInstance().StartTimer();
-
-	LoadNewScene();
 }
 
 // Clear the scene and properly delete the objects currently in the scene
@@ -109,24 +137,8 @@ void GameManager::CleanScene() {
 	}
 }
 
-// Updates the game logic and checks when the current game has finished
-void GameManager::Update() {
-	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
-
-	if (agent != nullptr) {
-		bool terminalState = InTerminalState(agent);
-		if (terminalState) {
-			TimeTracker::GetInstance().StopTimer();
-			reachedGoal = true;
-		}
-		if (reachedGoal) {
-			timeAfterGoal++;
-			if (timeAfterGoal >= graceTime) {
-				ResetScene();
-			}
-		}
-	}
-
+int GameManager::GetMazesCompleted() {
+	return mazesCompleted;
 }
 
 // Checks if the game is in a terminal state:
