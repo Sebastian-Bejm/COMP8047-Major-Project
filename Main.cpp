@@ -13,11 +13,10 @@
 #include "FPSCounter.h"
 #include "QLearn.h"
 
-const int screenWidth = 1200;
-const int screenHeight = 1000;
+const int windowWidth = 1200, windowHeight = 980;
 
-const int mazeRows = 13, mazeCols = 13;
-const int cameraDepth = 19.0f;
+const int mazeRows = 15, mazeCols = 15;
+const int cameraDepth = 28.0f;
 
 ObjectTracker* objectTracker;
 Renderer* renderer;
@@ -31,7 +30,7 @@ Camera camera;
 int Initialize() {
 	glm::fvec4 backgroundColour(180.0f / 255.0f, 240.0f / 255.0f, 239.0f / 255.0f, 1.0f);
 	renderer = Renderer::GetInstance();
-	renderer->Init(backgroundColour, screenWidth, screenHeight);
+	renderer->Init(backgroundColour, windowWidth, windowHeight);
 
 	objectTracker = &ObjectTracker::GetInstance();
 	physicsWorld = &PhysicsWorld::GetInstance();
@@ -46,7 +45,7 @@ int Initialize() {
 	gameManager = &GameManager::GetInstance();
 	gameManager->LoadShaders();
 
-	camera = Camera(screenWidth, screenHeight, glm::vec3((float)(mazeCols/2), (float)(-mazeRows/2), cameraDepth));
+	camera = Camera(windowWidth, windowHeight, glm::vec3((float)(mazeCols/2), (float)(-mazeRows/2), cameraDepth));
 	renderer->SetCamera(camera);
 
 	return 0;

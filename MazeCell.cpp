@@ -28,8 +28,10 @@ MazeCell::MazeCell(int row, int col, bool isWall) {
 }
 
 void MazeCell::SetWall(bool isWall) {
-	bool old = this->isWall;
 	this->isWall = isWall;
+	if (isWall) {
+		this->obstructed = false;
+	}
 }
 
 bool MazeCell::IsWall() {
@@ -38,6 +40,9 @@ bool MazeCell::IsWall() {
 
 void MazeCell::SetObstruction(bool obstructed) {
 	this->obstructed = obstructed;
+	if (obstructed) {
+		this->isWall = false;
+	}
 }
 
 bool MazeCell::IsObstruction() {

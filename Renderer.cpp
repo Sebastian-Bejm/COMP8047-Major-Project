@@ -24,6 +24,13 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+	// Get this monitors information
+	int monitorX, monitorY;
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+	glfwGetMonitorPos(monitor, &monitorX, &monitorY);
+
 	// Setup our window for OpenGL
 	window = glfwCreateWindow(windowWidth, windowHeight, "COMP8047 Major Project", NULL, NULL);
 	if (window == NULL) {
@@ -33,6 +40,9 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	}
 
 	glfwMakeContextCurrent(window);
+	
+	// Center the OpenGL window
+	glfwSetWindowPos(window, monitorX + (mode->width - windowWidth) / 2, monitorY + (mode->height - windowHeight) / 2);
 
 	// Load GLAD so it configures OpenGL
 	gladLoadGL();
@@ -297,7 +307,7 @@ int Renderer::Update(ObjectTracker* tracker) {
 	std::string lastBest = TimeTracker::GetInstance().GetLastBestTime();
 
 	int mazesCompleted = GameManager::GetInstance().GetMazesCompleted();
-	std::string mazesCompStr = "Mazes completed without error: " + std::to_string(mazesCompleted);
+	std::string mazesCompStr = "Mazes completed: " + std::to_string(mazesCompleted);
 
 	RenderText(textShader, currentTime, (float)windowWidth - TEXT_WIDTH_OFFSET*2,
 		(float)windowHeight - TEXT_HEIGHT_OFFSET, 0.7f, glm::vec3(0.0f, 0.0f, 0.0f));

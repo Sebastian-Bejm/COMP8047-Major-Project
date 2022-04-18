@@ -6,7 +6,7 @@ MazeGenerator& MazeGenerator::GetInstance() {
 }
 
 // Initialize the maze
-void MazeGenerator::InitMaze(int rows, int cols) {
+void MazeGenerator::InitMaze(int rows, int cols, int wallsToRemove) {
 	mazeCells.resize(rows);
 	for (size_t i = 0; i < rows; i++) {
 		mazeCells[i].resize(cols);
@@ -18,6 +18,8 @@ void MazeGenerator::InitMaze(int rows, int cols) {
 			mazeCells[row][col] = MazeCell(row, col);
 		}
 	}
+
+	this->wallsToRemove = wallsToRemove;
 }
 
 // Initialize a maze from file

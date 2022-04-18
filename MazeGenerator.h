@@ -17,7 +17,7 @@ public:
 
 	static MazeGenerator& GetInstance();
 
-	void InitMaze(int rows, int cols);
+	void InitMaze(int rows, int cols, int wallsToRemove = 0);
 	void InitMaze(std::string filename);
 	void Generate();
 	void PrintMaze();
@@ -30,6 +30,8 @@ public:
 	std::vector<std::vector<MazeCell>>& GetMazeCells();
 
 private:
+
+	int wallsToRemove = 0;
 
 	int directions[4][2] = {
 		{0, -2}, // north

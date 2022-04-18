@@ -34,19 +34,23 @@ void Agent::Train(Mode mode, bool verbose) {
 void Agent::MoveUpdate() {
 	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
 	
-	MazeCell mc = currentPath[currentPointIndex];
-	glm::vec3 destPoint = glm::vec3(mc.GetColumn(), -mc.GetRow(), 0);
+	if (!currentPath.empty()) {
+		MazeCell mc = currentPath[currentPointIndex];
+		glm::vec3 destPoint = glm::vec3(mc.GetColumn(), -mc.GetRow(), 0);
 
-	if (glm::distance(agent->GetTransform()->GetPosition(), destPoint) < 0.01f) {
-		currentPointIndex++;
-		std::cout << currentPointIndex << std::endl;
+		if (glm::distance(agent->GetTransform()->GetPosition(), destPoint) < 0.01f) {
+			currentPointIndex++;
+			//std::cout << currentPointIndex << std::endl;
+		}
+
+		if (currentPointIndex >= currentPath.size()) {
+			// Make sure the agent doesn't start moving on next run
+			currentPath.clear();
+		}
+
+		MoveTowards(destPoint.x, destPoint.y);
 	}
 
-	if (currentPointIndex >= currentPath.size()) {
-		// something to make sure the path restarts on next run and doesnt overshoot
-	}
-
-	MoveTowards(destPoint.x, destPoint.y);
 }
 
 // Move the agent towards a given destination point

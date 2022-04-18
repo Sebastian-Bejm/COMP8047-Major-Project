@@ -29,10 +29,7 @@ private:
 	int currentPointIndex = 0;
 
 	float agentSpeed = 0.25f;
-	bool pathDone = true;
-	bool moving = false;
-
-	float errorTime = 5.0f;
+	float errorTime = 4.0f;
 
 	void MoveTowards(float destX, float destY);
 };
