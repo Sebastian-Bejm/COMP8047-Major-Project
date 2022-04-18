@@ -278,7 +278,7 @@ int Renderer::Update(ObjectTracker* tracker) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	camera.ProcessInput(window, deltaTime);
-	camera.SetOrthoMatrix(-8.0f, 10.0f, -10.0f, 8.0f, 0.1f, 100.0f);
+	camera.SetOrthoMatrix(viewLeft, viewRight, viewBottom, viewTop, 0.1f, 100.0f);
 
 	// Draw the game objects here with a reference to the camera
 	std::vector<GameObject> objects = tracker->GetAllObjects();
@@ -295,7 +295,7 @@ int Renderer::Update(ObjectTracker* tracker) {
 		objects[i].Draw(camera);
 
 		// Draw the actual Mesh
-		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, nullptr);
 	}
 
 	// Activate the freetype text shader
@@ -340,4 +340,11 @@ int Renderer::Teardown() {
 
 void Renderer::SetCamera(Camera& camera) {
 	this->camera = camera;
+}
+
+void Renderer::SetView(float left, float right, float bottom, float top) {
+	viewLeft = left;
+	viewRight = right;
+	viewBottom = bottom;
+	viewTop = top;
 }

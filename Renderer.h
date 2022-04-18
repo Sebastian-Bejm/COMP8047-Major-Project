@@ -32,6 +32,7 @@ public:
 	int Teardown();
 
 	void SetCamera(Camera& camera);
+	void SetView(float left, float right, float bottom, float top);
 
 private:
 
@@ -54,8 +55,11 @@ private:
 	Shader textShader;
 
 	// Variables for window size and color
-	int windowWidth, windowHeight;
+	int windowWidth = 0, windowHeight = 0;
 	glm::vec4 backgroundColour;
+
+	// Variables for orthographic view
+	float viewLeft = 0.0f, viewRight = 0.0f, viewBottom = 0.0f, viewTop = 0.0f;
 
 	const int TEXT_WIDTH_OFFSET = 500;
 	const int TEXT_HEIGHT_OFFSET = 80;

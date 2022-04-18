@@ -19,7 +19,14 @@ void MazeGenerator::InitMaze(int rows, int cols, int wallsToRemove) {
 		}
 	}
 
-	this->wallsToRemove = wallsToRemove;
+	int maxMazeSize = rows * cols;
+	double wallRemovalLimit = 0.75;
+	if (wallsToRemove >= (maxMazeSize * wallRemovalLimit)) {
+		this->wallsToRemove = (int)(wallsToRemove * wallRemovalLimit);
+	}
+	else {
+		this->wallsToRemove = wallsToRemove;
+	}
 }
 
 // Initialize a maze from file
@@ -69,7 +76,10 @@ void MazeGenerator::Generate() {
 
 	PadOuterWalls(); 
 	CreateMazePositions();
-	//PrintMaze();
+
+	RemoveWalls();
+
+	PrintMaze();
 }
 
 // Print the generated maze. Mainly used for debugging.
@@ -315,4 +325,78 @@ void MazeGenerator::CreateMazePositions() {
 	int endY = points[endPoint - 1][1];
 
 	mazeCells[endX][endY].SetAsExit(true);
+}
+
+void MazeGenerator::RemoveWalls() {
+	if (wallsToRemove == 0) {
+		return;
+	}
+
+
+}
+
+bool MazeGenerator::RemoveWall(int row, int col) {
+	// Remove wall if possible
+	bool evenRow = (row % 2 == 0);
+	bool evenCol = (col % 2 == 0);
+
+	MazeCell cell = mazeCells[row][col];
+	if (!cell.IsWall()) {
+		return false;
+	}
+
+	if (!evenRow && evenCol) {
+		// Uneven row and even column
+		bool hasTop = (row - 2 > 0) && (mazeCells[row - 2][col].IsWall());
+		bool hasBottom = (row + 2 < mazeCells.size()) && (mazeCells[row + 2][col].IsWall());
+
+		if (hasTop && hasBottom) {
+			mazeCells[row][col].SetObstruction(true);
+			return true;
+		}
+		else if (!hasTop && hasBottom) {
+			bool left = mazeCells[row - 1][col - 1].IsWall();
+			bool right = mazeCells[row - 1][col + 1].IsWall();
+			if (left || right) {
+				mazeCells[row][col].SetObstruction(true);
+				return true;
+			}
+		}
+		else if (hasTop && !hasBottom) {
+			bool left = mazeCells[row + 1][col - 1].IsWall();
+			bool right = mazeCells[row + 1][col + 1].IsWall();
+			if (left || right) {
+				mazeCells[row][col].SetObstruction(true);
+				return true;
+			}
+		}
+
+	}
+	else if (evenRow && !evenCol) {
+		bool hasLeft = mazeCells[row][col - 2].IsWall();
+		bool hasRight = mazeCells[row][col + 2].IsWall();
+
+		if (hasLeft && hasRight) {
+			mazeCells[row][col].SetObstruction(true);
+			return true;
+		}
+		else if (!hasLeft && hasRight) {
+			bool top = mazeCells[row - 1][col - 1].IsWall();
+			bool bottom = mazeCells[row + 1][col - 1].IsWall();
+			if (top || bottom) {
+				mazeCells[row][col].SetObstruction(true);
+				return true;
+			}
+		}
+		else if (hasLeft && !hasRight) {
+			bool top = mazeCells[row - 1][col + 1].IsWall();
+			bool bottom = mazeCells[row + 1][col + 1].IsWall();
+			if (top || bottom) {
+				mazeCells[row][col].SetObstruction(true);
+				return true;
+			}
+		}
+	}
+
+	return false;
 }

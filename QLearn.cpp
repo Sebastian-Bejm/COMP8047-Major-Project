@@ -134,7 +134,7 @@ void QLearn::TrainQELM(bool verbose) {
 
 	QMaze qMaze(mazeNumRep, startPos, endPos);
 
-	for (int i = 0; i < numEpisodes; i++) {
+	for (int i = 0; i < 100; i++) {
 		
 	}
 }
@@ -164,6 +164,7 @@ void QLearn::CreateMazeNumRep() {
 				mazeNumRep[i][j] = 0.0;
 			}
 			else {
+				// Initially if the cell is nothing or is an obstruction, mark it as path here
 				mazeNumRep[i][j] = 1.0;
 			}
 		}

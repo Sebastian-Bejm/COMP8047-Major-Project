@@ -80,13 +80,16 @@ void GameManager::LoadScene() {
 void GameManager::Update() {
 	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
 
+	// TODO: handle obstruction logic in here
+
 	if (agent != nullptr) {
+
 		bool terminalState = InTerminalState(agent);
 		if (terminalState) {
 			TimeTracker::GetInstance().StopTimer();
 			reachedGoal = true;
-
 		}
+
 		if (reachedGoal) {
 			timeAfterGoal++;
 			if (timeAfterGoal >= graceTime) {
@@ -110,7 +113,7 @@ void GameManager::LoadNewScene() {
 	ObjectTracker::GetInstance().AddObject(agent);
 	PhysicsWorld::GetInstance().AddObject(&agent);*/
 
-	MazeGenerator::GetInstance().InitMaze(13, 13);
+	MazeGenerator::GetInstance().InitMaze(15, 15, 60);
 	MazeGenerator::GetInstance().Generate();
 
 	ObjectTracker::GetInstance().RemoveAllObjects();

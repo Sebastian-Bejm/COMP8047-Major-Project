@@ -32,6 +32,7 @@ public:
 private:
 
 	int wallsToRemove = 0;
+	int wallsRemoved = 0;
 
 	int directions[4][2] = {
 		{0, -2}, // north
@@ -55,4 +56,6 @@ private:
 	void PadOuterWalls();
 	void CreateMazePositions();
 
+	void RemoveWalls();
+	bool RemoveWall(int row, int col);
 };

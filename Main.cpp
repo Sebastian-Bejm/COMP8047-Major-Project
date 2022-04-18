@@ -14,9 +14,10 @@
 #include "QLearn.h"
 
 const int windowWidth = 1200, windowHeight = 980;
-
 const int mazeRows = 15, mazeCols = 15;
-const int cameraDepth = 28.0f;
+const int wallToRemove = 60;
+
+const float viewBounds[] = { -9.0f, 9.0f, -9.0f, 9.0f };
 
 ObjectTracker* objectTracker;
 Renderer* renderer;
@@ -31,13 +32,14 @@ int Initialize() {
 	glm::fvec4 backgroundColour(180.0f / 255.0f, 240.0f / 255.0f, 239.0f / 255.0f, 1.0f);
 	renderer = Renderer::GetInstance();
 	renderer->Init(backgroundColour, windowWidth, windowHeight);
+	renderer->SetView(viewBounds[0], viewBounds[1], viewBounds[2], viewBounds[3]);
 
 	objectTracker = &ObjectTracker::GetInstance();
 	physicsWorld = &PhysicsWorld::GetInstance();
 
 	// Generate a maze of size m x n (use odd numbers to avoid wall issue)
 	mazeGenerator = &MazeGenerator::GetInstance();
-	mazeGenerator->InitMaze(mazeRows, mazeCols);
+	mazeGenerator->InitMaze(mazeRows, mazeCols, wallToRemove);
 	mazeGenerator->Generate();
 
 	// INIT OBS GENERATOR HERE
@@ -45,7 +47,7 @@ int Initialize() {
 	gameManager = &GameManager::GetInstance();
 	gameManager->LoadShaders();
 
-	camera = Camera(windowWidth, windowHeight, glm::vec3((float)(mazeCols/2), (float)(-mazeRows/2), cameraDepth));
+	camera = Camera(windowWidth, windowHeight, glm::vec3((float)(mazeCols/2), (float)(-mazeRows/2), 0));
 	renderer->SetCamera(camera);
 
 	return 0;
