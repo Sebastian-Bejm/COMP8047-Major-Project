@@ -7,8 +7,6 @@ QMaze::QMaze(std::vector<std::vector<double>> maze, State agentPos, State endPos
 
 	this->numRows = maze.size();
 	this->numCols = maze[0].size();
-
-	//PrintMaze();
 }
 
 // Reset the simulation: reset the agent back to original position and reset the current path

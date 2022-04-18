@@ -74,9 +74,12 @@ void GameManager::LoadScene() {
 		}
 	}
 
-	// start the timer for this run
+	// Start timer and generator
 	TimeTracker::GetInstance().StartTimer();
-	ObstructionGenerator::GetInstance().StartGenerator(true);
+	//ObstructionGenerator::GetInstance().StartGenerator(true);
+
+	pathfindingAgent.InitializeQLearn();
+	pathfindingAgent.Train(Mode::QLEARN);
 }
 
 // Updates the game logic and checks when the current game has finished
@@ -85,9 +88,11 @@ void GameManager::Update() {
 	ObstructionGenerator* generatorInstance = &ObstructionGenerator::GetInstance();
 
 	// TODO: handle QLearn logic here and pass to agent
-	if (generatorInstance->GetMazeUpdates()) {
+	//if (generatorInstance->GetMazeUpdates()) {
 		// train agent QLearn here! :)
-	}
+	//}
+
+	//pathfindingAgent.MoveUpdate();
 
 	if (agent != nullptr) {
 		bool terminalState = InTerminalState(agent);
@@ -102,7 +107,7 @@ void GameManager::Update() {
 
 			if (timeAfterGoal >= graceTime) {
 				LoadNewScene();
-				generatorInstance->StartGenerator(true);
+				//generatorInstance->StartGenerator(true);
 
 				mazesCompleted++;
 				timeAfterGoal = 0;

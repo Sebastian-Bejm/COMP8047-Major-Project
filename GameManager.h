@@ -5,6 +5,7 @@
 #include "ObjectTracker.h"
 #include "PhysicsWorld.h"
 #include "TimeTracker.h"
+#include "Agent.h"
 
 class GameManager
 {
@@ -25,7 +26,8 @@ public:
 
 private:
 
-	ObstructionGenerator* obsGenerator = nullptr;
+	Agent pathfindingAgent = Agent();
+
 	std::vector<Shader> shaderStorage;
 
 	bool reachedGoal = false;

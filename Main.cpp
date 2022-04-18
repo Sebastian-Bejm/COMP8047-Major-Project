@@ -96,9 +96,7 @@ int main() {
 	// be able to pass the maze back to GameManager
 	// pass the new maze to Agent QLearn
 	// additional obstructions if time today
-
 	// Generator receives new maze - GOOD
-
 
 	// TODO Tuesday:
 	// Finish the updating, work on Q ELM
@@ -107,10 +105,10 @@ int main() {
 	Initialize();
 
 	// Initialize agent
-	Agent agent = Agent();
+	/*Agent agent = Agent();
 
 	agent.InitializeQLearn();
-	agent.Train(Mode::QLEARN);
+	agent.Train(Mode::QLEARN);*/
 
 	// Load the initial scene
 	gameManager->LoadScene();
@@ -123,7 +121,7 @@ int main() {
 		// Run the engine and its updates
 		PhysicsUpdate();
 
-		agent.MoveUpdate();
+		//agent.MoveUpdate();
 
 		obsGenerator->Update();
 		gameManager->Update();

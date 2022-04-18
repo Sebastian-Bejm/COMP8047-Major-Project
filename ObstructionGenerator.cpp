@@ -6,7 +6,7 @@ ObstructionGenerator& ObstructionGenerator::GetInstance() {
 }
 
 void ObstructionGenerator::Update() {
-	if (generatorStarted) {
+	/*if (generatorStarted) {
 		FindObstructions();
 		//std::cout << "start check" << std::endl;
 		generatorStarted = false;
@@ -16,7 +16,7 @@ void ObstructionGenerator::Update() {
 	if (InRange()) {
 		mazeUpdated = true;
 		UpdateMarkedObstructions();
-	}
+	}*/
 }
 
 // If obstructions are marked, remove them from vector
@@ -92,14 +92,7 @@ bool ObstructionGenerator::InRange() {
 				GenerateObstruction(obstacle);
 				return true;
 			}
-			/*if (fabs(xPos - obsX) <= revealRadius && fabs(yPos - obsY) <= revealRadius) {
-				std::cout << obsX << "," << obsY << std::endl;
-				obstructions[i].SetWall(true);
-				mazeGenInstance->GetMazeCells()[obstacle.GetRow()][obstacle.GetColumn()].SetWall(true);
 
-				GenerateObstruction(obstacle);
-				return true;
-			}*/
 		}
 	}
 
