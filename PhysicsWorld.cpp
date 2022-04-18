@@ -107,6 +107,21 @@ void PhysicsWorld::Update(ObjectTracker* tracker) {
 	}
 }
 
+// Safely remove the box2d bodies of objects
+void PhysicsWorld::DestroyObjects() {
+	ObjectTracker* tracker = &ObjectTracker::GetInstance();
+	std::vector<GameObject> objects = tracker->GetAllObjects();
+
+	for (size_t i = 0; i < tracker->GetAllObjects().size(); i++) {
+		if (objects[i].GetTag() == "agent") {
+			continue;
+		}
+		else {
+			PhysicsWorld::GetInstance().world->DestroyBody(objects[i].GetRigidBody()->box2dBody);
+		}
+	}
+}
+
 // Updates the transform of the GameObject based on the rigidbody position and state
 void PhysicsWorld::UpdateTransform(Transform* transform, RigidBody* rigidBody) {
 	float x = rigidBody->box2dBody->GetPosition().x;

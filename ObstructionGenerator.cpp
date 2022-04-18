@@ -42,7 +42,6 @@ bool ObstructionGenerator::GetMazeUpdates() {
 void ObstructionGenerator::FindObstructions() {
 	MazeGenerator* mazeGenInstance = &MazeGenerator::GetInstance();
 	std::vector<std::vector<MazeCell>> maze = mazeGenInstance->GetMazeCells();
-	//mazeGenInstance->PrintMaze();
 
 	for (size_t i = 0; i < maze.size(); i++) {
 		for (size_t j = 0; j < maze[i].size(); j++) {
@@ -85,7 +84,7 @@ bool ObstructionGenerator::InRange() {
 			glm::vec2 agentPos = glm::vec2(xPos, yPos);
 			glm::vec2 obsPos = glm::vec2(obsX, obsY);
 			if (glm::distance(agentPos, obsPos) <= revealRadius) {
-				std::cout << glm::distance(agentPos, obsPos) << std::endl;
+				//std::cout << glm::distance(agentPos, obsPos) << std::endl;
 				obstructions[i].SetWall(true);
 				mazeGenInstance->GetMazeCells()[obstacle.GetRow()][obstacle.GetColumn()].SetWall(true);
 

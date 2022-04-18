@@ -76,7 +76,7 @@ void GameManager::LoadScene() {
 
 	// Start timer and generator
 	TimeTracker::GetInstance().StartTimer();
-	//ObstructionGenerator::GetInstance().StartGenerator(true);
+	ObstructionGenerator::GetInstance().StartGenerator(true);
 
 	pathfindingAgent.InitializeQLearn();
 	pathfindingAgent.Train(Mode::QLEARN);
@@ -87,12 +87,13 @@ void GameManager::Update() {
 	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
 	ObstructionGenerator* generatorInstance = &ObstructionGenerator::GetInstance();
 
-	// TODO: handle QLearn logic here and pass to agent
-	//if (generatorInstance->GetMazeUpdates()) {
+	// TODO: handle QLearn logic here and pass back to agent
+	if (generatorInstance->GetMazeUpdates()) {
+		std::cout << "Update check" << std::endl;
 		// train agent QLearn here! :)
-	//}
+	}
 
-	//pathfindingAgent.MoveUpdate();
+	pathfindingAgent.MoveUpdate();
 
 	if (agent != nullptr) {
 		bool terminalState = InTerminalState(agent);
@@ -106,8 +107,10 @@ void GameManager::Update() {
 			timeAfterGoal++;
 
 			if (timeAfterGoal >= graceTime) {
+				CleanScene();
 				LoadNewScene();
-				//generatorInstance->StartGenerator(true);
+
+				generatorInstance->StartGenerator(true);
 
 				mazesCompleted++;
 				timeAfterGoal = 0;
@@ -143,10 +146,12 @@ void GameManager::ResetScene() {
 }
 
 // Clear the scene and properly delete the objects currently in the scene
-void GameManager::CleanScene() {	
-	for (auto& shader : shaderStorage) {
+void GameManager::CleanScene() {
+
+	PhysicsWorld::GetInstance().DestroyObjects();
+	/*for (auto& shader : shaderStorage) {
 		shader.Delete();
-	}
+	}*/
 }
 
 int GameManager::GetMazesCompleted() {

@@ -15,6 +15,7 @@ public:
 	static PhysicsWorld& GetInstance();
 	void AddObject(GameObject* gameObject);
 	void Update(ObjectTracker* tracker);
+	void DestroyObjects();
 
 private:
 	// A timestep in the physics engine is 1/60

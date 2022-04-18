@@ -54,6 +54,29 @@ int Initialize() {
 	return 0;
 }
 
+void HandleInputs() {
+	GameObject* agent = &objectTracker->GetObjectByTag("agent");
+
+	float velX = 0.0f, velY = 0.0f;
+	float speed = 0.35f;
+
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+		velX = -speed;
+	}
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+		velX = speed;
+	}
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+		velY = speed;
+	}
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+		velY = -speed;
+	}
+
+	agent->SetVelocity(velX, velY);
+
+}
+
 void PhysicsUpdate() {
 	physicsWorld->Update(objectTracker);
 }
@@ -104,12 +127,6 @@ int main() {
 	// Initalize everything required for engine
 	Initialize();
 
-	// Initialize agent
-	/*Agent agent = Agent();
-
-	agent.InitializeQLearn();
-	agent.Train(Mode::QLEARN);*/
-
 	// Load the initial scene
 	gameManager->LoadScene();
 
@@ -120,8 +137,6 @@ int main() {
 
 		// Run the engine and its updates
 		PhysicsUpdate();
-
-		//agent.MoveUpdate();
 
 		obsGenerator->Update();
 		gameManager->Update();

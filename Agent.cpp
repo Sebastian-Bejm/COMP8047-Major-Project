@@ -18,7 +18,6 @@ void Agent::InitializeQLearn() {
 void Agent::Train(Mode mode, bool verbose) {
 	// Get the current maze
 	instance.AttachMazeFromGame(MazeGenerator::GetInstance().GetMazeCells());
-	MazeGenerator::GetInstance().PrintMaze();
 
 	// Set the training mode
 	if (mode == Mode::QLEARN) {
@@ -37,27 +36,27 @@ void Agent::Train(Mode mode, bool verbose) {
 void Agent::MoveUpdate() {
 	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
 	
-	//if (!currentPath.empty()) {
+	if (!currentPath.empty()) {
 		MazeCell mc = currentPath[currentPointIndex];
 		glm::vec3 destPoint = glm::vec3(mc.GetColumn(), -mc.GetRow(), 0);
 
 		if (glm::distance(agent->GetTransform()->GetPosition(), destPoint) < 0.01f) {
-			std::cout << currentPointIndex << std::endl;
-			std::cout << destPoint.x << "," << destPoint.y << std::endl;
+			//std::cout << currentPointIndex << std::endl;
+			//std::cout << destPoint.x << "," << destPoint.y << std::endl;
 			currentPointIndex++;
 		}
 
 		if (currentPointIndex >= currentPath.size()) {
 			// Make sure the agent doesn't start moving on next run
-			//currentPath.clear();
-			//currentPointIndex = 0;
+			currentPath.clear();
+			currentPointIndex = 0;
 			agent->SetVelocity(0.0f, 0.0f);
 		}
 		else {
 			MoveTowards(destPoint.x, destPoint.y);
 		}
 
-	//}
+	}
 
 }
 

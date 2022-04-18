@@ -54,7 +54,8 @@ void QLearn::UpdateCurrentState(float posX, float posY, std::vector<std::vector<
 
 // Train using the standard Q-Learning algorithm
 void QLearn::TrainQLearn(bool verbose) {
-	// init QTable
+
+	// Init QTable
 	qTable = Eigen::MatrixXf::Zero((numRows * numCols), NUM_ACTIONS);
 
 	std::random_device rand_dev;
