@@ -1,17 +1,14 @@
 #include "ObstructionGenerator.h"
 
-// https://stackoverflow.com/questions/7986465/algorithm-to-generate-random-position-for-game-object
-// https://stackoverflow.com/questions/20364132/algorithm-to-spawn-objects-randomly
 ObstructionGenerator& ObstructionGenerator::GetInstance() {
 	static ObstructionGenerator instance;
 	return instance;
 }
 
-void ObstructionGenerator::RunGenerator() {
-	// if time interval is met
-	// create new object
-	// check if theres a valid spot where the object can be generated
-	// change its position if not valid
+void ObstructionGenerator::Update() {
+	if (newMaze) {
+
+	}
 }
 
 GameObject& ObstructionGenerator::GenerateObstruction(glm::vec3 targetPosition) {
@@ -23,19 +20,16 @@ GameObject& ObstructionGenerator::GenerateObstruction(glm::vec3 targetPosition) 
 	return obstacle;
 }
 
-void ObstructionGenerator::NextFrame() {
+void ObstructionGenerator::GetObstructions() {
+	std::vector<std::vector<MazeCell>> maze = MazeGenerator::GetInstance().GetMazeCells();
+	for (size_t i = 0; i < maze.size(); i++) {
+		for (size_t j = 0; j < maze[i].size(); j++) {
 
+		}
+	}
 }
 
-bool ObstructionGenerator::IsValidLocation(GameObject* agent, GameObject* targetObject) {
-	
-	RigidBody* agentRb = agent->GetRigidBody();
-	float agentX = agentRb->box2dBody->GetPosition().x;
-	float agentY = agentRb->box2dBody->GetPosition().y;
+bool ObstructionGenerator::InRange() {
+	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
 
-	float targetX = agentX + radius;
-
-
-	return false;
 }
-

@@ -19,11 +19,10 @@ public:
 
 	void InitMaze(int rows, int cols, int wallsToRemove = 0);
 	void InitMaze(std::string filename);
+	void SetMaze(std::vector<std::vector<MazeCell>> newMaze);
 	void Generate();
 	void PrintMaze();
 
-	MazeCell& GetStartCell();
-	MazeCell& GetEndCell();
 	std::vector<int> GetStartCoordinates();
 	std::vector<int> GetEndCoordinates();
 
@@ -33,6 +32,7 @@ private:
 
 	int wallsToRemove = 0;
 	int wallsRemoved = 0;
+	int wallRemovalLimit = 0;
 
 	int directions[4][2] = {
 		{0, -2}, // north

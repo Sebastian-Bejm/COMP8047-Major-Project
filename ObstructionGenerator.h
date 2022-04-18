@@ -9,20 +9,16 @@ public:
 
 	static ObstructionGenerator& GetInstance();
 
-	void RunGenerator();
+	void Update();
 	GameObject& GenerateObstruction(glm::vec3 targetPosition);
 	
 private:
 
-	void NextFrame();
-	bool IsValidLocation(GameObject* agent, GameObject* targetObject);
+	bool newMaze = true;
+	std::vector<MazeCell> obstructions;
+	const int revealRadius = 2;
 
-	MazeGenerator* mazeGenerator;
-
-	const float interval = 5.0f;
-	const int radius = 3;
-
-	clock_t prevTime;
-	clock_t deltaTime = 0;
+	void GetObstructions();
+	bool InRange();
 };
 

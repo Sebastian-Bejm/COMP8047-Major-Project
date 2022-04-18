@@ -15,7 +15,7 @@
 
 const int windowWidth = 1200, windowHeight = 980;
 const int mazeRows = 15, mazeCols = 15;
-const int wallToRemove = 60;
+const int wallToRemove = 25;
 
 const float viewBounds[] = { -9.0f, 9.0f, -9.0f, 9.0f };
 
@@ -43,6 +43,7 @@ int Initialize() {
 	mazeGenerator->Generate();
 
 	// INIT OBS GENERATOR HERE
+	obsGenerator = &ObstructionGenerator::GetInstance();
 
 	gameManager = &GameManager::GetInstance();
 	gameManager->LoadShaders();
@@ -92,7 +93,7 @@ int Teardown() {
 
 int main() {
 
-	// TODO Sunday:
+	// TODO Monday:
 	// UPDATE CYCLE => Pass QLearn when scene restarts => Pass QLearn when obstruction in range
 	// Obstruction generator
 
@@ -117,6 +118,7 @@ int main() {
 		PhysicsUpdate();
 
 		agent.MoveUpdate();
+		obsGenerator->Update();
 		gameManager->Update();
 
 		GraphicsUpdate();
