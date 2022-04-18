@@ -6,39 +6,55 @@ ObstructionGenerator& ObstructionGenerator::GetInstance() {
 }
 
 void ObstructionGenerator::Update() {
-	if (newMaze) {
+	if (generatorStarted) {
 		FindObstructions();
-		newMaze = false;
+		//std::cout << "start check" << std::endl;
+		generatorStarted = false;
 	}
 
 	// if is range and has already been updated, pass update to game manager
 	if (InRange()) {
-		
+		mazeUpdated = true;
+		UpdateMarkedObstructions();
 	}
 }
 
+// If obstructions are marked, remove them from vector
 void ObstructionGenerator::UpdateMarkedObstructions() {
-	// TODO: If an obstruction has been marked as a wall, remove it from vector
-	
+	obstructions.erase(std::remove_if(
+		obstructions.begin(), obstructions.end(),
+		[](MazeCell& mc) {
+			return mc.IsWall();
+	}), obstructions.end());
 }
 
+void ObstructionGenerator::StartGenerator(bool start) {
+	generatorStarted = start;
+}
+
+bool ObstructionGenerator::GetMazeUpdates() {
+	bool currentMazeUpdated = mazeUpdated;
+	mazeUpdated = false;
+	return currentMazeUpdated;
+}
+
+// Get marked obstructions from the maze generator
 void ObstructionGenerator::FindObstructions() {
 	MazeGenerator* mazeGenInstance = &MazeGenerator::GetInstance();
 	std::vector<std::vector<MazeCell>> maze = mazeGenInstance->GetMazeCells();
+	//mazeGenInstance->PrintMaze();
 
 	for (size_t i = 0; i < maze.size(); i++) {
 		for (size_t j = 0; j < maze[i].size(); j++) {
-			int x = static_cast<int>(j);
-			int y = -static_cast<int>(i);
 			if (maze[i][j].IsObstruction()) {
 				obstructions.push_back(maze[i][j]);
 			}
-
 		}
 	}
 
 }
 
+// Generate an obstruction within a maze cell
 void ObstructionGenerator::GenerateObstruction(MazeCell obsCell) {
 	Shader lavaShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
 
@@ -65,21 +81,25 @@ bool ObstructionGenerator::InRange() {
 			float xPos = agentRb->box2dBody->GetPosition().x;
 			float yPos = agentRb->box2dBody->GetPosition().y;
 
-			// If the current obstruction has been marked as wall again, continue
-			if (mazeGenInstance->GetMazeCells()[obstacle.GetRow()][obstacle.GetColumn()].IsWall()) {
-				continue;
-			}
-
 			// Check x and y radius range
-			if (fabs(xPos - obsX) <= revealRadius && fabs(yPos - obsY) <= revealRadius) {
-				std::cout << obsX << "," << obsY << std::endl;
+			glm::vec2 agentPos = glm::vec2(xPos, yPos);
+			glm::vec2 obsPos = glm::vec2(obsX, obsY);
+			if (glm::distance(agentPos, obsPos) <= revealRadius) {
+				std::cout << glm::distance(agentPos, obsPos) << std::endl;
+				obstructions[i].SetWall(true);
 				mazeGenInstance->GetMazeCells()[obstacle.GetRow()][obstacle.GetColumn()].SetWall(true);
-				//mazeGenInstance->PrintMaze();
 
 				GenerateObstruction(obstacle);
-
 				return true;
 			}
+			/*if (fabs(xPos - obsX) <= revealRadius && fabs(yPos - obsY) <= revealRadius) {
+				std::cout << obsX << "," << obsY << std::endl;
+				obstructions[i].SetWall(true);
+				mazeGenInstance->GetMazeCells()[obstacle.GetRow()][obstacle.GetColumn()].SetWall(true);
+
+				GenerateObstruction(obstacle);
+				return true;
+			}*/
 		}
 	}
 

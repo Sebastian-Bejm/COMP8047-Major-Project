@@ -29,7 +29,6 @@ public:
 
 	int GetCode();
 
-
 	friend bool operator==(const MazeCell& lhs, const MazeCell& rhs) {
 		return lhs.row == rhs.row && lhs.col == rhs.col && lhs.isWall == rhs.isWall;
 	}

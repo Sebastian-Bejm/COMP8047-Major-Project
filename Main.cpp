@@ -17,7 +17,7 @@ const int windowWidth = 1200, windowHeight = 980;
 const int mazeRows = 15, mazeCols = 15;
 const int wallToRemove = 25;
 
-const float viewBounds[] = { -9.0f, 9.0f, -9.0f, 9.0f };
+const float viewBounds[] = { -9.0f, 10.0f, -9.0f, 9.0f };
 
 ObjectTracker* objectTracker;
 Renderer* renderer;
@@ -93,9 +93,15 @@ int Teardown() {
 int main() {
 
 	// TODO Monday:
-	// Obstruction generator: finish correct location generation
 	// be able to pass the maze back to GameManager
 	// pass the new maze to Agent QLearn
+	// additional obstructions if time today
+
+	// Generator receives new maze - GOOD
+
+
+	// TODO Tuesday:
+	// Finish the updating, work on Q ELM
 
 	// Initalize everything required for engine
 	Initialize();
@@ -118,6 +124,7 @@ int main() {
 		PhysicsUpdate();
 
 		agent.MoveUpdate();
+
 		obsGenerator->Update();
 		gameManager->Update();
 

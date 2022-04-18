@@ -76,18 +76,22 @@ void GameManager::LoadScene() {
 
 	// start the timer for this run
 	TimeTracker::GetInstance().StartTimer();
+	ObstructionGenerator::GetInstance().StartGenerator(true);
 }
 
 // Updates the game logic and checks when the current game has finished
 void GameManager::Update() {
 	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
+	ObstructionGenerator* generatorInstance = &ObstructionGenerator::GetInstance();
 
-	// TODO: handle obstruction logic in here
-	// update maze here
+	// TODO: handle QLearn logic here and pass to agent
+	if (generatorInstance->GetMazeUpdates()) {
+		// train agent QLearn here! :)
+	}
 
 	if (agent != nullptr) {
-
 		bool terminalState = InTerminalState(agent);
+
 		if (terminalState) {
 			TimeTracker::GetInstance().StopTimer();
 			reachedGoal = true;
@@ -95,8 +99,10 @@ void GameManager::Update() {
 
 		if (reachedGoal) {
 			timeAfterGoal++;
+
 			if (timeAfterGoal >= graceTime) {
 				LoadNewScene();
+				generatorInstance->StartGenerator(true);
 
 				mazesCompleted++;
 				timeAfterGoal = 0;
@@ -104,18 +110,13 @@ void GameManager::Update() {
 			}
 		}
 
-		// add a check if agent is stuck, there is error, so dont update mazesCompleted
+		// add a check if agent is stuck badly (bad path), there is error, reset and try again
 	}
 
 }
 
 // Loads a new scene: generates a new maze, start/end point, and agent in new positions
 void GameManager::LoadNewScene() {
-	/*GameObject agent("agent", "lava.png", shaderStorage[2], glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
-
-	ObjectTracker::GetInstance().AddObject(agent);
-	PhysicsWorld::GetInstance().AddObject(&agent);*/
-
 	MazeGenerator::GetInstance().InitMaze(15, 15, 25);
 	MazeGenerator::GetInstance().Generate();
 

@@ -12,16 +12,18 @@ public:
 
 	void Update();
 	void UpdateMarkedObstructions();
+
+	void StartGenerator(bool start);
+	bool GetMazeUpdates();
 	
 private:
 
-	bool newMaze = true;
+	bool generatorStarted = false;
 	bool mazeUpdated = false;
 
 	std::vector<MazeCell> obstructions;
-	std::vector<bool> generatedObstructions;
 
-	const int revealRadius = 3; // temp, need to play around with it
+	const int revealRadius = 1.5f; // temp, need to play around with it
 
 	void FindObstructions();
 	void GenerateObstruction(MazeCell obsCell);
