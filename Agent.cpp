@@ -40,15 +40,16 @@ void Agent::MoveUpdate() {
 
 		if (glm::distance(agent->GetTransform()->GetPosition(), destPoint) < 0.01f) {
 			currentPointIndex++;
-			//std::cout << currentPointIndex << std::endl;
 		}
 
 		if (currentPointIndex >= currentPath.size()) {
 			// Make sure the agent doesn't start moving on next run
 			currentPath.clear();
 		}
+		else {
+			MoveTowards(destPoint.x, destPoint.y);
+		}
 
-		MoveTowards(destPoint.x, destPoint.y);
 	}
 
 }

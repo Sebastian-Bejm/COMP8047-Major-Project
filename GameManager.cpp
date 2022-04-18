@@ -9,16 +9,18 @@ GameManager& GameManager::GetInstance() {
 void GameManager::LoadShaders() {
 	Shader crateShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
 	Shader brickShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
-	Shader lavaShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
+	//Shader lavaShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
 
 	shaderStorage.push_back(crateShader);
 	shaderStorage.push_back(brickShader);
-	shaderStorage.push_back(lavaShader);
+	//shaderStorage.push_back(lavaShader);
 }
 
 // Load a scene given a generated maze, and position the rendered objects in the scene
 void GameManager::LoadScene() {
 	std::vector<std::vector<MazeCell>> maze = MazeGenerator::GetInstance().GetMazeCells();
+	ObjectTracker* trackerInstance = &ObjectTracker::GetInstance();
+	PhysicsWorld* worldInstance = &PhysicsWorld::GetInstance();
 
 	// Create the maze using game objects
 	// Row: -y, Col: x;
@@ -40,15 +42,15 @@ void GameManager::LoadScene() {
 				GameObject agent("agent", "crate.jpg", shaderStorage[0], startPos, rotation, agentScale);
 				agent.SetBodyType(b2_dynamicBody);
 
-				ObjectTracker::GetInstance().AddObject(agent);
-				PhysicsWorld::GetInstance().AddObject(&agent);
+				trackerInstance->AddObject(agent);
+				worldInstance->AddObject(&agent);
 
 				// Render an object representing the entrance
 				glm::vec3 startPointPos = glm::vec3(x, -y, -5.0f);
 				GameObject startingPoint("point", "start_tex.jpg", shaderStorage[0], startPointPos, rotation, generalScale);
 
-				ObjectTracker::GetInstance().AddObject(startingPoint);
-				PhysicsWorld::GetInstance().AddObject(&startingPoint);
+				trackerInstance->AddObject(startingPoint);
+				worldInstance->AddObject(&startingPoint);
 			}
 
 			// Render an object representing the exit
@@ -56,8 +58,8 @@ void GameManager::LoadScene() {
 				glm::vec3 endPointPos = glm::vec3(x, -y, -5.0f);
 				GameObject endingPoint("point", "end_tex.jpg", shaderStorage[0], endPointPos, rotation, generalScale);
 
-				ObjectTracker::GetInstance().AddObject(endingPoint);
-				PhysicsWorld::GetInstance().AddObject(&endingPoint);
+				trackerInstance->AddObject(endingPoint);
+				worldInstance->AddObject(&endingPoint);
 			}
 
 			// Create the wall objects
@@ -66,8 +68,8 @@ void GameManager::LoadScene() {
 
 				GameObject wall("wall", "brick.png", shaderStorage[1], position, rotation, generalScale);
 
-				ObjectTracker::GetInstance().AddObject(wall);
-				PhysicsWorld::GetInstance().AddObject(&wall);
+				trackerInstance->AddObject(wall);
+				worldInstance->AddObject(&wall);
 			}
 		}
 	}
@@ -81,6 +83,7 @@ void GameManager::Update() {
 	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
 
 	// TODO: handle obstruction logic in here
+	// update maze here
 
 	if (agent != nullptr) {
 
@@ -147,7 +150,7 @@ int GameManager::GetMazesCompleted() {
 // Checks if the game is in a terminal state:
 // The agent has reached the end goal, or the agent is stuck (should not happen but it is rare)
 bool GameManager::InTerminalState(GameObject* agent) {
-	std::vector<int> endPoint = MazeGenerator::GetInstance().GetEndCoordinates();
+	MazeCell endPoint = MazeGenerator::GetInstance().GetEndCell();
 
 	RigidBody* agentRb = agent->GetRigidBody();
 	float xPos = agentRb->box2dBody->GetPosition().x;
@@ -157,7 +160,7 @@ bool GameManager::InTerminalState(GameObject* agent) {
 	int roundY = (int)round(yPos);
 
 	if (!reachedGoal) {
-		if (endPoint[0] == roundX && endPoint[1] == roundY) {
+		if (endPoint.GetColumn() == roundX && -endPoint.GetRow() == roundY) {
 			return true;
 		}
 	}

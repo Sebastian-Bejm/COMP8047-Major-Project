@@ -2,6 +2,7 @@
 
 #include "MazeGenerator.h"
 #include "ObjectTracker.h"
+#include "PhysicsWorld.h"
 
 class ObstructionGenerator
 {
@@ -10,15 +11,21 @@ public:
 	static ObstructionGenerator& GetInstance();
 
 	void Update();
-	GameObject& GenerateObstruction(glm::vec3 targetPosition);
+	void UpdateMarkedObstructions();
 	
 private:
 
 	bool newMaze = true;
-	std::vector<MazeCell> obstructions;
-	const int revealRadius = 2;
+	bool mazeUpdated = false;
 
-	void GetObstructions();
+	std::vector<MazeCell> obstructions;
+	std::vector<bool> generatedObstructions;
+
+	const int revealRadius = 3; // temp, need to play around with it
+
+	void FindObstructions();
+	void GenerateObstruction(MazeCell obsCell);
+
 	bool InRange();
 };
 

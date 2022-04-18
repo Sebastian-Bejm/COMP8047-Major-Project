@@ -66,7 +66,6 @@ int RunEngine() {
 	// physics update comes first
 	PhysicsUpdate();
 
-
 	//agent.MoveUpdate();
 	gameManager->Update();
 
@@ -94,8 +93,9 @@ int Teardown() {
 int main() {
 
 	// TODO Monday:
-	// UPDATE CYCLE => Pass QLearn when scene restarts => Pass QLearn when obstruction in range
-	// Obstruction generator
+	// Obstruction generator: finish correct location generation
+	// be able to pass the maze back to GameManager
+	// pass the new maze to Agent QLearn
 
 	// Initalize everything required for engine
 	Initialize();

@@ -20,6 +20,7 @@ public:
 	bool IsStart();
 	bool IsExit();
 
+	void SetNewPos(int row, int col);
 	int GetRow();
 	int GetColumn();
 

@@ -19,12 +19,11 @@ public:
 
 	void InitMaze(int rows, int cols, int wallsToRemove = 0);
 	void InitMaze(std::string filename);
-	void SetMaze(std::vector<std::vector<MazeCell>> newMaze);
 	void Generate();
 	void PrintMaze();
 
-	std::vector<int> GetStartCoordinates();
-	std::vector<int> GetEndCoordinates();
+	MazeCell& GetStartCell();
+	MazeCell& GetEndCell();
 
 	std::vector<std::vector<MazeCell>>& GetMazeCells();
 
@@ -58,4 +57,5 @@ private:
 
 	void RemoveWalls();
 	bool RemoveWall(int row, int col);
+	void MarkAdditionalObstructions();
 };

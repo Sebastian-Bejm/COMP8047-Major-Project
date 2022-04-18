@@ -35,11 +35,6 @@ void MazeGenerator::InitMaze(std::string filename) {
 	mazeCells = FileSystem::ReadMazeDataFile(filename);
 }
 
-void MazeGenerator::SetMaze(std::vector<std::vector<MazeCell>> newMaze) {
-	mazeCells = newMaze;
-}
-
-
 // https://stackoverflow.com/questions/29739751/implementing-a-randomly-generated-maze-using-prims-algorithm
 // Generates a random maze using Prim's algorithm
 void MazeGenerator::Generate() {
@@ -86,14 +81,12 @@ void MazeGenerator::Generate() {
 
 	// Pad the outer walls if we don't have correct walls
 	PadOuterWalls(); 
+
 	// Set the start and end points
 	CreateMazePositions();
-	PrintMaze();
 
 	// Start trying to remove walls
 	RemoveWalls();
-
-	PrintMaze();
 }
 
 // Print the generated maze. Mainly used for debugging.
@@ -110,32 +103,26 @@ void MazeGenerator::PrintMaze() {
 
 }
 
-// Get the starting point coordinates of the maze
-std::vector<int> MazeGenerator::GetStartCoordinates() {
-	std::vector<int> coords(2);
+// Get the starting cell where the agent is first spawned in the maze
+MazeCell& MazeGenerator::GetStartCell() {
 	for (size_t row = 0; row < mazeCells.size(); row++) {
 		for (size_t col = 0; col < mazeCells[0].size(); col++) {
 			if (mazeCells[row][col].IsStart()) {
-				coords[0] = (int)col;
-				coords[1] = (int)row;
+				return mazeCells[row][col];
 			}
 		}
 	}
-	return coords;
 }
 
-// Get the end point coordinates of the maze
-std::vector<int> MazeGenerator::GetEndCoordinates() {
-	std::vector<int> coords(2);
+// Get the exit cell of the maze
+MazeCell& MazeGenerator::GetEndCell() {
 	for (size_t row = 0; row < mazeCells.size(); row++) {
 		for (size_t col = 0; col < mazeCells[0].size(); col++) {
 			if (mazeCells[row][col].IsExit()) {
-				coords[0] = (int)col;
-				coords[1] = -(int)(row);
+				return mazeCells[row][col];
 			}
 		}
 	}
-	return coords;
 }
 
 // Get the collection of maze cells
@@ -206,7 +193,6 @@ void MazeGenerator::PadOuterWalls() {
 	const size_t cols = mazeCells[0].size(); // width
 
 	size_t newMazeWidth = cols, newMazeHeight = rows;
-
 	bool rowsAdded = false, colsAdded = false;
 
 	// Check the top left, if there is a wall, check down and right
@@ -250,6 +236,7 @@ void MazeGenerator::PadOuterWalls() {
 				continue;
 			}
 			paddedMaze[row+addRow][col+addCol] = mazeCells[row][col];
+			paddedMaze[row + addRow][col + addCol].SetNewPos(row + addRow, col + addCol);
 		}
 	}
 
@@ -277,6 +264,7 @@ void MazeGenerator::PadOuterWalls() {
 		}
 	}
 
+
 	// Set the padded maze to the original maze 
 	mazeCells = paddedMaze;
 }
@@ -289,7 +277,6 @@ void MazeGenerator::CreateMazePositions() {
 
 	const size_t rows = mazeCells.size();
 	const size_t cols = mazeCells[0].size();
-	//std::cout << "New - " << rows << " " << cols << std::endl;
 
 	// Set the entrance point and exit points at opposite sides of the map
 	int points[4][2] = {
@@ -326,15 +313,13 @@ void MazeGenerator::RemoveWalls() {
 		return;
 	}
 
-	const int maxTries = 1000;
+	const int maxTries = 300;
 	const int min = 1;
 	const int maxRow = mazeCells.size() - 1;
 	const int maxCol = mazeCells[0].size() - 1;
 	int tries = 0;
 
 	srand(time(0));
-	//std::random_device rd;
-	//auto rng = std::default_random_engine{rd()};
 
 	while (tries < maxTries) {
 		tries++;
@@ -380,6 +365,8 @@ void MazeGenerator::RemoveWalls() {
 	}
 }
 
+// Checks if a wall can be removed at (row, col)
+// When a wall meets the criteria for removal, mark it as obstruction
 bool MazeGenerator::RemoveWall(int row, int col) {
 	// Remove wall if possible
 	bool evenRow = (row % 2 == 0);
@@ -445,4 +432,22 @@ bool MazeGenerator::RemoveWall(int row, int col) {
 	}
 
 	return false;
+}
+
+void MazeGenerator::MarkAdditionalObstructions() {
+	// mark obs where there are islands
+	// . . .
+	// . # .
+	// . . .
+	// ---------------------
+	// marks obs when there are continuous walls with multiple spaces (column wise or row wise)
+	// . # .
+	// . # .
+	// . . .
+	// . # .
+	// . # .
+	// . . .
+	// ---------------------
+	// And mark walls within 2x2 from start or end
+
 }

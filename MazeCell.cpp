@@ -67,6 +67,11 @@ bool MazeCell::IsExit() {
 	return exit;
 }
 
+void MazeCell::SetNewPos(int row, int col) {
+	this->row = row;
+	this->col = col;
+}
+
 int MazeCell::GetRow() {
 	return row;
 }
