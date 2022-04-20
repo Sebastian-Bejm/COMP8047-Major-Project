@@ -20,7 +20,7 @@ public:
 
 	void LoadNewScene();
 	void ResetScene();
-	void CleanScene();
+	void CleanScene(bool programExit=false);
 
 	int GetMazesCompleted();
 

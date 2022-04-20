@@ -32,11 +32,6 @@ void Agent::Train(Mode mode, bool verbose) {
 	// Get the path from QLearn
 	currentPath = instance.GetPath();
 	currentPointIndex = 0;
-
-	//MazeGenerator::GetInstance().PrintMaze();
-	/*for (size_t i = 0; i < currentPath.size(); i++) {
-		std::cout << currentPath[i].GetColumn() << "," << -currentPath[i].GetRow() << std::endl;
-	}*/
 }
 
 // Update the current state of the maze for QLearn after the maze changes

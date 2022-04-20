@@ -28,8 +28,10 @@ GameManager* gameManager;
 
 Camera camera;
 
+// Initialize all systems in the engine
 int Initialize() {
 	glm::fvec4 backgroundColour(180.0f / 255.0f, 240.0f / 255.0f, 239.0f / 255.0f, 1.0f);
+
 	renderer = Renderer::GetInstance();
 	renderer->Init(backgroundColour, windowWidth, windowHeight);
 	renderer->SetView(viewBounds[0], viewBounds[1], viewBounds[2], viewBounds[3]);
@@ -53,31 +55,7 @@ int Initialize() {
 	return 0;
 }
 
-void HandleInputs() {
-	GameObject* agent = &objectTracker->GetObjectByTag("agent");
-
-	float velX = 0.0f, velY = 0.0f;
-	float speed = 0.35f;
-
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-		velX = -speed;
-	}
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-		velX = speed;
-	}
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-		velY = speed;
-	}
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-		velY = -speed;
-	}
-
-	agent->SetVelocity(velX, velY);
-
-}
-
 void PhysicsUpdate() {
-	//HandleInputs();
 	physicsWorld->Update(objectTracker);
 }
 
@@ -86,10 +64,9 @@ void GraphicsUpdate() {
 }
 
 int RunEngine() {
-	// physics update comes first
+	// Physics update comes first
 	PhysicsUpdate();
 
-	//agent.MoveUpdate();
 	gameManager->Update();
 
 	// graphics comes after physics
@@ -99,13 +76,9 @@ int RunEngine() {
 }
 
 // Delete objects and free any memory that has been used
-int Teardown() {
-
-	// Deletes pointers that is stored in game objects
-	objectTracker->DeleteAllObjects();
-	
+int Teardown() {	
 	// Clean up the scene and delete all objects
-	gameManager->CleanScene();
+	gameManager->CleanScene(true);
 
 	// Destroys the window on exit
 	renderer->Teardown();
@@ -114,8 +87,6 @@ int Teardown() {
 }
 
 int main() {
-	// TODO Wednesday:
-	// Finish the updating, then work on Q ELM, try to finish everything
 
 	// Initalize everything required for engine
 	Initialize();
@@ -131,8 +102,9 @@ int main() {
 		// Run the engine and its updates
 		PhysicsUpdate();
 
-		obsGenerator->Update();
 		gameManager->Update();
+		// was previously before game manager update, testing
+		obsGenerator->Update(); 
 
 		GraphicsUpdate();
 	}

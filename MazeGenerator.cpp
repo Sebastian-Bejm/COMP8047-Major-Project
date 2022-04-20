@@ -1,5 +1,6 @@
 #include "MazeGenerator.h"
 
+// Returns the singleton instance of this class
 MazeGenerator& MazeGenerator::GetInstance() {
 	static MazeGenerator instance;
 	return instance;
@@ -15,7 +16,7 @@ void MazeGenerator::InitMaze(int rows, int cols, int wallsToRemove) {
 	// Initialize all cells in the maze
 	for (size_t row = 0; row < mazeCells.size(); row++) {
 		for (size_t col = 0; col < mazeCells[row].size(); col++) {
-			mazeCells[row][col] = MazeCell(row, col);
+			mazeCells[row][col] = MazeCell(row, col, true);
 		}
 	}
 
@@ -35,10 +36,6 @@ void MazeGenerator::InitMaze(std::string filename) {
 	mazeCells = FileSystem::ReadMazeDataFile(filename);
 }
 
-void MazeGenerator::SetMaze(std::vector<std::vector<MazeCell>> newMaze) {
-	this->mazeCells = newMaze;
-}
-
 // https://stackoverflow.com/questions/29739751/implementing-a-randomly-generated-maze-using-prims-algorithm
 // Generates a random maze using Prim's algorithm
 void MazeGenerator::Generate() {
@@ -50,13 +47,6 @@ void MazeGenerator::Generate() {
 	std::uniform_int_distribution<> xDistr(0, rowSize);
 	std::uniform_int_distribution<> yDistr(0, colSize);
 
-	// Initialize a grid with all cells set as walls with no path
-	for (size_t row = 0; row < mazeCells.size(); row++) {
-		for (size_t col = 0; col < mazeCells[row].size(); col++) {
-			mazeCells[row][col].SetWall(true);
-		}
-	}
-
 	// Pick a cell to start a path
 	int r = xDistr(gen);
 	int c = yDistr(gen);
@@ -65,7 +55,7 @@ void MazeGenerator::Generate() {
 	
 	std::vector<MazeCell> frontierCells = FrontierCellsOf(mazeCells[r][c]);
 
-	// If we have cells not open, continue
+	// If we have path cells not open, continue
 	while (!frontierCells.empty()) {
 		MazeCell& frontierCell = GetRandom(frontierCells);
 
@@ -240,11 +230,12 @@ void MazeGenerator::PadOuterWalls() {
 				continue;
 			}
 			paddedMaze[row+addRow][col+addCol] = mazeCells[row][col];
+			// Shift cells over when additional rows or columns are added
 			paddedMaze[row + addRow][col + addCol].SetNewPos(row + addRow, col + addCol);
 		}
 	}
 
-	// If rows or columns were added set the walls accoringdly
+	// If rows were added set the new cells as walls
 	if (rowsAdded) {
 		for (int i = 0; i < paddedMaze[0].size(); i++) {
 			if (!paddedMaze[0][i].IsWall()) {
@@ -256,6 +247,7 @@ void MazeGenerator::PadOuterWalls() {
 			}
 		}
 	}
+	// If columns were added set the new cells as walls
 	if (colsAdded) {
 		for (int i = 0; i < paddedMaze.size(); i++) {
 			if (!paddedMaze[i][0].IsWall()) {
@@ -290,8 +282,8 @@ void MazeGenerator::CreateMazePositions() {
 		{rows - 2, 1}, // SW
 	};
 
+	// Choose a random start point from one of the 4 corners of the maze
 	int startPoint = cellDistr(gen);
-
 	int startX = points[startPoint - 1][0];
 	int startY = points[startPoint - 1][1];
 
@@ -312,6 +304,7 @@ void MazeGenerator::CreateMazePositions() {
 	mazeCells[endX][endY].SetAsExit(true);
 }
 
+// Remove walls from the current maze and mark them as obstructions for later
 void MazeGenerator::RemoveWalls() {
 	if (wallsToRemove == 0) {
 		return;
@@ -321,7 +314,9 @@ void MazeGenerator::RemoveWalls() {
 	const int min = 1;
 	const int maxRow = mazeCells.size() - 1;
 	const int maxCol = mazeCells[0].size() - 1;
+
 	int tries = 0;
+	int wallsRemoved = 0;
 
 	srand(time(0));
 
@@ -330,7 +325,6 @@ void MazeGenerator::RemoveWalls() {
 
 		// If we reached the goal, exit
 		if (wallsRemoved >= wallsToRemove) {
-			std::cout << wallsRemoved;
 			break;
 		}
 
@@ -352,7 +346,6 @@ void MazeGenerator::RemoveWalls() {
 		}
 
 		// Shuffle the vector randomly
-		//std::shuffle(std::begin(walls), std::end(walls), rng);
 		std::random_shuffle(walls.begin(), walls.end());
 
 		// Try breaking a wall for this row
@@ -377,6 +370,8 @@ bool MazeGenerator::RemoveWall(int row, int col) {
 	bool evenCol = (col % 2 == 0);
 
 	MazeCell cell = mazeCells[row][col];
+
+	// If the cell isn't a wall (normal path) then immediately return
 	if (!cell.IsWall()) {
 		return false;
 	}

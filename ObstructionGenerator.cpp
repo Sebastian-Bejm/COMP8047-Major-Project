@@ -1,10 +1,12 @@
 #include "ObstructionGenerator.h"
 
+// Returns the singleton instance of this class
 ObstructionGenerator& ObstructionGenerator::GetInstance() {
 	static ObstructionGenerator instance;
 	return instance;
 }
 
+// Perform updates in the generator
 void ObstructionGenerator::Update() {
 	if (generatorStarted) {
 		FindObstructions();
@@ -26,10 +28,12 @@ void ObstructionGenerator::UpdateMarkedObstructions() {
 	}), obstructions.end());
 }
 
+// Starts the generator, used when we need to get new obstructions
 void ObstructionGenerator::StartGenerator(bool start) {
 	generatorStarted = start;
 }
 
+// Get the last update from when the maze was updated with obstructions
 bool ObstructionGenerator::GetMazeUpdates() {
 	bool currentMazeUpdated = mazeUpdated;
 	mazeUpdated = false;

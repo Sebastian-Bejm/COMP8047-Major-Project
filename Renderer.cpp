@@ -4,6 +4,7 @@ Renderer* Renderer::renderer = nullptr;
 
 GLFWwindow* window;
 
+// Returns the singleton instance of the Renderer
 Renderer* Renderer::GetInstance() {
 	if (renderer == nullptr) {
 		renderer = new Renderer();
@@ -11,6 +12,7 @@ Renderer* Renderer::GetInstance() {
 	return renderer;
 }
 
+// Initialize everything required for OpenGL to be running
 int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight) {
 	this->backgroundColour = backgroundColour;
 	this->windowWidth = windowWidth;
@@ -98,7 +100,6 @@ void Renderer::PrepareGLBuffers() {
 	vbo.Unbind();
 	ebo.Unbind();
 
-
 	// Handle GL buffers for freetype text
 	vao.Bind();
 	// Generate Vertex Buffer object for text
@@ -114,6 +115,7 @@ void Renderer::PrepareGLBuffers() {
 
 }
 
+// Load textures into memory
 void Renderer::LoadTextures() {
 	// Order image according to enum in GameObject
 	std::vector<std::string> images = { "crate.jpg", "brick.png", "start_tex.jpg", "end_tex.jpg", "lava.png"};
@@ -121,7 +123,7 @@ void Renderer::LoadTextures() {
 	for (std::string image : images) {
 		GLenum format = NULL;
 		std::string ext = GetTextureFileExtension(image);
-
+		// Check the file extension so we use the correct colour format
 		if (ext == "png") {
 			format = GL_RGBA;
 		}
@@ -135,6 +137,7 @@ void Renderer::LoadTextures() {
 
 }
 
+// Get the extension of an image file
 std::string Renderer::GetTextureFileExtension(const std::string& textureFile) {
 	size_t i = textureFile.rfind('.', textureFile.length());
 	if (i != std::string::npos) {
@@ -267,6 +270,7 @@ void Renderer::RenderText(Shader& shader, std::string text, float x, float y, fl
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+// Performs the Renderer's updates
 int Renderer::Update(ObjectTracker* tracker) {
 	// This fixes the fast movement over time on the machine
 	float deltaTime = Time::GetInstance().DeltaTime();
@@ -303,8 +307,8 @@ int Renderer::Update(ObjectTracker* tracker) {
 
 	// the text placement must be dynamic based on window size
 	// when updating text make sure its updated at least once per second, and converted to string correctly
-	std::string currentTime = TimeTracker::GetInstance().GetCurrentTime();
-	std::string lastBest = TimeTracker::GetInstance().GetLastBestTime();
+	std::string currentTime = TimeTracker::GetInstance().GetCurrentTimeString();
+	std::string lastBest = TimeTracker::GetInstance().GetLastBestTimeString();
 
 	int mazesCompleted = GameManager::GetInstance().GetMazesCompleted();
 	std::string mazesCompStr = "Mazes completed: " + std::to_string(mazesCompleted);
@@ -323,6 +327,7 @@ int Renderer::Update(ObjectTracker* tracker) {
 	return 0;
 }
 
+// Clean up on exit
 int Renderer::Teardown() {
 	// Delete the VAO
 	vao.Delete();
@@ -338,10 +343,12 @@ int Renderer::Teardown() {
 	return 0;
 }
 
+// Set the camera to be used in the Renderer
 void Renderer::SetCamera(Camera& camera) {
 	this->camera = camera;
 }
 
+// Set the bounding view for the scene to be rendered
 void Renderer::SetView(float left, float right, float bottom, float top) {
 	viewLeft = left;
 	viewRight = right;

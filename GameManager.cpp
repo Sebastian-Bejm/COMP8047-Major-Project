@@ -86,20 +86,20 @@ void GameManager::Update() {
 	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
 	ObstructionGenerator* generatorInstance = &ObstructionGenerator::GetInstance();
 
+	// Check if obstruction generator received new maze
 	if (generatorInstance->GetMazeUpdates()) {
-		// TODO: MAJOR MEMORY ISSUE!
-		// 
 		glm::vec3 curPos = agent->GetTransform()->GetPosition();
 		pathfindingAgent.UpdateCurrentState(curPos);
 		pathfindingAgent.Train(Mode::QLEARN);
 	}
 
+	// Agent performs its pathfinding
 	pathfindingAgent.MoveUpdate();
 
 	if (agent != nullptr) {
+		// Check if agent has reached the goal, then start the grace time before starting a new maze
 		bool terminalState = InTerminalState(agent);
-
-		if (terminalState) {
+		if (terminalState && !reachedGoal) {
 			TimeTracker::GetInstance().StopTimer();
 			reachedGoal = true;
 		}
@@ -143,17 +143,21 @@ void GameManager::ResetScene() {
 }
 
 // Clear the scene and properly delete the objects currently in the scene
-void GameManager::CleanScene() {
+void GameManager::CleanScene(bool programExit) {
 	PhysicsWorld::GetInstance().DestroyObjects();
 
 	ObjectTracker::GetInstance().DeleteAllObjects();
 	ObjectTracker::GetInstance().RemoveAllObjects();
 
-	/*for (auto& shader : shaderStorage) {
-		shader.Delete();
-	}*/
+	if (programExit) {
+		for (auto& shader : shaderStorage) {
+			shader.Delete();
+		}
+	}
+
 }
 
+// Get the number of mazes completed in the game
 int GameManager::GetMazesCompleted() {
 	return mazesCompleted;
 }

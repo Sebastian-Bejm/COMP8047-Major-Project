@@ -40,7 +40,7 @@ void GameObject::ResetTransform() {
 		rigidBody->box2dBody->GetPosition().y, transform->GetPosition().z));
 }
 
-// Set this object's position to
+// Set this object's current position to a new position
 void GameObject::SetPosition(float posX, float posY) {
 	rigidBody->box2dBody->SetTransform(b2Vec2(posX, posY), rigidBody->box2dBody->GetAngle());
 
@@ -69,6 +69,7 @@ RigidBody* GameObject::GetRigidBody() {
 	return rigidBody;
 }
 
+// Gets the shader attached to this GameObject
 Shader& GameObject::GetShader() {
 	return shaderProgram;
 }
