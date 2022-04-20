@@ -76,9 +76,9 @@ void GameManager::LoadScene() {
 	TimeTracker::GetInstance().StartTimer();
 	ObstructionGenerator::GetInstance().StartGenerator(true);
 
-	//pathfindingAgent.InitializeQLearn();
-	//pathfindingAgent.InitializeEnvironment();
-	//pathfindingAgent.Train(Mode::QLEARN);
+	pathfindingAgent.InitializeQLearn();
+	pathfindingAgent.InitializeEnvironment();
+	pathfindingAgent.Train(Mode::QLEARN);
 }
 
 // Updates the game logic and checks when the current game has finished
@@ -88,12 +88,13 @@ void GameManager::Update() {
 
 	if (generatorInstance->GetMazeUpdates()) {
 		// TODO: MAJOR MEMORY ISSUE!
+		// 
 		glm::vec3 curPos = agent->GetTransform()->GetPosition();
-		//pathfindingAgent.UpdateCurrentState(curPos);
-		//pathfindingAgent.Train(Mode::QLEARN);
+		pathfindingAgent.UpdateCurrentState(curPos);
+		pathfindingAgent.Train(Mode::QLEARN);
 	}
 
-	//pathfindingAgent.MoveUpdate();
+	pathfindingAgent.MoveUpdate();
 
 	if (agent != nullptr) {
 		bool terminalState = InTerminalState(agent);
@@ -125,7 +126,7 @@ void GameManager::Update() {
 
 // Loads a new scene: generates a new maze, start/end point, and agent in new positions
 void GameManager::LoadNewScene() {
-	MazeGenerator::GetInstance().InitMaze(15, 15, 25);
+	MazeGenerator::GetInstance().InitMaze(15, 15, 50);
 	MazeGenerator::GetInstance().Generate();
 
 	LoadScene();
@@ -143,8 +144,9 @@ void GameManager::ResetScene() {
 
 // Clear the scene and properly delete the objects currently in the scene
 void GameManager::CleanScene() {
-
 	PhysicsWorld::GetInstance().DestroyObjects();
+
+	ObjectTracker::GetInstance().DeleteAllObjects();
 	ObjectTracker::GetInstance().RemoveAllObjects();
 
 	/*for (auto& shader : shaderStorage) {

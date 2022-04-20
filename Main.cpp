@@ -15,7 +15,7 @@
 
 const int windowWidth = 1200, windowHeight = 980;
 const int mazeRows = 15, mazeCols = 15;
-const int wallToRemove = 25;
+const int wallToRemove = 50;
 
 const float viewBounds[] = { -9.0f, 10.0f, -9.0f, 9.0f };
 
@@ -77,7 +77,7 @@ void HandleInputs() {
 }
 
 void PhysicsUpdate() {
-	HandleInputs();
+	//HandleInputs();
 	physicsWorld->Update(objectTracker);
 }
 

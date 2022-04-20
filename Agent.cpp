@@ -21,8 +21,6 @@ void Agent::InitializeEnvironment() {
 
 // Train the QLearn internally, then pass path information to Agent
 void Agent::Train(Mode mode, bool verbose) {
-	// attach maze from game used to be here
-
 	// Set the training mode
 	if (mode == Mode::QLEARN) {
 		instance.TrainQLearn(verbose);
@@ -35,7 +33,7 @@ void Agent::Train(Mode mode, bool verbose) {
 	currentPath = instance.GetPath();
 	currentPointIndex = 0;
 
-	MazeGenerator::GetInstance().PrintMaze();
+	//MazeGenerator::GetInstance().PrintMaze();
 	/*for (size_t i = 0; i < currentPath.size(); i++) {
 		std::cout << currentPath[i].GetColumn() << "," << -currentPath[i].GetRow() << std::endl;
 	}*/
@@ -44,8 +42,6 @@ void Agent::Train(Mode mode, bool verbose) {
 // Update the current state of the maze for QLearn after the maze changes
 void Agent::UpdateCurrentState(glm::vec3 pos) {
 	instance.UpdateCurrentState(pos.x, pos.y, MazeGenerator::GetInstance().GetMazeCells());
-	std::cout << "updating???" << std::endl;
-
 }
 
 // Start performing the navigation given the path from QLearn

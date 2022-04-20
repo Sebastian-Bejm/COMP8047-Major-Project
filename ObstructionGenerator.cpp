@@ -8,12 +8,8 @@ ObstructionGenerator& ObstructionGenerator::GetInstance() {
 void ObstructionGenerator::Update() {
 	if (generatorStarted) {
 		FindObstructions();
-		std::cout << "Checking when new maze: " << obstructions.size() << std::endl;
-		//std::cout << "start check" << std::endl;
 		generatorStarted = false;
 	}
-
-	// if is range and has already been updated, pass update to game manager
 
 	if (InRange()) {
 		mazeUpdated = true;
@@ -45,6 +41,8 @@ void ObstructionGenerator::FindObstructions() {
 	MazeGenerator* mazeGenInstance = &MazeGenerator::GetInstance();
 	std::vector<std::vector<MazeCell>> maze = mazeGenInstance->GetMazeCells();
 
+	obstructions.clear(); // make sure the obstructions are all cleared
+
 	for (size_t i = 0; i < maze.size(); i++) {
 		for (size_t j = 0; j < maze[i].size(); j++) {
 			if (maze[i][j].IsObstruction()) {
@@ -52,6 +50,7 @@ void ObstructionGenerator::FindObstructions() {
 			}
 		}
 	}
+
 }
 
 // Generate an obstruction within a maze cell

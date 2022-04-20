@@ -32,7 +32,7 @@ private:
 
 	int wallsToRemove = 0;
 	int wallsRemoved = 0;
-	int wallRemovalLimit = 0;
+	int wallRemovalLimit = 300;
 
 	int directions[4][2] = {
 		{0, -2}, // north
