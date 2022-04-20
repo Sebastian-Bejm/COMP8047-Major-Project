@@ -34,7 +34,14 @@ std::string TimeTracker::GetLastBestTime() {
 		double elapsedTimeMS = std::chrono::duration<double, std::milli>(endTime - startTime).count();
 		double elapsedTimeSec = elapsedTimeMS / 1000;
 
-		tempLast = "Best Time: " + ConvertTimeToStr(elapsedTimeSec);
+		currentBestTime = elapsedTimeSec;
+		if (localBestTime == 0.0) {
+			localBestTime = currentBestTime;
+		}
+		else if (currentBestTime <= localBestTime) {
+			localBestTime = currentBestTime;
+		}
+		tempLast = "Best Time: " + ConvertTimeToStr(localBestTime);
 		lastBestTimeStr = tempLast;
 	}
 

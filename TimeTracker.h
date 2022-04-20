@@ -20,6 +20,8 @@ private:
 
 	bool stopped = false;
 	std::chrono::system_clock::time_point startTime, endTime;
+	double localBestTime, currentBestTime;
+
 	std::string currentTimeStr = "";
 	std::string lastBestTimeStr = "Best Time: ";
 
