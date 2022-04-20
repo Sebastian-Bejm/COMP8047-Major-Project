@@ -42,7 +42,6 @@ int Initialize() {
 	mazeGenerator->InitMaze(mazeRows, mazeCols, wallToRemove);
 	mazeGenerator->Generate();
 
-	// INIT OBS GENERATOR HERE
 	obsGenerator = &ObstructionGenerator::GetInstance();
 
 	gameManager = &GameManager::GetInstance();
@@ -78,6 +77,7 @@ void HandleInputs() {
 }
 
 void PhysicsUpdate() {
+	HandleInputs();
 	physicsWorld->Update(objectTracker);
 }
 
@@ -114,15 +114,8 @@ int Teardown() {
 }
 
 int main() {
-
-	// TODO Monday:
-	// be able to pass the maze back to GameManager
-	// pass the new maze to Agent QLearn
-	// additional obstructions if time today
-	// Generator receives new maze - GOOD
-
-	// TODO Tuesday:
-	// Finish the updating, work on Q ELM
+	// TODO Wednesday:
+	// Finish the updating, then work on Q ELM, try to finish everything
 
 	// Initalize everything required for engine
 	Initialize();

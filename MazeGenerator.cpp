@@ -35,6 +35,10 @@ void MazeGenerator::InitMaze(std::string filename) {
 	mazeCells = FileSystem::ReadMazeDataFile(filename);
 }
 
+void MazeGenerator::SetMaze(std::vector<std::vector<MazeCell>> newMaze) {
+	this->mazeCells = newMaze;
+}
+
 // https://stackoverflow.com/questions/29739751/implementing-a-randomly-generated-maze-using-prims-algorithm
 // Generates a random maze using Prim's algorithm
 void MazeGenerator::Generate() {

@@ -32,11 +32,7 @@ private:
 	int numEpisodes;
 
 	std::vector<std::vector<MazeCell>> maze;
-	std::vector<std::vector<double>> mazeNumRep;
 	std::vector<MazeCell> bestPath;
-	State startPos, endPos;
 
-	Eigen::MatrixXf qTable;
-
-	void CreateMazeNumRep();
+	std::vector<std::vector<double>> CreateMazeNumRep(State& startPos, State& endPos);
 };

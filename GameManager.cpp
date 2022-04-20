@@ -9,11 +9,9 @@ GameManager& GameManager::GetInstance() {
 void GameManager::LoadShaders() {
 	Shader crateShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
 	Shader brickShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
-	//Shader lavaShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
 
 	shaderStorage.push_back(crateShader);
 	shaderStorage.push_back(brickShader);
-	//shaderStorage.push_back(lavaShader);
 }
 
 // Load a scene given a generated maze, and position the rendered objects in the scene
@@ -78,8 +76,9 @@ void GameManager::LoadScene() {
 	TimeTracker::GetInstance().StartTimer();
 	ObstructionGenerator::GetInstance().StartGenerator(true);
 
-	pathfindingAgent.InitializeQLearn();
-	pathfindingAgent.Train(Mode::QLEARN);
+	//pathfindingAgent.InitializeQLearn();
+	//pathfindingAgent.InitializeEnvironment();
+	//pathfindingAgent.Train(Mode::QLEARN);
 }
 
 // Updates the game logic and checks when the current game has finished
@@ -87,13 +86,14 @@ void GameManager::Update() {
 	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
 	ObstructionGenerator* generatorInstance = &ObstructionGenerator::GetInstance();
 
-	// TODO: handle QLearn logic here and pass back to agent
 	if (generatorInstance->GetMazeUpdates()) {
-		std::cout << "Update check" << std::endl;
-		// train agent QLearn here! :)
+		// TODO: MAJOR MEMORY ISSUE!
+		glm::vec3 curPos = agent->GetTransform()->GetPosition();
+		//pathfindingAgent.UpdateCurrentState(curPos);
+		//pathfindingAgent.Train(Mode::QLEARN);
 	}
 
-	pathfindingAgent.MoveUpdate();
+	//pathfindingAgent.MoveUpdate();
 
 	if (agent != nullptr) {
 		bool terminalState = InTerminalState(agent);
@@ -108,6 +108,7 @@ void GameManager::Update() {
 
 			if (timeAfterGoal >= graceTime) {
 				CleanScene();
+
 				LoadNewScene();
 
 				generatorInstance->StartGenerator(true);
@@ -118,7 +119,6 @@ void GameManager::Update() {
 			}
 		}
 
-		// add a check if agent is stuck badly (bad path), there is error, reset and try again
 	}
 
 }
@@ -128,8 +128,6 @@ void GameManager::LoadNewScene() {
 	MazeGenerator::GetInstance().InitMaze(15, 15, 25);
 	MazeGenerator::GetInstance().Generate();
 
-	ObjectTracker::GetInstance().RemoveAllObjects();
-
 	LoadScene();
 }
 
@@ -137,8 +135,6 @@ void GameManager::LoadNewScene() {
 void GameManager::ResetScene() {
 	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
 	agent->ResetTransform();
-
-	// TODO: remove the obstructions after timer is stopped
 
 	reachedGoal = false;
 	timeAfterGoal = 0;
@@ -149,6 +145,8 @@ void GameManager::ResetScene() {
 void GameManager::CleanScene() {
 
 	PhysicsWorld::GetInstance().DestroyObjects();
+	ObjectTracker::GetInstance().RemoveAllObjects();
+
 	/*for (auto& shader : shaderStorage) {
 		shader.Delete();
 	}*/

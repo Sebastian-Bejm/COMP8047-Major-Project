@@ -93,11 +93,10 @@ void PhysicsWorld::AddObject(GameObject* gameObject) {
 // Updates the physics bodies of all objects currently in the scene
 void PhysicsWorld::Update(ObjectTracker* tracker) {
 	if (world) {
+
 		world->Step(timeStep, velocityIterations, positionIterations);
 
 		std::vector<GameObject> objects = tracker->GetAllObjects();
-		//std::cout << objects[0].GetRigidBody()->box2dBody->GetPosition().x 
-			//<< " " << objects[0].GetRigidBody()->box2dBody->GetPosition().y << std::endl;
 
 		for (int i = 0; i < objects.size(); i++) {
 			RigidBody* rigidBody = objects[i].GetRigidBody();

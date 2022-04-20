@@ -36,8 +36,7 @@ public:
 
 private:
 
-	//std::vector<std::vector<double>> maze;
-	std::vector<std::vector<MazeCell>> maze;
+	std::vector<std::vector<double>> maze;
 	std::vector<MazeCell> path;
 	int numRows, numCols;
 

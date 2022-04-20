@@ -23,40 +23,40 @@ void QLearn::InitHyperparameters(double discountFactor, double epsilon, double e
 // Attach a maze loaded from a file
 void QLearn::AttachMazeFromFile(std::string filename) {
 	this->maze = FileSystem::ReadMazeDataFile(filename);
-
-	this->numRows = maze.size();
-	this->numCols = maze[0].size();
-
-	CreateMazeNumRep();
 }
 
 // Attach the current maze directly received from the running game
 void QLearn::AttachMazeFromGame(std::vector<std::vector<MazeCell>> maze) {
 	this->maze = maze;
-
-	this->numRows = maze.size();
-	this->numCols = maze[0].size();
-
-	CreateMazeNumRep();
 }
 
+// Update the maze and start position with the agent's current position
 void QLearn::UpdateCurrentState(float posX, float posY, std::vector<std::vector<MazeCell>> currentMaze) {
-	startPos.x = std::round(posX);
-	startPos.y = std::round(posY);
-
 	this->maze = currentMaze;
 
-	this->numRows = maze.size();
-	this->numCols = maze[0].size();
+	for (size_t i = 0; i < maze.size(); i++) {
+		for (size_t j = 0; j < maze[i].size(); j++) {
+			if (maze[i][j].IsStart()) {
+				maze[i][j].SetAsStart(false);
+			}
+		}
+	}
 
-	CreateMazeNumRep();
+	int x = abs(std::round(posX));
+	int y = abs(std::round(posY)); 
+
+	maze[y][x].SetAsStart(true);
 }
 
 // Train using the standard Q-Learning algorithm
 void QLearn::TrainQLearn(bool verbose) {
+	// Create a number representation of the maze to be passed to QMaze
+	// Set start and end positions
+	State startPos, endPos;
+	std::vector<std::vector<double>> mazeNumRep = CreateMazeNumRep(startPos, endPos);
 
 	// Init QTable
-	qTable = Eigen::MatrixXf::Zero((numRows * numCols), NUM_ACTIONS);
+	Eigen::MatrixXf qTable = Eigen::MatrixXf::Zero(maze.size() * maze[0].size(), NUM_ACTIONS);
 
 	std::random_device rand_dev;
 	std::mt19937 gen(rand_dev());
@@ -133,6 +133,9 @@ void QLearn::TrainQELM(bool verbose) {
 	// auto startTime = std::chrono::system_clock::now();
 	// auto endTime = std::chrono::system_clock::now();
 
+	State startPos, endPos;
+	std::vector<std::vector<double>> mazeNumRep = CreateMazeNumRep(startPos, endPos);
+
 	QMaze qMaze(mazeNumRep, startPos, endPos);
 
 	for (int i = 0; i < 100; i++) {
@@ -146,20 +149,18 @@ std::vector<MazeCell> QLearn::GetPath() {
 }
 
 // Convert the maze for the QMaze class for navigation simulation
-void QLearn::CreateMazeNumRep() {
-	State startPos = {};
-	State endPos = {};
+std::vector<std::vector<double>> QLearn::CreateMazeNumRep(State& startPos, State& endPos) {
 	std::vector<std::vector<double>> mazeNumRep(maze.size(), std::vector<double>(maze[0].size()));
 
 	for (size_t i = 0; i < maze.size(); i++) {
 		for (size_t j = 0; j < maze[i].size(); j++) {
 			if (maze[i][j].IsStart()) {
-				startPos.x = (int)j;
-				startPos.y = (int)i;
+				startPos.x = maze[i][j].GetColumn();
+				startPos.y = maze[i][j].GetRow();
 			}
 			else if (maze[i][j].IsExit()) {
-				endPos.x = (int)j;
-				endPos.y = (int)i;
+				endPos.x = maze[i][j].GetColumn();
+				endPos.y = maze[i][j].GetRow();
 			}
 			if (maze[i][j].IsWall()) {
 				mazeNumRep[i][j] = 0.0;
@@ -171,8 +172,5 @@ void QLearn::CreateMazeNumRep() {
 		}
 	}
 
-	this->mazeNumRep = mazeNumRep;
-	this->startPos = startPos;
-	this->endPos = endPos;
+	return mazeNumRep;
 }
-

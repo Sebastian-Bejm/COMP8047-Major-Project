@@ -14,10 +14,14 @@ void Agent::InitializeQLearn() {
 	instance.InitHyperparameters(discountFactor, eps, epsDecayFactor, learningRate, numEpisodes);
 }
 
+// Initialize the environment for learning
+void Agent::InitializeEnvironment() {
+	instance.AttachMazeFromGame(MazeGenerator::GetInstance().GetMazeCells());
+}
+
 // Train the QLearn internally, then pass path information to Agent
 void Agent::Train(Mode mode, bool verbose) {
-	// Get the current maze
-	instance.AttachMazeFromGame(MazeGenerator::GetInstance().GetMazeCells());
+	// attach maze from game used to be here
 
 	// Set the training mode
 	if (mode == Mode::QLEARN) {
@@ -30,6 +34,18 @@ void Agent::Train(Mode mode, bool verbose) {
 	// Get the path from QLearn
 	currentPath = instance.GetPath();
 	currentPointIndex = 0;
+
+	MazeGenerator::GetInstance().PrintMaze();
+	/*for (size_t i = 0; i < currentPath.size(); i++) {
+		std::cout << currentPath[i].GetColumn() << "," << -currentPath[i].GetRow() << std::endl;
+	}*/
+}
+
+// Update the current state of the maze for QLearn after the maze changes
+void Agent::UpdateCurrentState(glm::vec3 pos) {
+	instance.UpdateCurrentState(pos.x, pos.y, MazeGenerator::GetInstance().GetMazeCells());
+	std::cout << "updating???" << std::endl;
+
 }
 
 // Start performing the navigation given the path from QLearn
@@ -41,8 +57,6 @@ void Agent::MoveUpdate() {
 		glm::vec3 destPoint = glm::vec3(mc.GetColumn(), -mc.GetRow(), 0);
 
 		if (glm::distance(agent->GetTransform()->GetPosition(), destPoint) < 0.01f) {
-			//std::cout << currentPointIndex << std::endl;
-			//std::cout << destPoint.x << "," << destPoint.y << std::endl;
 			currentPointIndex++;
 		}
 
@@ -70,6 +84,7 @@ void Agent::MoveTowards(float destX, float destY) {
 		float yPos = agentRb->box2dBody->GetPosition().y;
 
 		float velX = 0.0f, velY = 0.0f;
+		float agentSpeed = 0.3f;
 
 		if (destX > xPos) {
 			velX = agentSpeed;

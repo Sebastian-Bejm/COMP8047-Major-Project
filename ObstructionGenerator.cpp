@@ -6,17 +6,19 @@ ObstructionGenerator& ObstructionGenerator::GetInstance() {
 }
 
 void ObstructionGenerator::Update() {
-	/*if (generatorStarted) {
+	if (generatorStarted) {
 		FindObstructions();
+		std::cout << "Checking when new maze: " << obstructions.size() << std::endl;
 		//std::cout << "start check" << std::endl;
 		generatorStarted = false;
 	}
 
 	// if is range and has already been updated, pass update to game manager
+
 	if (InRange()) {
 		mazeUpdated = true;
 		UpdateMarkedObstructions();
-	}*/
+	}
 }
 
 // If obstructions are marked, remove them from vector
@@ -50,7 +52,6 @@ void ObstructionGenerator::FindObstructions() {
 			}
 		}
 	}
-
 }
 
 // Generate an obstruction within a maze cell

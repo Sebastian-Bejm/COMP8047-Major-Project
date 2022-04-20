@@ -19,6 +19,7 @@ public:
 
 	void InitMaze(int rows, int cols, int wallsToRemove = 0);
 	void InitMaze(std::string filename);
+	void SetMaze(std::vector<std::vector<MazeCell>> newMaze);
 	void Generate();
 	void PrintMaze();
 
