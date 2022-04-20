@@ -13,7 +13,7 @@ class ELM
 {
 public:
 
-	ELM(int inputSize, int hiddenSize, int outputSize, double regFactor=100);
+	ELM(int inputSize, int hiddenSize, int outputSize);
 
 	Eigen::MatrixXf Train(Eigen::MatrixXf X, Eigen::MatrixXf Y);
 	Eigen::MatrixXf Predict(Eigen::MatrixXf X);
@@ -22,7 +22,6 @@ public:
 private:
 
 	int inputSize, hiddenSize, outputSize;
-	double regFactor;
 	Eigen::MatrixXf weights, bias;
 	Eigen::MatrixXf H, beta;
 

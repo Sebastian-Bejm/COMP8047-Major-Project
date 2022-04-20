@@ -1,11 +1,10 @@
 #include "ELM.h"
 
 // Initialize ELM with input and hidden size
-ELM::ELM(int inputSize, int hiddenSize, int outputSize, double regFactor) {
+ELM::ELM(int inputSize, int hiddenSize, int outputSize) {
 	this->inputSize = inputSize;
 	this->hiddenSize = hiddenSize;
 	this->outputSize = outputSize;
-	this->regFactor = regFactor;
 
 	std::random_device rand_dev;
 	std::mt19937 gen(rand_dev());
@@ -27,55 +26,31 @@ Eigen::MatrixXf ELM::Train(Eigen::MatrixXf X, Eigen::MatrixXf Y) {
 
 	// calculate the hidden layer output matrix
 	H = (X * weights.transpose()) + bias.replicate(X.rows(), 1);
-	std::cout << H.rows() << "," << H.cols() << std::endl;
-
 	H = SigmoidActivation(H);
 
-	//constexpr double epsilon = std::numeric_limits<double>::epsilon();
-
 	// calculate the Moore-Penrose psuedoinverse matrix using SVD method
-	/*Eigen::JacobiSVD<Eigen::MatrixXf> svd(H, Eigen::ComputeFullU | Eigen::ComputeFullV);
+	// change this method tomorrow if it doesnt work out
+	// Eigen::JacobiSVD<Eigen::MatrixXf> svd(H, Eigen::ComputeFullU | Eigen::ComputeFullV);
+	Eigen::JacobiSVD<Eigen::MatrixXf> svd(H, Eigen::ComputeThinU | Eigen::ComputeThinV);
 
-	// for a non square matrix
-	// Eigen::JacobiSVD<Eigen::MatrixXf> svd(H, Eigen::ComputeThinU | Eigen::ComputeThinV);
-
+	constexpr double epsilon = std::numeric_limits<double>::epsilon();
 	double tolerance = epsilon * std::max(H.cols(), H.rows()) * svd.singularValues().array().abs()(0);
+
 	Eigen::MatrixXf moorePenrose = svd.matrixV() * 
 		(svd.singularValues().array().abs() > tolerance)
 		.select(svd.singularValues().array().inverse(), 0).matrix().asDiagonal()
 		* svd.matrixU().adjoint();
 
-
 	beta = moorePenrose * Y;
-	return H * beta;*/
-
-	/*Eigen::MatrixXf preH = weights * X + bias;
-
-	H = (1 + (-preH.array().exp())).cwiseInverse();
-
-	int regFactor = 100;
-
-	Eigen::MatrixXf A, b;
-	A = (Eigen::MatrixXf::Identity(hiddenSize, hiddenSize)).array() * (1 / regFactor) + (H * H.transpose()).array();
-	b = H * Y.transpose();
-
-	weights = A.llt().solve(b);
-
-	return weights;*/
+	return H * beta;
 }
 
 // Predict the results of the training process using test data
 Eigen::MatrixXf ELM::Predict(Eigen::MatrixXf X) {
-	// OLD
-	//Eigen::MatrixXf prod = (X * weights.transpose()) + bias;
-	//Eigen::MatrixXf y = SigmoidActivation(prod) * beta;
+	Eigen::MatrixXf pred = SigmoidActivation((X * weights.transpose()) + bias.replicate(X.rows(), 1)) * beta;
+	pred = SigmoidActivation(pred) * beta;
 
-	// NEW
-	//Eigen::MatrixXf y = (H.transpose() * weights).transpose();
-
-	Eigen::MatrixXf y = SigmoidActivation((X * weights.transpose()) + bias) * beta;
-
-	return y;
+	return pred;
 }
 
 // Sigmoid activation function
@@ -88,9 +63,20 @@ Eigen::MatrixXf ELM::SigmoidActivation(Eigen::MatrixXf X) {
 void ELM::Score(Eigen::MatrixXf YTest, Eigen::MatrixXf YPred) {
 	int correct = 0;
 	int total = YTest.rows();
-	for (int i = 0; i < YPred.rows(); i++) {
+	int onesCount = 0, zerosCount = 0;
+
+	for (int i = 0; i < total; i++) {
 		YPred(i, 0) = YPred(i, 0) >= 0.5 ? 1 : 0;
+
+		// checking for uniform dist in test
+		if (YTest(i, 0) == 1) {
+			onesCount++;
+		}
+		else if (YTest(i, 0) == 0) {
+			zerosCount++;
+		}
 	}
+	//std::cout << "1: " << onesCount << " 0: " << zerosCount << std::endl;
 
 	for (int i = 0; i < total; i++) {
 		if (YTest(i, 0) == YPred(i, 0)) {
