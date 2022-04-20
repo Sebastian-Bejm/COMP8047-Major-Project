@@ -25,14 +25,11 @@ ELM::ELM(int inputSize, int hiddenSize, int outputSize, double regFactor) {
 // Extreme Learning Machine training process
 Eigen::MatrixXf ELM::Train(Eigen::MatrixXf X, Eigen::MatrixXf Y) {
 
-	H = (X * weights.transpose());
+	// calculate the hidden layer output matrix
+	H = (X * weights.transpose()) + bias.replicate(X.rows(), 1);
 	std::cout << H.rows() << "," << H.cols() << std::endl;
 
 	H = SigmoidActivation(H);
-
-	// calculate the hidden layer output matrix
-	//H = (X * weights.transpose()) + bias;
-	//H = SigmoidActivation(H);
 
 	//constexpr double epsilon = std::numeric_limits<double>::epsilon();
 
