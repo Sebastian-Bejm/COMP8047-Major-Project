@@ -449,4 +449,8 @@ void MazeGenerator::MarkAdditionalObstructions() {
 	// ---------------------
 	// And mark walls within 2x2 from start or end
 
+	MazeCell cell = GetStartCell();
+	// check both directions
+	int bestX, bestY;
+
 }

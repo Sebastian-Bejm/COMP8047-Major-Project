@@ -88,8 +88,39 @@ int Teardown() {
 
 int main() {
 
+	// Generate random data
+	Eigen::MatrixXf data_x, data_y;
+	int samples_to_gen = 1000;
+
+	std::random_device rand_dev;
+	std::mt19937 gen(rand_dev());
+
+	std::uniform_real_distribution<float> rand_distr(0, 4);
+	std::uniform_int_distribution<int> q_distr(0, 1);
+
+	// initial sizes
+	data_x = Eigen::MatrixXf::Zero(1000, 20);
+	data_y = Eigen::MatrixXf::Zero(1000, 1);
+
+	for (int i = 0; i < data_x.rows(); i++) {
+		for (int j = 0; j < data_x.cols(); j++) {
+			data_x(i, j) = rand_distr(gen);
+		}
+		data_y(i, 0) = q_distr(gen);
+	}
+
+	// Testing ELM
+	ELM elm = ELM(data_x.cols(), 20, 1);
+
+	elm.Train(data_x, data_y);
+
+	//Eigen::MatrixXf y_pred = elm.Predict(data_x);
+	//std::cout << y_pred << std::endl;
+
+	//elm.Score(data_y, y_pred);
+
 	// Initalize everything required for engine
-	Initialize();
+	/*Initialize();
 
 	// Load the initial scene
 	gameManager->LoadScene();
@@ -110,7 +141,7 @@ int main() {
 	}
 
 	// Cleanup objects and destroy/exit window when done
-	Teardown();
+	Teardown();*/
 
 	return 0;
 }
