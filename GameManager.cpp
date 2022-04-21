@@ -87,7 +87,7 @@ void GameManager::Update() {
 	ObstructionGenerator* generatorInstance = &ObstructionGenerator::GetInstance();
 
 	// Check if obstruction generator received new maze
-	if (generatorInstance->GetMazeUpdates()) {
+	/*if (generatorInstance->GetMazeUpdates()) {
 		glm::vec3 curPos = agent->GetTransform()->GetPosition();
 		pathfindingAgent.UpdateCurrentState(curPos);
 		pathfindingAgent.Train(Mode::QLEARN);
@@ -120,7 +120,7 @@ void GameManager::Update() {
 			}
 		}
 
-	}
+	}*/
 
 }
 

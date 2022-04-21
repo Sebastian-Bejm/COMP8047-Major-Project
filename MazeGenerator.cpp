@@ -79,8 +79,16 @@ void MazeGenerator::Generate() {
 	// Set the start and end points
 	CreateMazePositions();
 
+	PrintMaze();
+
+	std::cout << std::endl;
+	std::cout << std::endl;
+	std::cout << std::endl;
+
 	// Start trying to remove walls
 	RemoveWalls();
+
+	PrintMaze();
 }
 
 // Print the generated maze. Mainly used for debugging.

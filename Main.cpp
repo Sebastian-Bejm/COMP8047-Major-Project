@@ -106,7 +106,7 @@ int main() {
 	qLearn.TrainQELM(true);*/
 
 	// Initalize everything required for engine
-	/*Initialize();
+	Initialize();
 
 	// Load the initial scene
 	gameManager->LoadScene();
@@ -127,7 +127,7 @@ int main() {
 	}
 
 	// Cleanup objects and destroy/exit window when done
-	Teardown();*/
+	Teardown();
 
 	return 0;
 }
