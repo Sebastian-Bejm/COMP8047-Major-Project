@@ -26,6 +26,7 @@ public:
 private:
 
 	const int NUM_ACTIONS = 4;
+	const int MAX_TRAINING_SIZE = 500;
 	int numRows, numCols;
 
 	double discountFactor, epsilon, epsDecayFactor, learningRate;
@@ -34,7 +35,7 @@ private:
 	std::vector<std::vector<MazeCell>> maze;
 	std::vector<MazeCell> bestPath;
 
-	Eigen::MatrixXf CreateTrainingSampleMatrix(std::vector<std::vector<double>> samples);
+	Eigen::MatrixXd CreateTrainingSampleMatrix(std::vector<std::vector<double>> samples, bool normalize);
 
 	std::vector<std::vector<double>> CreateMazeNumRep(State& startPos, State& endPos);
 };

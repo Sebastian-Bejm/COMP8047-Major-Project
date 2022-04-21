@@ -46,5 +46,8 @@ void TestGenData() {
 	elm.Train(data_x, data_y);
 
 	Eigen::MatrixXf y_pred = elm.Predict(test_x);
+	
+	std::cout << y_pred << std::endl;
+
 	elm.Score(test_y, y_pred);
 }

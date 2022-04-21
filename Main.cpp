@@ -12,6 +12,7 @@
 #include "Agent.h"
 #include "FPSCounter.h"
 #include "QLearn.h"
+#include "GenData.h"
 
 const int windowWidth = 1200, windowHeight = 980;
 const int mazeRows = 15, mazeCols = 15;
@@ -88,7 +89,7 @@ int Teardown() {
 
 int main() {
 
-	double discountFactor = 0.95;
+	/*double discountFactor = 0.95;
 	double eps = 0.5;
 	double epsDecayFactor = 0.998;
 	double learningRate = 0.8;
@@ -102,7 +103,7 @@ int main() {
 	qLearn.InitHyperparameters(discountFactor, eps, epsDecayFactor, learningRate, numEpisodes);
 	qLearn.AttachMazeFromGame(mazeGenerator->GetMazeCells());
 
-	qLearn.TrainQELM(true);
+	qLearn.TrainQELM(true);*/
 
 	// Initalize everything required for engine
 	/*Initialize();

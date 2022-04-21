@@ -62,7 +62,7 @@ void QLearn::TrainQLearn(bool verbose) {
 	std::uniform_int_distribution<int> actions(0, NUM_ACTIONS - 1);
 
 	// Init QTable
-	Eigen::MatrixXf qTable = Eigen::MatrixXf::Zero(maze.size() * maze[0].size(), NUM_ACTIONS);
+	Eigen::MatrixXd qTable = Eigen::MatrixXd::Zero(maze.size() * maze[0].size(), NUM_ACTIONS);
 
 	auto startTime = std::chrono::system_clock::now();
 
@@ -137,11 +137,10 @@ void QLearn::TrainQELM(bool verbose) {
 	std::uniform_real_distribution<float> eps_distr(0, 1);
 	std::uniform_int_distribution<int> actions(0, NUM_ACTIONS - 1);
 
-	Eigen::MatrixXf qTable = Eigen::MatrixXf::Zero(maze.size() * maze[0].size(), NUM_ACTIONS);
+	Eigen::MatrixXd qTable = Eigen::MatrixXd::Zero(maze.size() * maze[0].size(), NUM_ACTIONS);
 
-	// Init training samples as vector
+	// Init training samples as 2d vector
 	std::vector<std::vector<double>> trainingSamples;
-	const int maxTrainingSize = 200;
 
 	auto startTime = std::chrono::system_clock::now();
 	// std::vector<int> actions = { 0, 1, 2, 3 }; // left, right, up, down
@@ -151,14 +150,37 @@ void QLearn::TrainQELM(bool verbose) {
 
 	QMaze qMaze(mazeNumRep, startPos, endPos);
 	int currentSteps = 0;
-	int episodeForELMstart = 10;
+	int episodeForELMstart = 1;
+	bool ELMstart = false;
 
-	for (int i = 0; i < 100; i++) {
+	for (int i = 0; i < numEpisodes; i++) {
 		int state = qMaze.Reset();
 		epsilon *= epsDecayFactor;
 
 		bool done = false;
 		int steps = 0;
+
+		if (i >= episodeForELMstart && !ELMstart) {
+			Eigen::MatrixXd samplesMatrix = CreateTrainingSampleMatrix(trainingSamples, true);
+			Eigen::MatrixXd input = samplesMatrix(Eigen::all, Eigen::seq(0, 1));
+			Eigen::MatrixXd output = samplesMatrix.col(2);
+
+			Eigen::MatrixXf trainX = input.cast<float>();
+			Eigen::MatrixXf trainY = output.cast<float>();
+
+			elm.Train(trainX, trainY);
+
+			if (!ELMstart) {
+
+				Eigen::MatrixXf testX = trainX.bottomRows(20);
+				std::cout << "Actual: " << trainY.bottomRows(20) << std::endl;
+
+				Eigen::MatrixXf test = elm.Predict(testX);
+				std::cout << "Pred: " << test << std::endl;
+
+				ELMstart = true;
+			}
+		}
 
 		while (!done) {
 			state = qMaze.GetState();
@@ -173,28 +195,42 @@ void QLearn::TrainQELM(bool verbose) {
 				action = maxIndex;
 			}
 
+			// get results of action
 			std::tuple<int, double, bool> res = qMaze.TakeAction(action);
 			int newState = std::get<0>(res);
 			double reward = std::get<1>(res);
 			done = std::get<2>(res);
 
-			qTable(state, action) += reward + learningRate * (discountFactor * qTable.row(newState).maxCoeff() - qTable(state, action));
+			double qValue = reward + learningRate * (discountFactor * qTable.row(newState).maxCoeff() - qTable(state, action));
+			qTable(state, action) += qValue;
 
 			// create new training sample
 			std::vector<double> sample = { static_cast<double>(state), static_cast<double>(action), qTable(state, action) };
 			trainingSamples.push_back(sample);
 
-			// rolling window
-			if (trainingSamples.size() >= maxTrainingSize) {
-				const int samplesToRemove = trainingSamples.size() - maxTrainingSize;
-				trainingSamples.erase(trainingSamples.begin() + samplesToRemove);
+			// rolling window remove older samples
+			if (trainingSamples.size() >= MAX_TRAINING_SIZE) {
+				const int samplesToRemove = trainingSamples.size() - MAX_TRAINING_SIZE;
+				if (samplesToRemove != 0) {
+					trainingSamples.erase(trainingSamples.begin() + samplesToRemove);
+				}
 			}
 
 			steps += 1;
 		}
-	}
 
-	std::cout << trainingSamples.size();
+
+		if (verbose) {
+			if (i % 100 == 0) {
+				std::cout << "Run: " << i << std::endl;
+				std::cout << "Steps made at this point: " << steps << std::endl;
+			}
+			if (i == numEpisodes - 1) {
+				std::cout << "Steps on final run: " << steps << std::endl;
+				currentSteps = steps;
+			}
+		}
+	}
 
 	auto endTime = std::chrono::system_clock::now();
 
@@ -213,11 +249,25 @@ std::vector<MazeCell> QLearn::GetPath() {
 }
 
 // Create the training sample matrix for a vector of input-output data
-Eigen::MatrixXf CreateTrainingSampleMatrix(std::vector<std::vector<double>> samples) {
+Eigen::MatrixXd QLearn::CreateTrainingSampleMatrix(std::vector<std::vector<double>> samples, bool normalize) {
 	const int rows = samples.size();
 	const int cols = 3;
+	const int mazeSize = maze.size() * maze[0].size();
 
-	Eigen::MatrixXf samplesMatrix = Eigen::MatrixXf();
+	Eigen::MatrixXd samplesMatrix = Eigen::MatrixXd(rows, cols);
+
+	for (size_t i = 0; i < samples.size(); i++) {
+		if (normalize) {
+			samplesMatrix(i, 0) = samples[i][0] / mazeSize;
+			samplesMatrix(i, 1) = samples[i][1] / NUM_ACTIONS;
+		}
+		else {
+			samplesMatrix(i, 0) = samples[i][0];
+			samplesMatrix(i, 1) = samples[i][1];
+		}
+		samplesMatrix(i, 2) = samples[i][2];
+	}
+
 	return samplesMatrix;
 }
 

@@ -26,5 +26,6 @@ private:
 	Eigen::MatrixXf H, beta;
 
 	Eigen::MatrixXf SigmoidActivation(Eigen::MatrixXf X);
+	Eigen::MatrixXf ReLuActivation(Eigen::MatrixXf X);
 
 };
