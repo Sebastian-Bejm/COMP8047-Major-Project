@@ -193,6 +193,7 @@
     <ClInclude Include="ContactListener.h" />
     <ClInclude Include="EBO.h" />
     <ClInclude Include="ELM.h" />
+    <ClInclude Include="GenData.h" />
     <ClInclude Include="QMaze.h" />
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="FPSCounter.h" />
