@@ -29,8 +29,6 @@ Eigen::MatrixXf ELM::Train(Eigen::MatrixXf X, Eigen::MatrixXf Y) {
 	H = SigmoidActivation(H);
 
 	// calculate the Moore-Penrose psuedoinverse matrix using SVD method
-	// change this method tomorrow if it doesnt work out
-	// Eigen::JacobiSVD<Eigen::MatrixXf> svd(H, Eigen::ComputeFullU | Eigen::ComputeFullV);
 	Eigen::JacobiSVD<Eigen::MatrixXf> svd(H, Eigen::ComputeThinU | Eigen::ComputeThinV);
 
 	constexpr double epsilon = std::numeric_limits<double>::epsilon();
@@ -41,6 +39,7 @@ Eigen::MatrixXf ELM::Train(Eigen::MatrixXf X, Eigen::MatrixXf Y) {
 		.select(svd.singularValues().array().inverse(), 0).matrix().asDiagonal()
 		* svd.matrixU().adjoint();
 
+	// calculate the output weights
 	beta = moorePenrose * Y;
 	return H * beta;
 }

@@ -139,27 +139,19 @@ void QLearn::TrainQELM(bool verbose) {
 
 	Eigen::MatrixXf qTable = Eigen::MatrixXf::Zero(maze.size() * maze[0].size(), NUM_ACTIONS);
 
-	Eigen::MatrixXf trainingSamples = Eigen::MatrixXf(3, 3);
-	trainingSamples << 6, 6, 6, 7, 7, 7, 8, 8, 8;
-	//std::cout << trainingSamples << std::endl;
-	Eigen::Vector3f row = Eigen::Vector3f(1, 3);
-	row << 1, 2, 3;
-	trainingSamples = AddSamples(trainingSamples, row);
-	std::cout << "After add:\n" << trainingSamples << std::endl;
-
-	trainingSamples = RollWindow(trainingSamples, 2);
-	std::cout << "Rolling:\n" << trainingSamples << std::endl;
+	// Init training samples as vector
+	std::vector<std::vector<double>> trainingSamples;
+	const int maxTrainingSize = 200;
 
 	auto startTime = std::chrono::system_clock::now();
 	// std::vector<int> actions = { 0, 1, 2, 3 }; // left, right, up, down
 
-	// input size is 2 - (St, At)
-	// output size is 1 - (Qt)
+	// input size is 2 - (St, At), output size is 1 - (Qt)
 	ELM elm = ELM(2, 100, 1);
 
 	QMaze qMaze(mazeNumRep, startPos, endPos);
 	int currentSteps = 0;
-	int episodeForELMstart = 5;
+	int episodeForELMstart = 10;
 
 	for (int i = 0; i < 100; i++) {
 		int state = qMaze.Reset();
@@ -188,9 +180,21 @@ void QLearn::TrainQELM(bool verbose) {
 
 			qTable(state, action) += reward + learningRate * (discountFactor * qTable.row(newState).maxCoeff() - qTable(state, action));
 
+			// create new training sample
+			std::vector<double> sample = { static_cast<double>(state), static_cast<double>(action), qTable(state, action) };
+			trainingSamples.push_back(sample);
+
+			// rolling window
+			if (trainingSamples.size() >= maxTrainingSize) {
+				const int samplesToRemove = trainingSamples.size() - maxTrainingSize;
+				trainingSamples.erase(trainingSamples.begin() + samplesToRemove);
+			}
+
 			steps += 1;
 		}
 	}
+
+	std::cout << trainingSamples.size();
 
 	auto endTime = std::chrono::system_clock::now();
 
@@ -208,28 +212,13 @@ std::vector<MazeCell> QLearn::GetPath() {
 	return bestPath;
 }
 
-// Roll the window for the training samples to discard the oldest samples
-Eigen::MatrixXf QLearn::RollWindow(Eigen::MatrixXf samples, int windowSize) {
-	int numRows = samples.rows()-1;
-	int numCols = samples.cols();
+// Create the training sample matrix for a vector of input-output data
+Eigen::MatrixXf CreateTrainingSampleMatrix(std::vector<std::vector<double>> samples) {
+	const int rows = samples.size();
+	const int cols = 3;
 
-	// e.g. window size is 100 and samples size is 150, we want to discard oldest 50 samples at time t
-
-	if (samples.rows() >= windowSize) {
-		Eigen::MatrixXf newSamples = samples.bottomRows(windowSize);
-		return newSamples;
-	}
-}
-
-// Add a new row of samples to the matrix
-Eigen::MatrixXf QLearn::AddSamples(Eigen::MatrixXf samples, Eigen::Vector3f values) {
-	int newRows = samples.rows() + 1;
-
-	Eigen::MatrixXf newSamples = samples.replicate(1, 1);
-	newSamples.conservativeResize(newRows, samples.cols());
-	newSamples.row(static_cast<Eigen::Index>(newRows-1)) = values;
-
-	return newSamples;
+	Eigen::MatrixXf samplesMatrix = Eigen::MatrixXf();
+	return samplesMatrix;
 }
 
 // Convert the maze for the QMaze class for navigation simulation
