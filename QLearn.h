@@ -34,7 +34,7 @@ private:
 	std::vector<std::vector<MazeCell>> maze;
 	std::vector<MazeCell> bestPath;
 
-	void RollWindow(Eigen::MatrixXf& samples, int windowSize, int t);
+	Eigen::MatrixXf RollWindow(Eigen::MatrixXf samples, int windowSize);
 	Eigen::MatrixXf AddSamples(Eigen::MatrixXf samples, Eigen::Vector3f values);
 	std::vector<std::vector<double>> CreateMazeNumRep(State& startPos, State& endPos);
 };

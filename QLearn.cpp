@@ -139,13 +139,16 @@ void QLearn::TrainQELM(bool verbose) {
 
 	Eigen::MatrixXf qTable = Eigen::MatrixXf::Zero(maze.size() * maze[0].size(), NUM_ACTIONS);
 
-	Eigen::MatrixXf trainingSamples = Eigen::MatrixXf(2, 3);
-	trainingSamples << 6, 6, 6, 7, 7, 7;
+	Eigen::MatrixXf trainingSamples = Eigen::MatrixXf(3, 3);
+	trainingSamples << 6, 6, 6, 7, 7, 7, 8, 8, 8;
 	//std::cout << trainingSamples << std::endl;
 	Eigen::Vector3f row = Eigen::Vector3f(1, 3);
 	row << 1, 2, 3;
-	//std::cout << row << std::endl;
 	trainingSamples = AddSamples(trainingSamples, row);
+	std::cout << "After add:\n" << trainingSamples << std::endl;
+
+	trainingSamples = RollWindow(trainingSamples, 2);
+	std::cout << "Rolling:\n" << trainingSamples << std::endl;
 
 	auto startTime = std::chrono::system_clock::now();
 	// std::vector<int> actions = { 0, 1, 2, 3 }; // left, right, up, down
@@ -206,15 +209,16 @@ std::vector<MazeCell> QLearn::GetPath() {
 }
 
 // Roll the window for the training samples to discard the oldest samples
-void QLearn::RollWindow(Eigen::MatrixXf& samples, int windowSize, int t) {
+Eigen::MatrixXf QLearn::RollWindow(Eigen::MatrixXf samples, int windowSize) {
 	int numRows = samples.rows()-1;
 	int numCols = samples.cols();
-	int rowToRemove = 0;
-	
+
+	// e.g. window size is 100 and samples size is 150, we want to discard oldest 50 samples at time t
+
 	if (samples.rows() >= windowSize) {
-		samples.block(rowToRemove, 0, numRows - rowToRemove, numCols) = samples.block(rowToRemove + 1, 0, numRows - rowToRemove, numCols).eval();
+		Eigen::MatrixXf newSamples = samples.bottomRows(windowSize);
+		return newSamples;
 	}
-	samples.conservativeResize(numRows, numCols);
 }
 
 // Add a new row of samples to the matrix
@@ -223,9 +227,7 @@ Eigen::MatrixXf QLearn::AddSamples(Eigen::MatrixXf samples, Eigen::Vector3f valu
 
 	Eigen::MatrixXf newSamples = samples.replicate(1, 1);
 	newSamples.conservativeResize(newRows, samples.cols());
-	newSamples.row(newRows-1) = values;
-
-	std::cout << newSamples << std::endl;
+	newSamples.row(static_cast<Eigen::Index>(newRows-1)) = values;
 
 	return newSamples;
 }
