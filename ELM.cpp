@@ -8,11 +8,11 @@ ELM::ELM(int inputSize, int hiddenSize, int outputSize) {
 
 	std::random_device rand_dev;
 	std::mt19937 gen(rand_dev());
-	std::uniform_real_distribution<float> weights_distr(-0.5, 0.5);
-	auto weights_uniform = [&](float) {return weights_distr(gen); };
+	std::uniform_real_distribution<float> uniform_weights_distr(-0.5, 0.5);
+	auto weights_uniform = [&](float) {return uniform_weights_distr(gen); };
 
-	std::uniform_real_distribution<float> bias_distr(0, 1);
-	auto bias_uniform = [&](float) {return bias_distr(gen); };
+	std::uniform_real_distribution<float> uniform_bias_distr(0, 1);
+	auto bias_uniform = [&](float) {return uniform_bias_distr(gen); };
 
 	// initialize random weight with range (-0.5, 0.5)
 	weights = Eigen::MatrixXf::Zero(this->hiddenSize, this->inputSize).unaryExpr(weights_uniform);
@@ -38,8 +38,6 @@ Eigen::MatrixXf ELM::Train(Eigen::MatrixXf X, Eigen::MatrixXf Y) {
 		(svd.singularValues().array().abs() > tolerance)
 		.select(svd.singularValues().array().inverse(), 0).matrix().asDiagonal()
 		* svd.matrixU().adjoint();
-
-	//Eigen::MatrixXf moorePenrose = H.completeOrthogonalDecomposition().pseudoInverse();
 
 	// calculate the output weights
 	beta = moorePenrose * Y;
@@ -77,22 +75,34 @@ Eigen::MatrixXf ELM::ReLuActivation(Eigen::MatrixXf X) {
 }
 
 // Calculate the accuracy and loss based on predictions
-// This is for initial test classification set
-void ELM::Score(Eigen::MatrixXf YTest, Eigen::MatrixXf YPred) {
-	int correct = 0;
+// For classification we calculate simple accuracy between actual and test data
+// For regression we calculate the mean absolute error
+void ELM::Score(Eigen::MatrixXf YTest, Eigen::MatrixXf YPred, bool regression) {
 	int total = YTest.rows();
-	int onesCount = 0, zerosCount = 0;
 
-	for (int i = 0; i < total; i++) {
-		YPred(i, 0) = YPred(i, 0) >= 0.5 ? 1 : 0;
-	}
-
-	for (int i = 0; i < total; i++) {
-		if (YTest(i, 0) == YPred(i, 0)) {
-			correct++;
+	if (regression) {
+		float sum = 0;
+		for (int i = 0; i < total; i++) {
+			sum += abs(YTest(i, 0) - YPred(i, 0));
 		}
-	}
 
-	float accuracy = correct / total;
-	std::cout << "Accuracy for " << hiddenSize << " hidden nodes " << accuracy << std::endl;
+		float error = sum / total;
+		std::cout << "Mean absolute error: " << error << " using " << hiddenSize << " hidden nodes" << std::endl;
+	}
+	else {
+		int correct = 0;
+
+		for (int i = 0; i < total; i++) {
+			YPred(i, 0) = YPred(i, 0) >= 0.5 ? 1 : 0;
+		}
+
+		for (int i = 0; i < total; i++) {
+			if (YTest(i, 0) == YPred(i, 0)) {
+				correct++;
+			}
+		}
+
+		float accuracy = (float)correct / total;
+		std::cout << "Accuracy for " << hiddenSize << " hidden nodes " << accuracy << std::endl;
+	}
 }

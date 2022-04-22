@@ -5,7 +5,8 @@
 
 #include "ELM.h"
 
-void TestGenData() {
+// This is to test that everything in the ELM is working correctly
+void TestGenData(bool regression=false) {
 	// Generate random data
 	Eigen::MatrixXf data_x, data_y, test_x, test_y;
 	int samples_to_gen = 1000;
@@ -13,31 +14,58 @@ void TestGenData() {
 	std::random_device rand_dev;
 	std::mt19937 gen(rand_dev());
 
-	std::uniform_real_distribution<float> rand_distr(0, 4);
+	// classification
+	std::uniform_real_distribution<float> rand_distr(-5, 5);
 	std::uniform_int_distribution<int> q_distr(0, 1);
-	std::uniform_int_distribution<int> t_distr(0, 1);
+
+	// regression
+	std::uniform_real_distribution<float> randreg_distr(-5, 5);
+	std::uniform_real_distribution<float> qr_distr(-500, 500);
 
 	// initial sizes
-	data_x = Eigen::MatrixXf::Zero(800, 20);
-	data_y = Eigen::MatrixXf::Zero(800, 1);
+	int train_size = (int) (samples_to_gen * 0.8);
+	int test_size = (int) (samples_to_gen * 0.2);
+	data_x = Eigen::MatrixXf::Zero(train_size, 20);
+	data_y = Eigen::MatrixXf::Zero(train_size, 1);
 
-	test_x = Eigen::MatrixXf::Zero(200, 20);
-	test_y = Eigen::MatrixXf::Zero(200, 1);
+	test_x = Eigen::MatrixXf::Zero(test_size, 20);
+	test_y = Eigen::MatrixXf::Zero(test_size, 1);
 
-	// gen training data
-	for (int i = 0; i < data_x.rows(); i++) {
-		for (int j = 0; j < data_x.cols(); j++) {
-			data_x(i, j) = rand_distr(gen);
+	if (regression) {
+		// regression data
+		// gen training data
+		for (int i = 0; i < data_x.rows(); i++) {
+			for (int j = 0; j < data_x.cols(); j++) {
+				data_x(i, j) = randreg_distr(gen);
+			}
+			data_y(i, 0) = qr_distr(gen);
 		}
-		data_y(i, 0) = q_distr(gen);
+
+		// gen testing data
+		for (int i = 0; i < test_x.rows(); i++) {
+			for (int j = 0; j < test_x.cols(); j++) {
+				test_x(i, j) = randreg_distr(gen);
+			}
+			test_y(i, 0) = qr_distr(gen);
+		}
 	}
-
-	// gen testing data
-	for (int i = 0; i < test_x.rows(); i++) {
-		for (int j = 0; j < test_x.cols(); j++) {
-			test_x(i, j) = rand_distr(gen);
+	else {
+		// classification data
+		// gen training data
+		for (int i = 0; i < data_x.rows(); i++) {
+			for (int j = 0; j < data_x.cols(); j++) {
+				data_x(i, j) = rand_distr(gen);
+			}
+			data_y(i, 0) = q_distr(gen);
 		}
-		test_y(i, 0) = q_distr(gen);
+
+		// gen testing data
+		for (int i = 0; i < test_x.rows(); i++) {
+			for (int j = 0; j < test_x.cols(); j++) {
+				test_x(i, j) = rand_distr(gen);
+			}
+			test_y(i, 0) = q_distr(gen);
+		}
 	}
 
 	// Testing ELM
@@ -47,7 +75,5 @@ void TestGenData() {
 
 	Eigen::MatrixXf y_pred = elm.Predict(test_x);
 	
-	std::cout << y_pred << std::endl;
-
-	elm.Score(test_y, y_pred);
+	elm.Score(test_y, y_pred, regression);
 }
