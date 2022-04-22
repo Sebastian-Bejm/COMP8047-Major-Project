@@ -81,9 +81,11 @@ void QLearn::TrainQLearn(bool verbose) {
 
 			int action = -1;
 			if (eps_distr(gen) < epsilon) {
+				// exploration
 				action = actions(gen);
 			}
 			else {
+				// exploitation
 				int maxIndex;
 				qTable.row(state).maxCoeff(&maxIndex);
 				action = maxIndex;
@@ -118,7 +120,7 @@ void QLearn::TrainQLearn(bool verbose) {
 	double elapsedTimeSec = elapsedTimeMS / 1000;
 
 	if (verbose) {
-		std::cout << "Training complete in: " << elapsedTimeSec << std::endl;
+		std::cout << "Training complete in: " << elapsedTimeSec << " seconds" << std::endl;
 	}
 
 	this->bestPath = qMaze.GetPath();
@@ -137,20 +139,21 @@ void QLearn::TrainQELM(bool verbose) {
 	std::uniform_real_distribution<float> eps_distr(0, 1);
 	std::uniform_int_distribution<int> actions(0, NUM_ACTIONS - 1);
 
+	// std::vector<int> actions = { 0, 1, 2, 3 }; // left, right, up, down
 	Eigen::MatrixXd qTable = Eigen::MatrixXd::Zero(maze.size() * maze[0].size(), NUM_ACTIONS);
+
+	auto startTime = std::chrono::system_clock::now();
+
+	// Init ELM
+	ELM elm = ELM(2, 25, 1);
 
 	// Init training samples as 2d vector
 	std::vector<std::vector<double>> trainingSamples;
 
-	auto startTime = std::chrono::system_clock::now();
-	// std::vector<int> actions = { 0, 1, 2, 3 }; // left, right, up, down
-
-	// input size is 2 - (St, At), output size is 1 - (Qt)
-	ELM elm = ELM(2, 100, 1);
-
 	QMaze qMaze(mazeNumRep, startPos, endPos);
 	int currentSteps = 0;
-	int episodeForELMstart = 1;
+	int episodeForELMstart = 100;
+
 	bool ELMstart = false;
 
 	for (int i = 0; i < numEpisodes; i++) {
@@ -171,13 +174,6 @@ void QLearn::TrainQELM(bool verbose) {
 			elm.Train(trainX, trainY);
 
 			if (!ELMstart) {
-
-				Eigen::MatrixXf testX = trainX.bottomRows(20);
-				std::cout << "Actual: " << trainY.bottomRows(20) << std::endl;
-
-				Eigen::MatrixXf test = elm.Predict(testX);
-				std::cout << "Pred: " << test << std::endl;
-
 				ELMstart = true;
 			}
 		}
@@ -187,12 +183,52 @@ void QLearn::TrainQELM(bool verbose) {
 
 			int action = -1;
 			if (eps_distr(gen) < epsilon) {
+				// exploration
 				action = actions(gen);
 			}
 			else {
-				int maxIndex;
-				qTable.row(state).maxCoeff(&maxIndex);
-				action = maxIndex;
+				// exploitation
+				if (ELMstart) {
+					float maxValueActions[] = {INT_MIN, INT_MIN, INT_MIN, INT_MIN};
+					std::vector<std::vector<double>> stateMatches;
+
+					// first find state matches
+					for (size_t i = 0; i < trainingSamples.size(); i++) {
+						if ((int)trainingSamples[i][0] == state) {
+							stateMatches.push_back(trainingSamples[i]);
+						}
+					}
+
+					// find the best q values for each action
+					for (size_t i = 0; i < stateMatches.size(); i++) {
+						int act = (int) stateMatches[i][1];
+						float qValue = stateMatches[i][2];
+						switch (act) {
+						case 0:
+							maxValueActions[0] = std::max(maxValueActions[0], qValue);
+							break;
+						case 1:
+							maxValueActions[1] = std::max(maxValueActions[1], qValue);
+							break;
+						case 2:
+							maxValueActions[2] = std::max(maxValueActions[2], qValue);
+							break;
+						case 3:
+							maxValueActions[3] = std::max(maxValueActions[3], qValue);
+							break;
+						default:
+							break;
+						}
+					}
+
+					action = std::distance(maxValueActions, std::max_element(maxValueActions, maxValueActions + 4));
+
+				}
+				else {
+					int maxIndex;
+					qTable.row(state).maxCoeff(&maxIndex);
+					action = maxIndex;
+				}
 			}
 
 			// get results of action
@@ -201,19 +237,31 @@ void QLearn::TrainQELM(bool verbose) {
 			double reward = std::get<1>(res);
 			done = std::get<2>(res);
 
-			double qValue = reward + learningRate * (discountFactor * qTable.row(newState).maxCoeff() - qTable(state, action));
-			qTable(state, action) += qValue;
+			// create new sample
+			std::vector<double> sample;
 
-			// create new training sample
-			std::vector<double> sample = { static_cast<double>(state), static_cast<double>(action), qTable(state, action) };
-			trainingSamples.push_back(sample);
+			if (!ELMstart) {
+				double qValue = reward + learningRate * (discountFactor * qTable.row(newState).maxCoeff() - qTable(state, action));
+				qTable(state, action) += qValue;
 
-			// rolling window remove older samples
-			if (trainingSamples.size() >= MAX_TRAINING_SIZE) {
-				const int samplesToRemove = trainingSamples.size() - MAX_TRAINING_SIZE;
-				if (samplesToRemove != 0) {
-					trainingSamples.erase(trainingSamples.begin() + samplesToRemove);
-				}
+				sample = { static_cast<double>(state), static_cast<double>(action), qTable(state, action) };
+				trainingSamples.push_back(sample);
+			}
+			else {
+				// get previous sample
+				std::vector<double> lastSample = trainingSamples.back();
+				Eigen::MatrixXf inputSample = Eigen::MatrixXf(1, 2);
+				inputSample << newState, action;
+
+				Eigen::MatrixXf qPred = elm.Predict(inputSample);
+
+				// calc new qValue and add to sample
+				double qValue = reward + learningRate * (discountFactor * qPred(0,0) - lastSample[2]);
+				sample = { static_cast<double>(state), static_cast<double>(action), qValue };
+				trainingSamples.push_back(sample);
+
+				// remove oldest samples
+				trainingSamples.erase(trainingSamples.begin() + 0);
 			}
 
 			steps += 1;
@@ -221,7 +269,7 @@ void QLearn::TrainQELM(bool verbose) {
 
 
 		if (verbose) {
-			if (i % 100 == 0) {
+			if (i % 2 == 0) {
 				std::cout << "Run: " << i << std::endl;
 				std::cout << "Steps made at this point: " << steps << std::endl;
 			}
@@ -238,7 +286,7 @@ void QLearn::TrainQELM(bool verbose) {
 	double elapsedTimeSec = elapsedTimeMS / 1000;
 
 	if (verbose) {
-		std::cout << "Training completed in: " << elapsedTimeSec << std::endl;
+		std::cout << "Training completed in: " << elapsedTimeSec << " seconds" << std::endl;
 	}
 
 }

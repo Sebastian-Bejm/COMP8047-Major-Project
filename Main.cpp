@@ -89,11 +89,11 @@ int Teardown() {
 
 int main() {
 
-	/*double discountFactor = 0.95;
+	double discountFactor = 0.95;
 	double eps = 0.5;
 	double epsDecayFactor = 0.998;
 	double learningRate = 0.8;
-	int numEpisodes = 1000;
+	int numEpisodes = 500;
 
 	mazeGenerator = &MazeGenerator::GetInstance();
 	mazeGenerator->InitMaze(mazeRows, mazeCols, wallToRemove);
@@ -103,10 +103,15 @@ int main() {
 	qLearn.InitHyperparameters(discountFactor, eps, epsDecayFactor, learningRate, numEpisodes);
 	qLearn.AttachMazeFromGame(mazeGenerator->GetMazeCells());
 
-	qLearn.TrainQELM(true);*/
+	qLearn.TrainQELM(true);
+
+	std::vector<MazeCell> path = qLearn.GetPath();
+	for (MazeCell mc : path) {
+		std::cout << "(" << mc.GetColumn() << "," << mc.GetRow() << ")" << std::endl;
+	}
 
 	// Initalize everything required for engine
-	Initialize();
+	/*Initialize();
 
 	// Load the initial scene
 	gameManager->LoadScene();
@@ -127,7 +132,7 @@ int main() {
 	}
 
 	// Cleanup objects and destroy/exit window when done
-	Teardown();
+	Teardown();*/
 
 	return 0;
 }
