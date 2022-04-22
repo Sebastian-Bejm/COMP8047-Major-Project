@@ -37,7 +37,7 @@ void GameManager::LoadScene() {
 				glm::vec3 agentScale = glm::vec3(0.6f, 0.6f, 1.0f);
 
 				// The agent is the first object added to the object tracker
-				GameObject agent("agent", "crate.jpg", shaderStorage[0], startPos, rotation, agentScale);
+				GameObject agent("agent", "Textures/cyber.jpg", shaderStorage[0], startPos, rotation, agentScale);
 				agent.SetBodyType(b2_dynamicBody);
 
 				trackerInstance->AddObject(agent);
@@ -45,7 +45,7 @@ void GameManager::LoadScene() {
 
 				// Render an object representing the entrance
 				glm::vec3 startPointPos = glm::vec3(x, -y, -5.0f);
-				GameObject startingPoint("point", "start_tex.jpg", shaderStorage[0], startPointPos, rotation, generalScale);
+				GameObject startingPoint("point", "Textures/start_tex.jpg", shaderStorage[0], startPointPos, rotation, generalScale);
 
 				trackerInstance->AddObject(startingPoint);
 				worldInstance->AddObject(&startingPoint);
@@ -54,7 +54,7 @@ void GameManager::LoadScene() {
 			// Render an object representing the exit
 			if (maze[r][c].IsExit()) {
 				glm::vec3 endPointPos = glm::vec3(x, -y, -5.0f);
-				GameObject endingPoint("point", "end_tex.jpg", shaderStorage[0], endPointPos, rotation, generalScale);
+				GameObject endingPoint("point", "Textures/end_tex.jpg", shaderStorage[0], endPointPos, rotation, generalScale);
 
 				trackerInstance->AddObject(endingPoint);
 				worldInstance->AddObject(&endingPoint);
@@ -64,7 +64,7 @@ void GameManager::LoadScene() {
 			if (maze[r][c].IsWall()) {
 				glm::vec3 position = glm::vec3(x, -y, 0.0f);
 
-				GameObject wall("wall", "brick.png", shaderStorage[1], position, rotation, generalScale);
+				GameObject wall("wall", "Textures/brick.png", shaderStorage[1], position, rotation, generalScale);
 
 				trackerInstance->AddObject(wall);
 				worldInstance->AddObject(&wall);
@@ -87,7 +87,7 @@ void GameManager::Update() {
 	ObstructionGenerator* generatorInstance = &ObstructionGenerator::GetInstance();
 
 	// Check if obstruction generator received new maze
-	/*if (generatorInstance->GetMazeUpdates()) {
+	if (generatorInstance->GetMazeUpdates()) {
 		glm::vec3 curPos = agent->GetTransform()->GetPosition();
 		pathfindingAgent.UpdateCurrentState(curPos);
 		pathfindingAgent.Train(Mode::QLEARN);
@@ -120,7 +120,7 @@ void GameManager::Update() {
 			}
 		}
 
-	}*/
+	}
 
 }
 

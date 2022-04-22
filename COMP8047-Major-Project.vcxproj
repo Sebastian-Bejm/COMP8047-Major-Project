@@ -221,14 +221,15 @@
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="brick.png" />
-    <Image Include="crate.jpg" />
-    <Image Include="end_tex.jpg" />
-    <Image Include="lava.png" />
-    <Image Include="start_tex.jpg" />
+    <Text Include="maze.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="maze.txt" />
+    <Image Include="Textures\brick.png" />
+    <Image Include="Textures\crate.jpg" />
+    <Image Include="Textures\cyber.jpg" />
+    <Image Include="Textures\end_tex.jpg" />
+    <Image Include="Textures\lava.png" />
+    <Image Include="Textures\start_tex.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -120,7 +120,7 @@ int main() {
 		PhysicsUpdate();
 
 		gameManager->Update();
-		// was previously before game manager update, testing
+
 		obsGenerator->Update(); 
 
 		GraphicsUpdate();
