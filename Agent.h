@@ -15,7 +15,7 @@ public:
 
 	Agent();
 	
-	void InitializeQLearn();
+	void InitializeHyperparameters();
 	void InitializeEnvironment();
 	void Train(Mode mode, bool verbose=false);
 

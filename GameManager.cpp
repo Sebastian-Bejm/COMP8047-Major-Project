@@ -76,9 +76,7 @@ void GameManager::LoadScene() {
 	TimeTracker::GetInstance().StartTimer();
 	ObstructionGenerator::GetInstance().StartGenerator(true);
 
-	pathfindingAgent.InitializeQLearn();
-	pathfindingAgent.InitializeEnvironment();
-	pathfindingAgent.Train(Mode::QLEARN);
+	StartAgent(nullptr);
 }
 
 // Updates the game logic and checks when the current game has finished
@@ -88,9 +86,7 @@ void GameManager::Update() {
 
 	// Check if obstruction generator received new maze
 	if (generatorInstance->GetMazeUpdates()) {
-		glm::vec3 curPos = agent->GetTransform()->GetPosition();
-		pathfindingAgent.UpdateCurrentState(curPos);
-		pathfindingAgent.Train(Mode::QLEARN);
+		StartAgent(agent, true);
 	}
 
 	// Agent performs its pathfinding
@@ -161,6 +157,19 @@ void GameManager::CleanScene(bool programExit) {
 int GameManager::GetMazesCompleted() {
 	return mazesCompleted;
 }
+
+void GameManager::StartAgent(GameObject* agent, bool newUpdates) {
+	pathfindingAgent.InitializeHyperparameters();
+	if (newUpdates) {
+		glm::vec3 curPos = agent->GetTransform()->GetPosition();
+		pathfindingAgent.UpdateCurrentState(curPos);
+	}
+	else {
+		pathfindingAgent.InitializeEnvironment();
+	}
+	pathfindingAgent.Train(Mode::QLEARN);
+}
+
 
 // Checks if the game is in a terminal state:
 // The agent has reached the end goal, or the agent is stuck (should not happen but it is rare)
