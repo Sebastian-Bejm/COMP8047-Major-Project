@@ -18,16 +18,15 @@ public:
 
 	void UpdateCurrentState(float posX, float posY, std::vector<std::vector<MazeCell>> currentMaze);
 
-	void TrainQLearn(bool verbose = false);
-	void TrainQELM(bool verbose = false);
+	void TrainQLearn(bool verbose = false, int logRate = 50);
+	void TrainQELM(bool verbose = false, int logRate = 50);
 
 	std::vector<MazeCell> GetPath();
 
 private:
 
 	const int NUM_ACTIONS = 4;
-	const int MAX_TRAINING_SIZE = 500;
-	int numRows, numCols;
+	const int MAX_TRAINING_SIZE = 200;
 
 	double discountFactor, epsilon, epsDecayFactor, learningRate;
 	int numEpisodes;

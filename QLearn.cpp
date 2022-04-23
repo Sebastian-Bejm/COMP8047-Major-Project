@@ -1,9 +1,6 @@
 #include "QLearn.h"
 
 QLearn::QLearn() {
-	this->numRows = 0;
-	this->numCols = 0;
-
 	this->discountFactor = 0;
 	this->epsilon = 0;
 	this->epsDecayFactor = 0;
@@ -49,7 +46,7 @@ void QLearn::UpdateCurrentState(float posX, float posY, std::vector<std::vector<
 }
 
 // Train using the standard Q-Learning algorithm
-void QLearn::TrainQLearn(bool verbose) {
+void QLearn::TrainQLearn(bool verbose, int logRate) {
 	// Create a number representation of the maze to be passed to QMaze
 	// Set start and end positions
 	State startPos, endPos;
@@ -102,7 +99,7 @@ void QLearn::TrainQLearn(bool verbose) {
 		}
 
 		if (verbose) {
-			if (i % 100 == 0) {
+			if (i % logRate == 0) {
 				std::cout << "Run: " << i << std::endl;
 				std::cout << steps << std::endl;
 			}
@@ -115,7 +112,6 @@ void QLearn::TrainQLearn(bool verbose) {
 	}
 
 	auto endTime = std::chrono::system_clock::now();
-
 	double elapsedTimeMS = std::chrono::duration<double, std::milli>(endTime - startTime).count();
 	double elapsedTimeSec = elapsedTimeMS / 1000;
 
@@ -127,7 +123,7 @@ void QLearn::TrainQLearn(bool verbose) {
 }
 
 // Train using the ELM based Q-Learning algorithm
-void QLearn::TrainQELM(bool verbose) {
+void QLearn::TrainQELM(bool verbose, int logRate) {
 	// Create a number representation of the maze to be passed to QMaze
 	// Set start and end positions
 	State startPos, endPos;
@@ -139,22 +135,20 @@ void QLearn::TrainQELM(bool verbose) {
 	std::uniform_real_distribution<float> eps_distr(0, 1);
 	std::uniform_int_distribution<int> actions(0, NUM_ACTIONS - 1);
 
-	// std::vector<int> actions = { 0, 1, 2, 3 }; // left, right, up, down
+	// Init QTable
 	Eigen::MatrixXd qTable = Eigen::MatrixXd::Zero(maze.size() * maze[0].size(), NUM_ACTIONS);
 
 	auto startTime = std::chrono::system_clock::now();
 
 	// Init ELM
-	ELM elm = ELM(2, 25, 1);
+	ELM elm = ELM(2, 50, 1);
 
 	// Init training samples as 2d vector
 	std::vector<std::vector<double>> trainingSamples;
 
 	QMaze qMaze(mazeNumRep, startPos, endPos);
+	int episodeToStartELM = 10;
 	int currentSteps = 0;
-	int episodeForELMstart = 100;
-
-	bool ELMstart = false;
 
 	for (int i = 0; i < numEpisodes; i++) {
 		int state = qMaze.Reset();
@@ -163,65 +157,63 @@ void QLearn::TrainQELM(bool verbose) {
 		bool done = false;
 		int steps = 0;
 
-		if (i >= episodeForELMstart && !ELMstart) {
-			Eigen::MatrixXd samplesMatrix = CreateTrainingSampleMatrix(trainingSamples, true);
-			Eigen::MatrixXd input = samplesMatrix(Eigen::all, Eigen::seq(0, 1));
-			Eigen::MatrixXd output = samplesMatrix.col(2);
-
-			Eigen::MatrixXf trainX = input.cast<float>();
-			Eigen::MatrixXf trainY = output.cast<float>();
-
-			elm.Train(trainX, trainY);
-
-			if (!ELMstart) {
-				ELMstart = true;
-			}
-		}
-
 		while (!done) {
 			state = qMaze.GetState();
+
+			std::vector<double> stateActionValues = { (double)INT_MIN, (double)INT_MIN, (double)INT_MIN, (double)INT_MIN };
 
 			int action = -1;
 			if (eps_distr(gen) < epsilon) {
 				// exploration
 				action = actions(gen);
+				if (i >= episodeToStartELM) {
+					Eigen::MatrixXd samplesMatrix = CreateTrainingSampleMatrix(trainingSamples, true);
+					Eigen::MatrixXd input = samplesMatrix(Eigen::all, Eigen::seq(0, 1));
+					Eigen::MatrixXd output = samplesMatrix.col(2);
+
+					Eigen::MatrixXf trainX = input.cast<float>();
+					Eigen::MatrixXf trainY = output.cast<float>();
+
+					elm.Train(trainX, trainY);
+
+					Eigen::MatrixXf samplePred = Eigen::MatrixXf(1, 2);
+					samplePred << state, action;
+					// the predicted q value
+					Eigen::MatrixXf pred = elm.Predict(samplePred);
+					stateActionValues[action] = pred(0, 0);
+
+				}
 			}
 			else {
 				// exploitation
-				if (ELMstart) {
-					float maxValueActions[] = {INT_MIN, INT_MIN, INT_MIN, INT_MIN};
-					std::vector<std::vector<double>> stateMatches;
+				if (i >= episodeToStartELM) {
+					// create the samples
+					Eigen::MatrixXd samplesMatrix = CreateTrainingSampleMatrix(trainingSamples, true);
+					Eigen::MatrixXd input = samplesMatrix(Eigen::all, Eigen::seq(0, 1));
+					Eigen::MatrixXd output = samplesMatrix.col(2);
 
-					// first find state matches
-					for (size_t i = 0; i < trainingSamples.size(); i++) {
-						if ((int)trainingSamples[i][0] == state) {
-							stateMatches.push_back(trainingSamples[i]);
-						}
+					Eigen::MatrixXf trainX = input.cast<float>();
+					Eigen::MatrixXf trainY = output.cast<float>();
+
+					elm.Train(trainX, trainY);
+
+					// predict q values based on each action
+					Eigen::MatrixXf samplePreds = Eigen::MatrixXf(4, 2);
+					samplePreds << state, 0,
+						state, 1,
+						state, 2,
+						state, 3;
+					// the predicted q values
+					Eigen::MatrixXf pred = elm.Predict(samplePreds).reshaped(1, 4);
+					
+					int maxIndex;
+					pred.row(0).maxCoeff(&maxIndex);
+					action = maxIndex;
+
+					// store the predicted q values
+					for (size_t i = 0; i < stateActionValues.size(); i++) {
+						stateActionValues[i] = pred(i, 0);
 					}
-
-					// find the best q values for each action
-					for (size_t i = 0; i < stateMatches.size(); i++) {
-						int act = (int) stateMatches[i][1];
-						float qValue = stateMatches[i][2];
-						switch (act) {
-						case 0:
-							maxValueActions[0] = std::max(maxValueActions[0], qValue);
-							break;
-						case 1:
-							maxValueActions[1] = std::max(maxValueActions[1], qValue);
-							break;
-						case 2:
-							maxValueActions[2] = std::max(maxValueActions[2], qValue);
-							break;
-						case 3:
-							maxValueActions[3] = std::max(maxValueActions[3], qValue);
-							break;
-						default:
-							break;
-						}
-					}
-
-					action = std::distance(maxValueActions, std::max_element(maxValueActions, maxValueActions + 4));
 
 				}
 				else {
@@ -231,45 +223,36 @@ void QLearn::TrainQELM(bool verbose) {
 				}
 			}
 
-			// get results of action
 			std::tuple<int, double, bool> res = qMaze.TakeAction(action);
 			int newState = std::get<0>(res);
 			double reward = std::get<1>(res);
 			done = std::get<2>(res);
 
-			// create new sample
-			std::vector<double> sample;
+			if (i >= episodeToStartELM) {
+				std::vector<double> lastSample = trainingSamples.back();
 
-			if (!ELMstart) {
-				double qValue = reward + learningRate * (discountFactor * qTable.row(newState).maxCoeff() - qTable(state, action));
-				qTable(state, action) += qValue;
-
-				sample = { static_cast<double>(state), static_cast<double>(action), qTable(state, action) };
+				double newQValue = reward + learningRate * (discountFactor -
+					*std::max_element(stateActionValues.begin(), stateActionValues.end()) - lastSample[2]);
+				std::vector<double> sample = { (double)newState, (double)state, newQValue };
 				trainingSamples.push_back(sample);
 			}
 			else {
-				// get previous sample
-				std::vector<double> lastSample = trainingSamples.back();
-				Eigen::MatrixXf inputSample = Eigen::MatrixXf(1, 2);
-				inputSample << newState, action;
-
-				Eigen::MatrixXf qPred = elm.Predict(inputSample);
-
-				// calc new qValue and add to sample
-				double qValue = reward + learningRate * (discountFactor * qPred(0,0) - lastSample[2]);
-				sample = { static_cast<double>(state), static_cast<double>(action), qValue };
+				qTable(state, action) += reward + learningRate * (discountFactor * qTable.row(newState).maxCoeff() - qTable(state, action));
+				std::vector<double> sample = { (double)newState, (double)state, qTable(state, action) };
 				trainingSamples.push_back(sample);
+			}
 
-				// remove oldest samples
+			// remove oldest samples
+			if (trainingSamples.size() >= MAX_TRAINING_SIZE) {
 				trainingSamples.erase(trainingSamples.begin() + 0);
 			}
 
 			steps += 1;
 		}
-
+		std::cout << steps << std::endl;
 
 		if (verbose) {
-			if (i % 2 == 0) {
+			if (i % logRate == 0) {
 				std::cout << "Run: " << i << std::endl;
 				std::cout << "Steps made at this point: " << steps << std::endl;
 			}
@@ -281,7 +264,6 @@ void QLearn::TrainQELM(bool verbose) {
 	}
 
 	auto endTime = std::chrono::system_clock::now();
-
 	double elapsedTimeMS = std::chrono::duration<double, std::milli>(endTime - startTime).count();
 	double elapsedTimeSec = elapsedTimeMS / 1000;
 
