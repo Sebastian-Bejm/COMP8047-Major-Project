@@ -4,7 +4,6 @@ QMaze::QMaze(std::vector<std::vector<double>> maze, State agentPos, State endPos
 	this->maze = maze;
 	this->endPos = endPos;
 	this->startPos = agentPos;
-
 	this->numRows = maze.size();
 	this->numCols = maze[0].size();
 }

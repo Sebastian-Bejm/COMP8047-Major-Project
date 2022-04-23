@@ -170,7 +170,6 @@
     <ClCompile Include="ObjectTracker.cpp" />
     <ClCompile Include="ObstructionGenerator.cpp" />
     <ClCompile Include="PhysicsWorld.cpp" />
-    <ClCompile Include="QELM.cpp" />
     <ClCompile Include="QLearn.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -194,6 +193,7 @@
     <ClInclude Include="ContactListener.h" />
     <ClInclude Include="EBO.h" />
     <ClInclude Include="ELM.h" />
+    <ClInclude Include="GenData.h" />
     <ClInclude Include="QMaze.h" />
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="FPSCounter.h" />
@@ -206,12 +206,12 @@
     <ClInclude Include="ObjectTracker.h" />
     <ClInclude Include="ObstructionGenerator.h" />
     <ClInclude Include="PhysicsWorld.h" />
-    <ClInclude Include="QELM.h" />
     <ClInclude Include="QLearn.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShapeDetails.h" />
+    <ClInclude Include="Tag.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="TimeTracker.h" />
@@ -221,14 +221,15 @@
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="brick.png" />
-    <Image Include="crate.jpg" />
-    <Image Include="end_tex.jpg" />
-    <Image Include="lava.png" />
-    <Image Include="start_tex.jpg" />
+    <Text Include="maze.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="maze.txt" />
+    <Image Include="Textures\brick.png" />
+    <Image Include="Textures\crate.jpg" />
+    <Image Include="Textures\cyber.jpg" />
+    <Image Include="Textures\end_tex.jpg" />
+    <Image Include="Textures\lava.png" />
+    <Image Include="Textures\start_tex.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -20,14 +20,12 @@ public:
 	bool IsStart();
 	bool IsExit();
 
+	void SetNewPos(int row, int col);
 	int GetRow();
 	int GetColumn();
 
 	bool IsEqual(const MazeCell& mc);
 	std::string str();
-
-	int GetCode();
-
 
 	friend bool operator==(const MazeCell& lhs, const MazeCell& rhs) {
 		return lhs.row == rhs.row && lhs.col == rhs.col && lhs.isWall == rhs.isWall;
@@ -39,4 +37,5 @@ private:
 	bool isWall;
 	bool obstructed;
 	bool start, exit;
+
 };

@@ -40,7 +40,7 @@ void GameObject::ResetTransform() {
 		rigidBody->box2dBody->GetPosition().y, transform->GetPosition().z));
 }
 
-// Set this object's position to
+// Set this object's current position to a new position
 void GameObject::SetPosition(float posX, float posY) {
 	rigidBody->box2dBody->SetTransform(b2Vec2(posX, posY), rigidBody->box2dBody->GetAngle());
 
@@ -69,6 +69,7 @@ RigidBody* GameObject::GetRigidBody() {
 	return rigidBody;
 }
 
+// Gets the shader attached to this GameObject
 Shader& GameObject::GetShader() {
 	return shaderProgram;
 }
@@ -80,19 +81,20 @@ std::string GameObject::GetTag() {
 
 // Get the ID of the texture image passed into the object
 int GameObject::GetTextureID() {
-	if (imageFile == "crate.jpg") {
+	std::string folderPath = "Textures/" + imageFile;
+	if (imageFile == "Textures/cyber.jpg") {
 		return 0;
 	}
-	else if (imageFile == "brick.png") {
+	else if (imageFile == "Textures/brick.png") {
 		return 1;
 	}
-	else if (imageFile == "start_tex.jpg") {
+	else if (imageFile == "Textures/start_tex.jpg") {
 		return 2;
 	}
-	else if (imageFile == "end_tex.jpg") {
+	else if (imageFile == "Textures/end_tex.jpg") {
 		return 3;
 	}
-	else if (imageFile == "lava.png") {
+	else if (imageFile == "Textures/lava.png") {
 		return 4;
 	}
 	return -1;

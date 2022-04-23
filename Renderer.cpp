@@ -4,6 +4,7 @@ Renderer* Renderer::renderer = nullptr;
 
 GLFWwindow* window;
 
+// Returns the singleton instance of the Renderer
 Renderer* Renderer::GetInstance() {
 	if (renderer == nullptr) {
 		renderer = new Renderer();
@@ -11,6 +12,7 @@ Renderer* Renderer::GetInstance() {
 	return renderer;
 }
 
+// Initialize everything required for OpenGL to be running
 int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight) {
 	this->backgroundColour = backgroundColour;
 	this->windowWidth = windowWidth;
@@ -24,6 +26,13 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+	// Get this monitors information
+	int monitorX, monitorY;
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+	glfwGetMonitorPos(monitor, &monitorX, &monitorY);
+
 	// Setup our window for OpenGL
 	window = glfwCreateWindow(windowWidth, windowHeight, "COMP8047 Major Project", NULL, NULL);
 	if (window == NULL) {
@@ -33,6 +42,9 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	}
 
 	glfwMakeContextCurrent(window);
+	
+	// Center the OpenGL window
+	glfwSetWindowPos(window, monitorX + (mode->width - windowWidth) / 2, monitorY + (mode->height - windowHeight) / 2);
 
 	// Load GLAD so it configures OpenGL
 	gladLoadGL();
@@ -88,7 +100,6 @@ void Renderer::PrepareGLBuffers() {
 	vbo.Unbind();
 	ebo.Unbind();
 
-
 	// Handle GL buffers for freetype text
 	vao.Bind();
 	// Generate Vertex Buffer object for text
@@ -104,14 +115,19 @@ void Renderer::PrepareGLBuffers() {
 
 }
 
+// Load textures into memory
 void Renderer::LoadTextures() {
 	// Order image according to enum in GameObject
-	std::vector<std::string> images = { "crate.jpg", "brick.png", "start_tex.jpg", "end_tex.jpg", "lava.png"};
+	std::vector<std::string> images = { "Textures/cyber.jpg", 
+		"Textures/brick.png", 
+		"Textures/start_tex.jpg", 
+		"Textures/end_tex.jpg", 
+		"Textures/lava.png"};
 
 	for (std::string image : images) {
 		GLenum format = NULL;
 		std::string ext = GetTextureFileExtension(image);
-
+		// Check the file extension so we use the correct colour format
 		if (ext == "png") {
 			format = GL_RGBA;
 		}
@@ -125,6 +141,7 @@ void Renderer::LoadTextures() {
 
 }
 
+// Get the extension of an image file
 std::string Renderer::GetTextureFileExtension(const std::string& textureFile) {
 	size_t i = textureFile.rfind('.', textureFile.length());
 	if (i != std::string::npos) {
@@ -257,6 +274,7 @@ void Renderer::RenderText(Shader& shader, std::string text, float x, float y, fl
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+// Performs the Renderer's updates
 int Renderer::Update(ObjectTracker* tracker) {
 	// This fixes the fast movement over time on the machine
 	float deltaTime = Time::GetInstance().DeltaTime();
@@ -268,10 +286,11 @@ int Renderer::Update(ObjectTracker* tracker) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	camera.ProcessInput(window, deltaTime);
-	camera.SetOrthoMatrix(-8.0f, 10.0f, -10.0f, 8.0f, 0.1f, 100.0f);
+	camera.SetOrthoMatrix(viewLeft, viewRight, viewBottom, viewTop, 0.1f, 100.0f);
 
 	// Draw the game objects here with a reference to the camera
 	std::vector<GameObject> objects = tracker->GetAllObjects();
+
 	for (int i = 0; i < objects.size(); i++) {
 
 		objects[i].GetShader().Activate();
@@ -284,7 +303,7 @@ int Renderer::Update(ObjectTracker* tracker) {
 		objects[i].Draw(camera);
 
 		// Draw the actual Mesh
-		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, nullptr);
 	}
 
 	// Activate the freetype text shader
@@ -292,20 +311,27 @@ int Renderer::Update(ObjectTracker* tracker) {
 
 	// the text placement must be dynamic based on window size
 	// when updating text make sure its updated at least once per second, and converted to string correctly
-	std::string currentTime = TimeTracker::GetInstance().GetCurrentTime();
-	std::string lastBest = TimeTracker::GetInstance().GetLastBestTime();
+	std::string currentTime = TimeTracker::GetInstance().GetCurrentTimeString();
+	std::string lastBest = TimeTracker::GetInstance().GetLastBestTimeString();
+
+	int mazesCompleted = GameManager::GetInstance().GetMazesCompleted();
+	std::string mazesCompStr = "Mazes completed: " + std::to_string(mazesCompleted);
 
 	RenderText(textShader, currentTime, (float)windowWidth - TEXT_WIDTH_OFFSET*2,
-		(float)windowHeight - TEXT_HEIGHT_OFFSET, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+		(float)windowHeight - TEXT_HEIGHT_OFFSET, 0.7f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	RenderText(textShader, lastBest, (float)windowWidth - TEXT_WIDTH_OFFSET, 
-		(float)windowHeight - TEXT_HEIGHT_OFFSET, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+		(float)windowHeight - TEXT_HEIGHT_OFFSET, 0.7f, glm::vec3(0.0f, 0.0f, 0.0f));
+
+	RenderText(textShader, mazesCompStr, (float)windowWidth - TEXT_WIDTH_OFFSET * 2,
+		(float)windowHeight - TEXT_HEIGHT_OFFSET * 2, 0.7f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	glfwSwapBuffers(window);
 
 	return 0;
 }
 
+// Clean up on exit
 int Renderer::Teardown() {
 	// Delete the VAO
 	vao.Delete();
@@ -321,6 +347,15 @@ int Renderer::Teardown() {
 	return 0;
 }
 
+// Set the camera to be used in the Renderer
 void Renderer::SetCamera(Camera& camera) {
 	this->camera = camera;
+}
+
+// Set the bounding view for the scene to be rendered
+void Renderer::SetView(float left, float right, float bottom, float top) {
+	viewLeft = left;
+	viewRight = right;
+	viewBottom = bottom;
+	viewTop = top;
 }

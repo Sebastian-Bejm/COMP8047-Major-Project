@@ -13,13 +13,17 @@ public:
 	void StartTimer();
 	void StopTimer();
 
-	std::string GetCurrentTime();
-	std::string GetLastBestTime();
+	auto GetCurrentTime();
+
+	std::string GetCurrentTimeString();
+	std::string GetLastBestTimeString();
 
 private:
 
 	bool stopped = false;
 	std::chrono::system_clock::time_point startTime, endTime;
+	double localBestTime, currentBestTime;
+
 	std::string currentTimeStr = "";
 	std::string lastBestTimeStr = "Best Time: ";
 

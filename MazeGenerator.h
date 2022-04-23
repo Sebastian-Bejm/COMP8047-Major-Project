@@ -15,21 +15,22 @@ class MazeGenerator
 {
 public:
 
-	MazeGenerator();
+	static MazeGenerator& GetInstance();
 
-	void InitMaze(int rows, int cols);
+	void InitMaze(int rows, int cols, int wallsToRemove = 0);
 	void InitMaze(std::string filename);
 	void Generate();
 	void PrintMaze();
 
 	MazeCell& GetStartCell();
 	MazeCell& GetEndCell();
-	std::vector<int> GetStartCoordinates();
-	std::vector<int> GetEndCoordinates();
 
 	std::vector<std::vector<MazeCell>>& GetMazeCells();
 
 private:
+
+	int wallsToRemove = 0;
+	int wallRemovalLimit = 300;
 
 	int directions[4][2] = {
 		{0, -2}, // north
@@ -53,4 +54,7 @@ private:
 	void PadOuterWalls();
 	void CreateMazePositions();
 
+	void RemoveWalls();
+	bool RemoveWall(int row, int col);
+	void MarkAdditionalObstructions();
 };

@@ -5,28 +5,23 @@ GameManager& GameManager::GetInstance() {
 	return instance;
 }
 
-void GameManager::Attach(ObstructionGenerator* obsGenerator, MazeGenerator* mazeGenerator) {
-	this->obsGenerator = obsGenerator;
-	this->mazeGenerator = mazeGenerator;	
-}
-
 // Initialize the shaders to be used
 void GameManager::LoadShaders() {
 	Shader crateShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
 	Shader brickShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
-	Shader lavaShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
 
 	shaderStorage.push_back(crateShader);
 	shaderStorage.push_back(brickShader);
-	shaderStorage.push_back(lavaShader);
 }
 
 // Load a scene given a generated maze, and position the rendered objects in the scene
 void GameManager::LoadScene() {
-	std::vector<std::vector<MazeCell>> maze = mazeGenerator->GetMazeCells();
+	std::vector<std::vector<MazeCell>> maze = MazeGenerator::GetInstance().GetMazeCells();
+	ObjectTracker* trackerInstance = &ObjectTracker::GetInstance();
+	PhysicsWorld* worldInstance = &PhysicsWorld::GetInstance();
 
 	// Create the maze using game objects
-	// Row: y, Col: x;
+	// Row: -y, Col: x;
 	for (size_t r = 0; r < maze.size(); r++) {
 		for (size_t c = 0; c < maze[r].size(); c++) {
 			int x = c;
@@ -42,51 +37,99 @@ void GameManager::LoadScene() {
 				glm::vec3 agentScale = glm::vec3(0.6f, 0.6f, 1.0f);
 
 				// The agent is the first object added to the object tracker
-				GameObject agent("agent", "crate.jpg", shaderStorage[0], startPos, rotation, agentScale);
+				GameObject agent("agent", "Textures/cyber.jpg", shaderStorage[0], startPos, rotation, agentScale);
 				agent.SetBodyType(b2_dynamicBody);
 
-				ObjectTracker::GetInstance().AddObject(agent);
-				PhysicsWorld::GetInstance().AddObject(&agent);
+				trackerInstance->AddObject(agent);
+				worldInstance->AddObject(&agent);
 
 				// Render an object representing the entrance
-				glm::vec3 startPointPos = glm::vec3(x, -y, -1.0f);
-				GameObject startingPoint("point", "start_tex.jpg", shaderStorage[0], startPointPos, rotation, generalScale);
+				glm::vec3 startPointPos = glm::vec3(x, -y, -5.0f);
+				GameObject startingPoint("point", "Textures/start_tex.jpg", shaderStorage[0], startPointPos, rotation, generalScale);
 
-				ObjectTracker::GetInstance().AddObject(startingPoint);
-				PhysicsWorld::GetInstance().AddObject(&startingPoint);
+				trackerInstance->AddObject(startingPoint);
+				worldInstance->AddObject(&startingPoint);
 			}
 
 			// Render an object representing the exit
 			if (maze[r][c].IsExit()) {
-				glm::vec3 endPointPos = glm::vec3(x, -y, -1.0f);
-				GameObject endingPoint("point", "end_tex.jpg", shaderStorage[0], endPointPos, rotation, generalScale);
+				glm::vec3 endPointPos = glm::vec3(x, -y, -5.0f);
+				GameObject endingPoint("point", "Textures/end_tex.jpg", shaderStorage[0], endPointPos, rotation, generalScale);
 
-				ObjectTracker::GetInstance().AddObject(endingPoint);
-				PhysicsWorld::GetInstance().AddObject(&endingPoint);
+				trackerInstance->AddObject(endingPoint);
+				worldInstance->AddObject(&endingPoint);
 			}
 
 			// Create the wall objects
 			if (maze[r][c].IsWall()) {
 				glm::vec3 position = glm::vec3(x, -y, 0.0f);
 
-				GameObject wall("wall", "brick.png", shaderStorage[1], position, rotation, generalScale);
+				GameObject wall("wall", "Textures/brick.png", shaderStorage[1], position, rotation, generalScale);
 
-				ObjectTracker::GetInstance().AddObject(wall);
-				PhysicsWorld::GetInstance().AddObject(&wall);
+				trackerInstance->AddObject(wall);
+				worldInstance->AddObject(&wall);
 			}
 		}
 	}
 
-	// start the timer for this run
+	// Start timer and generator
 	TimeTracker::GetInstance().StartTimer();
+	ObstructionGenerator::GetInstance().StartGenerator(true);
+
+	pathfindingAgent.InitializeQLearn();
+	pathfindingAgent.InitializeEnvironment();
+	pathfindingAgent.Train(Mode::QLEARN);
+}
+
+// Updates the game logic and checks when the current game has finished
+void GameManager::Update() {
+	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
+	ObstructionGenerator* generatorInstance = &ObstructionGenerator::GetInstance();
+
+	// Check if obstruction generator received new maze
+	if (generatorInstance->GetMazeUpdates()) {
+		glm::vec3 curPos = agent->GetTransform()->GetPosition();
+		pathfindingAgent.UpdateCurrentState(curPos);
+		pathfindingAgent.Train(Mode::QLEARN);
+	}
+
+	// Agent performs its pathfinding
+	pathfindingAgent.MoveUpdate();
+
+	if (agent != nullptr) {
+		// Check if agent has reached the goal, then start the grace time before starting a new maze
+		bool terminalState = InTerminalState(agent);
+		if (terminalState && !reachedGoal) {
+			TimeTracker::GetInstance().StopTimer();
+			reachedGoal = true;
+		}
+
+		if (reachedGoal) {
+			timeAfterGoal++;
+
+			if (timeAfterGoal >= graceTime) {
+				CleanScene();
+
+				LoadNewScene();
+
+				generatorInstance->StartGenerator(true);
+
+				mazesCompleted++;
+				timeAfterGoal = 0;
+				reachedGoal = false;
+			}
+		}
+
+	}
+
 }
 
 // Loads a new scene: generates a new maze, start/end point, and agent in new positions
 void GameManager::LoadNewScene() {
-	GameObject agent("agent", "lava.png", shaderStorage[2], glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
+	MazeGenerator::GetInstance().InitMaze(15, 15, 50);
+	MazeGenerator::GetInstance().Generate();
 
-	ObjectTracker::GetInstance().AddObject(agent);
-	PhysicsWorld::GetInstance().AddObject(&agent);
+	LoadScene();
 }
 
 // Resets the scene by resetting the Agent to its original location, and removes obstructions
@@ -94,46 +137,35 @@ void GameManager::ResetScene() {
 	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
 	agent->ResetTransform();
 
-	// TODO: remove the obstructions after timer is stopped
-
 	reachedGoal = false;
 	timeAfterGoal = 0;
 	TimeTracker::GetInstance().StartTimer();
-
-	LoadNewScene();
 }
 
 // Clear the scene and properly delete the objects currently in the scene
-void GameManager::CleanScene() {	
-	for (auto& shader : shaderStorage) {
-		shader.Delete();
+void GameManager::CleanScene(bool programExit) {
+	PhysicsWorld::GetInstance().DestroyObjects();
+
+	ObjectTracker::GetInstance().DeleteAllObjects();
+	ObjectTracker::GetInstance().RemoveAllObjects();
+
+	if (programExit) {
+		for (auto& shader : shaderStorage) {
+			shader.Delete();
+		}
 	}
+
 }
 
-// Updates the game logic and checks when the current game has finished
-void GameManager::Update() {
-	GameObject* agent = &ObjectTracker::GetInstance().GetObjectByTag("agent");
-
-	if (agent != nullptr) {
-		bool terminalState = InTerminalState(agent);
-		if (terminalState) {
-			TimeTracker::GetInstance().StopTimer();
-			reachedGoal = true;
-		}
-		if (reachedGoal) {
-			timeAfterGoal++;
-			if (timeAfterGoal >= graceTime) {
-				ResetScene();
-			}
-		}
-	}
-
+// Get the number of mazes completed in the game
+int GameManager::GetMazesCompleted() {
+	return mazesCompleted;
 }
 
 // Checks if the game is in a terminal state:
 // The agent has reached the end goal, or the agent is stuck (should not happen but it is rare)
 bool GameManager::InTerminalState(GameObject* agent) {
-	std::vector<int> endPoint = mazeGenerator->GetEndCoordinates();
+	MazeCell endPoint = MazeGenerator::GetInstance().GetEndCell();
 
 	RigidBody* agentRb = agent->GetRigidBody();
 	float xPos = agentRb->box2dBody->GetPosition().x;
@@ -143,7 +175,7 @@ bool GameManager::InTerminalState(GameObject* agent) {
 	int roundY = (int)round(yPos);
 
 	if (!reachedGoal) {
-		if (endPoint[0] == roundX && endPoint[1] == roundY) {
+		if (endPoint.GetColumn() == roundX && -endPoint.GetRow() == roundY) {
 			return true;
 		}
 	}

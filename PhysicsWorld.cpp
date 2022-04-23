@@ -93,16 +93,30 @@ void PhysicsWorld::AddObject(GameObject* gameObject) {
 // Updates the physics bodies of all objects currently in the scene
 void PhysicsWorld::Update(ObjectTracker* tracker) {
 	if (world) {
+
 		world->Step(timeStep, velocityIterations, positionIterations);
 
 		std::vector<GameObject> objects = tracker->GetAllObjects();
-		//std::cout << objects[0].GetRigidBody()->box2dBody->GetPosition().x 
-			//<< " " << objects[0].GetRigidBody()->box2dBody->GetPosition().y << std::endl;
 
 		for (int i = 0; i < objects.size(); i++) {
 			RigidBody* rigidBody = objects[i].GetRigidBody();
 			Transform* transform = objects[i].GetTransform();
 			UpdateTransform(transform, rigidBody);
+		}
+	}
+}
+
+// Safely remove the box2d bodies of objects
+void PhysicsWorld::DestroyObjects() {
+	ObjectTracker* tracker = &ObjectTracker::GetInstance();
+	std::vector<GameObject> objects = tracker->GetAllObjects();
+
+	for (size_t i = 0; i < tracker->GetAllObjects().size(); i++) {
+		if (objects[i].GetTag() == "agent") {
+			continue;
+		}
+		else {
+			PhysicsWorld::GetInstance().world->DestroyBody(objects[i].GetRigidBody()->box2dBody);
 		}
 	}
 }

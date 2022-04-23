@@ -1,7 +1,6 @@
 #pragma once
 
-#include <vector>
-
+#include "MazeGenerator.h"
 #include "ObjectTracker.h"
 #include "QLearn.h"
 
@@ -17,20 +16,20 @@ public:
 	Agent();
 	
 	void InitializeQLearn();
-	void AttachCurrentMaze(std::vector<std::vector<MazeCell>> currentMaze);
-	void Train(Mode mode, bool verbose);
+	void InitializeEnvironment();
+	void Train(Mode mode, bool verbose=false);
 
+	void UpdateCurrentState(glm::vec3 pos);
 	void MoveUpdate();
-	void Move(float destX, float destY);
-	void TeleportMove();
 
 private:
 
 	QLearn instance;
-	float speed = 0.25f;
 
-	std::chrono::system_clock::time_point start, current, end;
+	std::vector<MazeCell> currentPath;
+	int currentPointIndex = 0;
 
-	void NextFrame();
+	float agentSpeed = 0.3f;
+
+	void MoveTowards(float destX, float destY);
 };
-

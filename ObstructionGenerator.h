@@ -8,23 +8,26 @@ class ObstructionGenerator
 {
 public:
 
-	ObstructionGenerator();
+	static ObstructionGenerator& GetInstance();
 
-	void AttachMazeGenerator(MazeGenerator* mazeGenerator);
-	void RunGenerator(ObjectTracker* tracker, PhysicsWorld* physicsWorld);
-	GameObject& GenerateObstruction(glm::vec3 targetPosition);
+	void Update();
+	void UpdateMarkedObstructions();
+
+	void StartGenerator(bool start);
+	bool GetMazeUpdates();
 	
 private:
 
-	void NextFrame();
-	bool IsValidLocation(GameObject* agent, GameObject* targetObject);
+	bool generatorStarted = false;
+	bool mazeUpdated = false;
 
-	MazeGenerator* mazeGenerator;
+	std::vector<MazeCell> obstructions;
 
-	const float interval = 5.0f;
-	const int radius = 3;
+	const int revealRadius = 1.5f; // temp, need to play around with it
 
-	clock_t prevTime;
-	clock_t deltaTime = 0;
+	void FindObstructions();
+	void GenerateObstruction(MazeCell obsCell);
+
+	bool InRange();
 };
 

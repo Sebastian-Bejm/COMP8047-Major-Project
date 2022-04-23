@@ -111,9 +111,6 @@
     <ClCompile Include="ELM.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
-    <ClCompile Include="QELM.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
     <ClCompile Include="QMaze.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
@@ -226,9 +223,6 @@
     <ClInclude Include="ELM.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
-    <ClInclude Include="QELM.h">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
     <ClInclude Include="QMaze.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
@@ -256,27 +250,36 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files\MainSystems</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="crate.jpg">
-      <Filter>Resource Files\Textures</Filter>
-    </Image>
-    <Image Include="brick.png">
-      <Filter>Resource Files\Textures</Filter>
-    </Image>
-    <Image Include="lava.png">
-      <Filter>Resource Files\Textures</Filter>
-    </Image>
-    <Image Include="end_tex.jpg">
-      <Filter>Resource Files\Textures</Filter>
-    </Image>
-    <Image Include="start_tex.jpg">
-      <Filter>Resource Files\Textures</Filter>
-    </Image>
+    <ClInclude Include="Tag.h">
+      <Filter>Header Files\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GenData.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="maze.txt">
       <Filter>Resource Files\MazeData</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Textures\start_tex.jpg">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="Textures\brick.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="Textures\crate.jpg">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="Textures\cyber.jpg">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="Textures\end_tex.jpg">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="Textures\lava.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>

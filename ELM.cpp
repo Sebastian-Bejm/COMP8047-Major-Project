@@ -1,5 +1,6 @@
 #include "ELM.h"
 
+// Initialize ELM with input and hidden size
 ELM::ELM(int inputSize, int hiddenSize, int outputSize) {
 	this->inputSize = inputSize;
 	this->hiddenSize = hiddenSize;
@@ -7,32 +8,38 @@ ELM::ELM(int inputSize, int hiddenSize, int outputSize) {
 
 	std::random_device rand_dev;
 	std::mt19937 gen(rand_dev());
-	std::uniform_real_distribution<float> weights_distr(-0.5, 0.5);
-	auto weights_uniform = [&](float) {return weights_distr(gen); };
+	std::uniform_real_distribution<float> uniform_weights_distr(-0.5, 0.5);
+	auto weights_uniform = [&](float) {return uniform_weights_distr(gen); };
 
-	std::uniform_real_distribution<float> bias_distr(0, 1);
-	auto bias_uniform = [&](float) {return bias_distr(gen); };
+	std::uniform_real_distribution<float> uniform_bias_distr(0, 1);
+	auto bias_uniform = [&](float) {return uniform_bias_distr(gen); };
 
-	// may have to change this, doesnt seem uniform
 	// initialize random weight with range (-0.5, 0.5)
 	weights = Eigen::MatrixXf::Zero(this->hiddenSize, this->inputSize).unaryExpr(weights_uniform);
+
 	// initialize random bias with range (0, 1)
 	bias = Eigen::MatrixXf::Zero(1, this->hiddenSize).unaryExpr(bias_uniform);
-
 }
 
 // Extreme Learning Machine training process
 Eigen::MatrixXf ELM::Train(Eigen::MatrixXf X, Eigen::MatrixXf Y) {
+
 	// calculate the hidden layer output matrix
-	H = (X * weights.transpose()) + bias;
+	H = (X * weights.transpose()) + bias.replicate(X.rows(), 1);
+	H = ReLuActivation(H);
 
-	H = SigmoidActivation(H);
+	// calculate the Moore-Penrose psuedoinverse matrix using SVD method
+	Eigen::JacobiSVD<Eigen::MatrixXf> svd(H, Eigen::ComputeThinU | Eigen::ComputeThinV);
 
-	// calculate the Moore-Penrose psuedoinverse matrix
-	Eigen::MatrixXf moorePenrose = H.transpose() * H;
-	moorePenrose = moorePenrose.inverse();
-	moorePenrose = moorePenrose * H.transpose();
+	constexpr double epsilon = std::numeric_limits<double>::epsilon();
+	double tolerance = epsilon * std::max(H.cols(), H.rows()) * svd.singularValues().array().abs()(0);
 
+	Eigen::MatrixXf moorePenrose = svd.matrixV() * 
+		(svd.singularValues().array().abs() > tolerance)
+		.select(svd.singularValues().array().inverse(), 0).matrix().asDiagonal()
+		* svd.matrixU().adjoint();
+
+	// calculate the output weights
 	beta = moorePenrose * Y;
 
 	return H * beta;
@@ -40,33 +47,62 @@ Eigen::MatrixXf ELM::Train(Eigen::MatrixXf X, Eigen::MatrixXf Y) {
 
 // Predict the results of the training process using test data
 Eigen::MatrixXf ELM::Predict(Eigen::MatrixXf X) {
-	Eigen::MatrixXf prod = (X * weights.transpose()) + bias;
-	Eigen::MatrixXf y = SigmoidActivation(prod) * beta;
+	Eigen::MatrixXf pred = ReLuActivation((X * weights.transpose()) + bias.replicate(X.rows(), 1)) * beta;
+
+	return pred;
 }
 
 // Sigmoid activation function
 Eigen::MatrixXf ELM::SigmoidActivation(Eigen::MatrixXf X) {
+	return (1 + (-X.array()).exp()).cwiseInverse();
+}
+
+// Rectified linear activation function
+Eigen::MatrixXf ELM::ReLuActivation(Eigen::MatrixXf X) {
+	Eigen::MatrixXf relu = Eigen::MatrixXf(X.rows(), X.cols());
 	for (size_t i = 0; i < X.rows(); i++) {
 		for (size_t j = 0; j < X.cols(); j++) {
-			X(i, j) = 1.0 / (1.0 + exp(-1 * X(i, j)));
+			if (X(i, j) <= 0.0) {
+				relu(i, j) = 0.0;
+			}
+			else {
+				relu(i, j) = X(i, j);
+			}
 		}
 	}
 
-	return X;
+	return relu;
 }
 
 // Calculate the accuracy and loss based on predictions
-void ELM::Score(Eigen::MatrixXf X, Eigen::MatrixXf Y) {
-	/*def score(self, x, y) :
-        self.prediction = self.predict(x)
-        if self.elm_type == 'clf':
-            self.correct = 0
-            for i in range(y.shape[0]):
-                if self.prediction[i] == y[i]:
-                    self.correct += 1
-            self.test_score = self.correct/y.shape[0]
-        if self.elm_type == 'reg':
-            self.test_score = np.sqrt(np.sum((self.result - self.y) * (self.result - self.y))/self.y.shape[0])
+// For classification we calculate simple accuracy between actual and test data
+// For regression we calculate the mean absolute error
+void ELM::Score(Eigen::MatrixXf YTest, Eigen::MatrixXf YPred, bool regression) {
+	int total = YTest.rows();
 
-        return self.test_score*/
+	if (regression) {
+		float sum = 0;
+		for (int i = 0; i < total; i++) {
+			sum += abs(YTest(i, 0) - YPred(i, 0));
+		}
+
+		float error = sum / total;
+		std::cout << "Mean absolute error: " << error << " using " << hiddenSize << " hidden nodes" << std::endl;
+	}
+	else {
+		int correct = 0;
+
+		for (int i = 0; i < total; i++) {
+			YPred(i, 0) = YPred(i, 0) >= 0.5 ? 1 : 0;
+		}
+
+		for (int i = 0; i < total; i++) {
+			if (YTest(i, 0) == YPred(i, 0)) {
+				correct++;
+			}
+		}
+
+		float accuracy = (float)correct / total;
+		std::cout << "Accuracy for " << hiddenSize << " hidden nodes " << accuracy << std::endl;
+	}
 }
