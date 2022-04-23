@@ -89,22 +89,6 @@ int Teardown() {
 
 int main() {
 
-	/*double discountFactor = 0.95;
-	double eps = 0.5;
-	double epsDecayFactor = 0.998;
-	double learningRate = 0.8;
-	int numEpisodes = 1000;
-
-	mazeGenerator = &MazeGenerator::GetInstance();
-	mazeGenerator->InitMaze(mazeRows, mazeCols, wallToRemove);
-	mazeGenerator->Generate();
-
-	QLearn qLearn;
-	qLearn.InitHyperparameters(discountFactor, eps, epsDecayFactor, learningRate, numEpisodes);
-	qLearn.AttachMazeFromGame(mazeGenerator->GetMazeCells());
-
-	qLearn.TrainQELM(true);*/
-
 	// Initalize everything required for engine
 	Initialize();
 
@@ -116,13 +100,10 @@ int main() {
 		// Tell GLFW to keep track of input events
 		glfwPollEvents();
 
-		// Run the engine and its updates
+		// Run the engine systems and its updates
 		PhysicsUpdate();
-
 		gameManager->Update();
-
 		obsGenerator->Update(); 
-
 		GraphicsUpdate();
 	}
 

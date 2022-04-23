@@ -20,7 +20,7 @@ void TestGenData(bool regression=false) {
 
 	// regression
 	std::uniform_real_distribution<float> randreg_distr(-5, 5);
-	std::uniform_real_distribution<float> qr_distr(-500, 500);
+	std::uniform_real_distribution<float> qr_distr(-200, 200);
 
 	// initial sizes
 	int train_size = (int) (samples_to_gen * 0.8);
@@ -69,7 +69,7 @@ void TestGenData(bool regression=false) {
 	}
 
 	// Testing ELM
-	ELM elm = ELM(data_x.cols(), 20, 1);
+	ELM elm = ELM(data_x.cols(), 50, 1);
 
 	elm.Train(data_x, data_y);
 
