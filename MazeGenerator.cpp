@@ -87,6 +87,7 @@ void MazeGenerator::Generate() {
 
 	// Start trying to remove walls
 	RemoveWalls();
+	MarkObstructions();
 
 	PrintMaze();
 }
@@ -326,7 +327,9 @@ void MazeGenerator::RemoveWalls() {
 	int tries = 0;
 	int wallsRemoved = 0;
 
-	srand(time(0));
+	std::random_device rd; 
+	std::mt19937 gen(rd()); 
+	std::uniform_int_distribution<> distr(min, maxRow);
 
 	while (tries < maxTries) {
 		tries++;
@@ -337,7 +340,8 @@ void MazeGenerator::RemoveWalls() {
 		}
 
 		// Get random row from maze
-		int y = min + rand() % ((maxRow + 1) - min);
+		//int y = min + rand() % ((maxRow + 1) - min);
+		int y = distr(gen);
 		y = (y == maxRow) ? y - 1 : y;
 
 		std::vector<int> walls; 
@@ -441,24 +445,50 @@ bool MazeGenerator::RemoveWall(int row, int col) {
 	return false;
 }
 
-void MazeGenerator::MarkAdditionalObstructions() {
-	// mark obs where there are islands
+// Mark additional obstructions in available locations where the wall removal hadn't marked them
+void MazeGenerator::MarkObstructions() {
+	// mark obstacles where there are "wall islands"
 	// . . .
 	// . # .
 	// . . .
-	// ---------------------
-	// marks obs when there are continuous walls with multiple spaces (column wise or row wise)
-	// . # .
-	// . # .
-	// . . .
-	// . # .
-	// . # .
-	// . . .
-	// ---------------------
-	// And mark walls within 2x2 from start or end
 
-	MazeCell cell = GetStartCell();
-	// check both directions
-	int bestX, bestY;
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> distr(1, 4);
 
+	for (size_t i = 0; i < mazeCells.size(); i++) {
+		for (size_t j = 0; j < mazeCells[i].size(); j++) {
+			MazeCell currentCell = mazeCells[i][j];
+			// check index so we dont get an out of bounds error
+			if (currentCell.IsWall() && i > 1 && j > 1 && i < mazeCells.size()-1 && j < mazeCells.size()-1) {
+
+				// check if there are surrounding walls in the four directions
+				if (!mazeCells[i - 1][j].IsWall() && !mazeCells[i + 1][j].IsWall() 
+					&& !mazeCells[i][j - 1].IsWall() && !mazeCells[i][j + 1].IsWall()) {
+
+					// generate a random spot for obstruction
+					// W = 1, E = 2, N = 3, S = 4
+					int loc = distr(gen);
+					int x = 0, y = 0;
+					switch (loc) {
+					case 1:
+						x = -1;
+						break;
+					case 2:
+						x = 1;
+						break;
+					case 3:
+						y = 1;
+						break;
+					case 4:
+						y = -1;
+						break;
+					}
+
+					mazeCells[i + y][j + x].SetObstruction(true);
+				}
+				
+			}
+		}
+	}
 }

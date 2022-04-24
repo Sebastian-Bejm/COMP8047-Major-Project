@@ -56,5 +56,5 @@ private:
 
 	void RemoveWalls();
 	bool RemoveWall(int row, int col);
-	void MarkAdditionalObstructions();
+	void MarkObstructions();
 };

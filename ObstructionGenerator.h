@@ -23,7 +23,7 @@ private:
 
 	std::vector<MazeCell> obstructions;
 
-	const int revealRadius = 1.5f; // temp, need to play around with it
+	const int revealRadius = 1.5f;
 
 	void FindObstructions();
 	void GenerateObstruction(MazeCell obsCell);

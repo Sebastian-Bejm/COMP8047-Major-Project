@@ -36,5 +36,6 @@ private:
 
 	int mazesCompleted = 0;
 
+	void StartAgent(GameObject* agent, bool newUpdates = false);
 	bool InTerminalState(GameObject* agent);
 };

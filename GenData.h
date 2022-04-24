@@ -5,7 +5,7 @@
 
 #include "ELM.h"
 
-// This is to test that everything in the ELM is working correctly
+// This is to test that the ELM is functioning correctly.
 void TestGenData(bool regression=false) {
 	// Generate random data
 	Eigen::MatrixXf data_x, data_y, test_x, test_y;
@@ -69,7 +69,7 @@ void TestGenData(bool regression=false) {
 	}
 
 	// Testing ELM
-	ELM elm = ELM(data_x.cols(), 50, 1);
+	ELM elm = ELM(data_x.cols(), 20, 1);
 
 	elm.Train(data_x, data_y);
 

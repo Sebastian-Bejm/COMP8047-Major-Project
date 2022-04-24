@@ -3,12 +3,12 @@
 Agent::Agent() {}
 
 // Initialize the QLearn class with the hyperparameters
-void Agent::InitializeQLearn() {
+void Agent::InitializeHyperparameters() {
 	double discountFactor = 0.95;
 	double eps = 0.5;
 	double epsDecayFactor = 0.998;
 	double learningRate = 0.8;
-	int numEpisodes = 1500;
+	int numEpisodes = 1000;
 
 	// Initalize the QLearn class with hyperparameters
 	instance.InitHyperparameters(discountFactor, eps, epsDecayFactor, learningRate, numEpisodes);

@@ -40,6 +40,7 @@ void MazeCell::SetWall(bool isWall) {
 
 // Get a cells wall status
 bool MazeCell::IsWall() {
+	// check for obstruced as well since it will eventually be a wall
 	return isWall;
 }
 
