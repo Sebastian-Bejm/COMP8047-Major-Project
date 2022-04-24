@@ -28,6 +28,7 @@ ObstructionGenerator* obsGenerator;
 GameManager* gameManager;
 
 Camera camera;
+FPSCounter counter = FPSCounter();
 
 // Initialize all systems in the engine
 int Initialize() {
@@ -89,6 +90,8 @@ int Teardown() {
 
 int main() {
 
+
+
 	// Initalize everything required for engine
 	Initialize();
 
@@ -99,6 +102,9 @@ int main() {
 	while (!glfwWindowShouldClose(window)) {
 		// Tell GLFW to keep track of input events
 		glfwPollEvents();
+
+		// FPS counter
+		//counter.NextFrame();
 
 		// Run the engine systems and its updates
 		PhysicsUpdate();

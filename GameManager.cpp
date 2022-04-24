@@ -92,6 +92,7 @@ void GameManager::Update() {
 	// Agent performs its pathfinding
 	pathfindingAgent.MoveUpdate();
 
+
 	if (agent != nullptr) {
 		// Check if agent has reached the goal, then start the grace time before starting a new maze
 		bool terminalState = InTerminalState(agent);

@@ -1,7 +1,7 @@
 #include "ELM.h"
 
 // Initialize ELM with input and hidden size
-ELM::ELM(int inputSize, int hiddenSize, int outputSize) {
+ELM::ELM(int inputSize, int hiddenSize, int outputSize, bool verbose) {
 	this->inputSize = inputSize;
 	this->hiddenSize = hiddenSize;
 	this->outputSize = outputSize;
@@ -19,6 +19,13 @@ ELM::ELM(int inputSize, int hiddenSize, int outputSize) {
 
 	// initialize random bias with range (0, 1)
 	bias = Eigen::MatrixXf::Zero(1, this->hiddenSize).unaryExpr(bias_uniform);
+
+	if (verbose) {
+		std::cout << "Input size: " << inputSize << std::endl;
+		std::cout << "Number of hidden nodes: " << hiddenSize << std::endl;
+		std::cout << "Size of weights matrix: " << "(" << weights.rows() << "," << weights.cols() << ")" << std::endl;
+		std::cout << "Size of bias matrix: " << "(" << bias.rows() << "," << bias.cols() << ")" << std::endl;
+	}
 }
 
 // Extreme Learning Machine training process

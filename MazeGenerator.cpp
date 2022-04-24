@@ -447,7 +447,7 @@ bool MazeGenerator::RemoveWall(int row, int col) {
 
 // Mark additional obstructions in available locations where the wall removal hadn't marked them
 void MazeGenerator::MarkObstructions() {
-	// mark obstacles where there are " wall islands"
+	// mark obstacles where there are "wall islands"
 	// . . .
 	// . # .
 	// . . .
@@ -463,7 +463,6 @@ void MazeGenerator::MarkObstructions() {
 			if (currentCell.IsWall() && i > 1 && j > 1 && i < mazeCells.size()-1 && j < mazeCells.size()-1) {
 
 				// check if there are surrounding walls in the four directions
-				
 				if (!mazeCells[i - 1][j].IsWall() && !mazeCells[i + 1][j].IsWall() 
 					&& !mazeCells[i][j - 1].IsWall() && !mazeCells[i][j + 1].IsWall()) {
 

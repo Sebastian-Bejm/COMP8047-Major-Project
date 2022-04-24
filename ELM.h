@@ -9,7 +9,7 @@ class ELM
 {
 public:
 
-	ELM(int inputSize, int hiddenSize, int outputSize);
+	ELM(int inputSize, int hiddenSize, int outputSize, bool verbose=false);
 
 	Eigen::MatrixXf Train(Eigen::MatrixXf X, Eigen::MatrixXf Y);
 	Eigen::MatrixXf Predict(Eigen::MatrixXf X);
