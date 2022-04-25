@@ -90,8 +90,6 @@ int Teardown() {
 
 int main() {
 
-
-
 	// Initalize everything required for engine
 	Initialize();
 

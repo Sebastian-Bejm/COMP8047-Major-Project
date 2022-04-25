@@ -180,6 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="FTTextFragShader.fs" />
+    <None Include="Sample Data\iris.data" />
     <None Include="TextureFragShader.fs" />
     <None Include="TextureVertShader.vs" />
     <None Include="DefaultFragShader.fs" />

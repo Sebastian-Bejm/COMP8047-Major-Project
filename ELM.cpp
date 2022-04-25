@@ -29,11 +29,16 @@ ELM::ELM(int inputSize, int hiddenSize, int outputSize, bool verbose) {
 }
 
 // Extreme Learning Machine training process
-Eigen::MatrixXf ELM::Train(Eigen::MatrixXf X, Eigen::MatrixXf Y) {
+Eigen::MatrixXf ELM::Train(Eigen::MatrixXf X, Eigen::MatrixXf Y, std::string type) {
 
 	// calculate the hidden layer output matrix
 	H = (X * weights.transpose()) + bias.replicate(X.rows(), 1);
-	H = ReLuActivation(H);
+	if (type == "clf") {
+		H = Sigmoid(H);
+	}
+	else if (type == "reg") {
+		H = ReLu(H);
+	}
 
 	// calculate the Moore-Penrose psuedoinverse matrix using SVD method
 	Eigen::JacobiSVD<Eigen::MatrixXf> svd(H, Eigen::ComputeThinU | Eigen::ComputeThinV);
@@ -53,19 +58,24 @@ Eigen::MatrixXf ELM::Train(Eigen::MatrixXf X, Eigen::MatrixXf Y) {
 }
 
 // Predict the results of the training process using test data
-Eigen::MatrixXf ELM::Predict(Eigen::MatrixXf X) {
-	Eigen::MatrixXf pred = ReLuActivation((X * weights.transpose()) + bias.replicate(X.rows(), 1)) * beta;
-
+Eigen::MatrixXf ELM::Predict(Eigen::MatrixXf X, std::string type) {
+	Eigen::MatrixXf pred;
+	if (type == "clf") {
+		pred = Sigmoid((X * weights.transpose()) + bias.replicate(X.rows(), 1)) * beta;
+	}
+	else if (type == "reg") {
+		pred = ReLu((X * weights.transpose()) + bias.replicate(X.rows(), 1)) * beta;
+	}
 	return pred;
 }
 
-// Sigmoid activation function
-Eigen::MatrixXf ELM::SigmoidActivation(Eigen::MatrixXf X) {
+// Sigmoid activation function: for binary class classification
+Eigen::MatrixXf ELM::Sigmoid(Eigen::MatrixXf X) {
 	return (1 + (-X.array()).exp()).cwiseInverse();
 }
 
-// Rectified linear activation function
-Eigen::MatrixXf ELM::ReLuActivation(Eigen::MatrixXf X) {
+// Rectified linear activation function: for regression
+Eigen::MatrixXf ELM::ReLu(Eigen::MatrixXf X) {
 	Eigen::MatrixXf relu = Eigen::MatrixXf(X.rows(), X.cols());
 	for (size_t i = 0; i < X.rows(); i++) {
 		for (size_t j = 0; j < X.cols(); j++) {

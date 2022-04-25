@@ -49,9 +49,6 @@
     <Filter Include="Source Files\Utility">
       <UniqueIdentifier>{5ecbc8a2-1ec2-4293-a1a7-426fefec51fa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\MazeData">
-      <UniqueIdentifier>{2a371245-9887-45a4-b13f-254e26d05b9b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Network">
       <UniqueIdentifier>{a6a8ac78-dc4d-42d7-8839-9b12e5be8063}</UniqueIdentifier>
     </Filter>
@@ -63,6 +60,12 @@
     </Filter>
     <Filter Include="Header Files\MainSystems">
       <UniqueIdentifier>{ed14e745-131e-4e88-b809-e40a1cf0c42c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Sample Data">
+      <UniqueIdentifier>{ab5333cd-362d-4435-b19b-8dd2aa22e2a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Maze Data">
+      <UniqueIdentifier>{2a371245-9887-45a4-b13f-254e26d05b9b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +160,9 @@
     </None>
     <None Include="FTTextVertShader.vs">
       <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Sample Data\iris.data">
+      <Filter>Resource Files\Sample Data</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -259,7 +265,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="maze.txt">
-      <Filter>Resource Files\MazeData</Filter>
+      <Filter>Resource Files\Maze Data</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
