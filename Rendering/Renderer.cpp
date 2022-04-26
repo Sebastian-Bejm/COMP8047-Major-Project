@@ -69,7 +69,7 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	LoadFreetype();
 
 	textProjectionMatrix = glm::ortho(0.0f, (float)windowWidth, 0.0f, (float)windowHeight);
-	textShader = Shader("FTTextVertShader.vs", "FTTextFragShader.fs");
+	textShader = Shader(FTTEXT_VS, FTTEXT_FS);
 
 	return 0;
 }

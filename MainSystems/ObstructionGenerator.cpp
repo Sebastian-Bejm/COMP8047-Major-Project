@@ -59,7 +59,7 @@ void ObstructionGenerator::FindObstructions() {
 
 // Generate an obstruction within a maze cell
 void ObstructionGenerator::GenerateObstruction(MazeCell obsCell) {
-	Shader lavaShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
+	Shader lavaShader = Shader(TEXTURE_VS, TEXTURE_FS);
 
 	glm::vec3 obsPos = glm::vec3((float)obsCell.GetColumn(), (float)(-obsCell.GetRow()), 0.0f);
 	GameObject obstruction("obstruction", LAVA_TEX, lavaShader, obsPos, glm::vec3(0.0f), glm::vec3(1.0f));

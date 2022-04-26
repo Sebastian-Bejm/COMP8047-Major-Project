@@ -1,10 +1,11 @@
 #include "ELM.h"
 
 // Initialize ELM with input and hidden size
-ELM::ELM(int inputSize, int hiddenSize, int outputSize, bool verbose) {
+ELM::ELM(int inputSize, int hiddenSize, int outputSize, std::string type, bool verbose) {
 	this->inputSize = inputSize;
 	this->hiddenSize = hiddenSize;
 	this->outputSize = outputSize;
+	this->type = type;
 
 	std::random_device rand_dev;
 	std::mt19937 gen(rand_dev());
@@ -29,7 +30,7 @@ ELM::ELM(int inputSize, int hiddenSize, int outputSize, bool verbose) {
 }
 
 // Extreme Learning Machine training process
-Eigen::MatrixXf ELM::Train(Eigen::MatrixXf X, Eigen::MatrixXf Y, std::string type) {
+Eigen::MatrixXf ELM::Train(Eigen::MatrixXf X, Eigen::MatrixXf Y) {
 
 	// calculate the hidden layer output matrix
 	H = (X * weights.transpose()) + bias.replicate(X.rows(), 1);
@@ -58,7 +59,7 @@ Eigen::MatrixXf ELM::Train(Eigen::MatrixXf X, Eigen::MatrixXf Y, std::string typ
 }
 
 // Predict the results of the training process using test data
-Eigen::MatrixXf ELM::Predict(Eigen::MatrixXf X, std::string type) {
+Eigen::MatrixXf ELM::Predict(Eigen::MatrixXf X) {
 	Eigen::MatrixXf pred;
 	if (type == "clf") {
 		pred = Sigmoid((X * weights.transpose()) + bias.replicate(X.rows(), 1)) * beta;
@@ -94,10 +95,10 @@ Eigen::MatrixXf ELM::ReLu(Eigen::MatrixXf X) {
 // Calculate the accuracy and loss based on predictions
 // For classification we calculate simple accuracy between actual and test data
 // For regression we calculate the mean absolute error
-void ELM::Score(Eigen::MatrixXf YTest, Eigen::MatrixXf YPred, bool regression) {
+void ELM::Score(Eigen::MatrixXf YTest, Eigen::MatrixXf YPred) {
 	int total = YTest.rows();
 
-	if (regression) {
+	if (type == "reg") {
 		float sum = 0;
 		for (int i = 0; i < total; i++) {
 			sum += abs(YTest(i, 0) - YPred(i, 0));
@@ -106,7 +107,7 @@ void ELM::Score(Eigen::MatrixXf YTest, Eigen::MatrixXf YPred, bool regression) {
 		float error = sum / total;
 		std::cout << "Mean absolute error: " << error << " using " << hiddenSize << " hidden nodes" << std::endl;
 	}
-	else {
+	else if (type == "clf") {
 		int correct = 0;
 
 		for (int i = 0; i < total; i++) {

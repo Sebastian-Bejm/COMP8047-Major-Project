@@ -179,12 +179,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\iris.data" />
-    <None Include="FTTextFragShader.fs" />
-    <None Include="TextureFragShader.fs" />
-    <None Include="TextureVertShader.vs" />
-    <None Include="DefaultFragShader.fs" />
-    <None Include="DefaultVertShader.vs" />
-    <None Include="FTTextVertShader.vs" />
+    <None Include="Shaders\DefaultFragShader.fs" />
+    <None Include="Shaders\DefaultVertShader.vs" />
+    <None Include="Shaders\FTTextFragShader.fs" />
+    <None Include="Shaders\FTTextVertShader.vs" />
+    <None Include="Shaders\TextureFragShader.fs" />
+    <None Include="Shaders\TextureVertShader.vs" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI\Agent.h" />

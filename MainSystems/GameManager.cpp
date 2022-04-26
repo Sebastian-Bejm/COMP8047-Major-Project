@@ -7,8 +7,8 @@ GameManager& GameManager::GetInstance() {
 
 // Initialize the shaders to be used
 void GameManager::LoadShaders() {
-	Shader crateShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
-	Shader brickShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
+	Shader crateShader = Shader(TEXTURE_VS, TEXTURE_FS);
+	Shader brickShader = Shader(TEXTURE_VS, TEXTURE_FS);
 
 	shaderStorage.push_back(crateShader);
 	shaderStorage.push_back(brickShader);

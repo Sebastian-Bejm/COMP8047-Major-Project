@@ -2,6 +2,7 @@
 
 #include <Eigen/Dense>
 #include <iostream>
+#include <algorithm>
 
 #include "ELM.h"
 
@@ -173,11 +174,21 @@ void LoadIrisDataset() {
 	Eigen::MatrixXf pred_y = elm.Predict(test_x.normalized());
 	std::cout << pred_y << std::endl;
 
-	//elm.Score(test_y, pred_y, 2, 3, false);
 }
 
 // This is to test that the ELM is functioning correctly.
-void TestGenData(bool regression=false) {
+void TestGenData(std::string type) {
+	// specify type
+	std::vector<std::string> availableTypes = { "clf", "reg" };
+	if (type.empty() || type == "") {
+		std::cerr << "No testing type specified" << std::endl;
+		return;
+	}
+	else if (!(std::find(availableTypes.begin(), availableTypes.end(), type) != availableTypes.end())) {
+		std::cerr << "Not an available testing type" << std::endl;
+		return;
+	}
+
 	// Generate random data
 	Eigen::MatrixXf data_x, data_y, test_x, test_y;
 	int samples_to_gen = 1000;
@@ -202,9 +213,11 @@ void TestGenData(bool regression=false) {
 	test_x = Eigen::MatrixXf::Zero(test_size, 20);
 	test_y = Eigen::MatrixXf::Zero(test_size, 1);
 
-	std::cout << "Generating random sample data:" << std::endl;
+	std::cout << "Generating random sample data" << std::endl;
+	std::cout << "---------------------------------------------" << std::endl;
 
-	if (regression) {
+	if (type == "reg") {
+		std::cout << "ELM Regression:" << std::endl;
 		std::cout << "Feature data from uniform float range (-5, 5)" << std::endl;
 		std::cout << "Label data from uniform float range (-200, 200)" << std::endl;
 
@@ -225,7 +238,8 @@ void TestGenData(bool regression=false) {
 			test_y(i, 0) = qr_distr(gen);
 		}
 	}
-	else {
+	else if (type == "clf") {
+		std::cout << "ELM Classification:" << std::endl;
 		std::cout << "Feature data from uniform float range (-5, 5)" << std::endl;
 		std::cout << "Label data from uniform int range (0, 1)" << std::endl;
 
@@ -248,11 +262,11 @@ void TestGenData(bool regression=false) {
 	}
 
 	// Testing ELM
-	ELM elm = ELM(data_x.cols(), 20, 1);
+	ELM elm = ELM(data_x.cols(), 20, 1, type);
 
 	elm.Train(data_x, data_y);
 
 	Eigen::MatrixXf y_pred = elm.Predict(test_x);
 	
-	elm.Score(test_y, y_pred, regression);
+	elm.Score(test_y, y_pred);
 }

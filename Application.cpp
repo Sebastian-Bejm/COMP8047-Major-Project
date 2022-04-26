@@ -2,15 +2,10 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
-#include "GameObject/GameObject.h"
-#include "MainSystems/ObjectTracker.h"
 #include "Rendering/Renderer.h"
 #include "Physics/PhysicsWorld.h"
-#include "MainSystems/MazeGenerator.h"
-#include "MainSystems/ObstructionGenerator.h"
-#include "MainSystems/GameManager.h"
-#include "AI/Agent.h"
 #include "Utility/FPSCounter.h"
+#include "AI/Agent.h"
 #include "AI/QLearn.h"
 #include "AI/SampleData.h"
 
@@ -85,8 +80,6 @@ int Teardown() {
 }
 
 int main() {
-
-	//TestGenData();
 
 	// Initalize everything required for engine
 	Initialize();
