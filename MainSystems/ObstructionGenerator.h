@@ -2,7 +2,7 @@
 
 #include "MazeGenerator.h"
 #include "ObjectTracker.h"
-#include "PhysicsWorld.h"
+#include "Physics/PhysicsWorld.h"
 
 class ObstructionGenerator
 {

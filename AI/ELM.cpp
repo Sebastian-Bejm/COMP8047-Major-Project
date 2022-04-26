@@ -1,10 +1,11 @@
 #include "ELM.h"
 
 // Initialize ELM with input and hidden size
-ELM::ELM(int inputSize, int hiddenSize, int outputSize, bool verbose) {
+ELM::ELM(int inputSize, int hiddenSize, int outputSize, std::string type, bool verbose) {
 	this->inputSize = inputSize;
 	this->hiddenSize = hiddenSize;
 	this->outputSize = outputSize;
+	this->type = type;
 
 	std::random_device rand_dev;
 	std::mt19937 gen(rand_dev());
@@ -33,7 +34,12 @@ Eigen::MatrixXf ELM::Train(Eigen::MatrixXf X, Eigen::MatrixXf Y) {
 
 	// calculate the hidden layer output matrix
 	H = (X * weights.transpose()) + bias.replicate(X.rows(), 1);
-	H = ReLuActivation(H);
+	if (type == "clf") {
+		H = Sigmoid(H);
+	}
+	else if (type == "reg") {
+		H = ReLu(H);
+	}
 
 	// calculate the Moore-Penrose psuedoinverse matrix using SVD method
 	Eigen::JacobiSVD<Eigen::MatrixXf> svd(H, Eigen::ComputeThinU | Eigen::ComputeThinV);
@@ -54,18 +60,23 @@ Eigen::MatrixXf ELM::Train(Eigen::MatrixXf X, Eigen::MatrixXf Y) {
 
 // Predict the results of the training process using test data
 Eigen::MatrixXf ELM::Predict(Eigen::MatrixXf X) {
-	Eigen::MatrixXf pred = ReLuActivation((X * weights.transpose()) + bias.replicate(X.rows(), 1)) * beta;
-
+	Eigen::MatrixXf pred;
+	if (type == "clf") {
+		pred = Sigmoid((X * weights.transpose()) + bias.replicate(X.rows(), 1)) * beta;
+	}
+	else if (type == "reg") {
+		pred = ReLu((X * weights.transpose()) + bias.replicate(X.rows(), 1)) * beta;
+	}
 	return pred;
 }
 
-// Sigmoid activation function
-Eigen::MatrixXf ELM::SigmoidActivation(Eigen::MatrixXf X) {
+// Sigmoid activation function: for binary class classification
+Eigen::MatrixXf ELM::Sigmoid(Eigen::MatrixXf X) {
 	return (1 + (-X.array()).exp()).cwiseInverse();
 }
 
-// Rectified linear activation function
-Eigen::MatrixXf ELM::ReLuActivation(Eigen::MatrixXf X) {
+// Rectified linear activation function: for regression
+Eigen::MatrixXf ELM::ReLu(Eigen::MatrixXf X) {
 	Eigen::MatrixXf relu = Eigen::MatrixXf(X.rows(), X.cols());
 	for (size_t i = 0; i < X.rows(); i++) {
 		for (size_t j = 0; j < X.cols(); j++) {
@@ -84,10 +95,10 @@ Eigen::MatrixXf ELM::ReLuActivation(Eigen::MatrixXf X) {
 // Calculate the accuracy and loss based on predictions
 // For classification we calculate simple accuracy between actual and test data
 // For regression we calculate the mean absolute error
-void ELM::Score(Eigen::MatrixXf YTest, Eigen::MatrixXf YPred, bool regression) {
+void ELM::Score(Eigen::MatrixXf YTest, Eigen::MatrixXf YPred) {
 	int total = YTest.rows();
 
-	if (regression) {
+	if (type == "reg") {
 		float sum = 0;
 		for (int i = 0; i < total; i++) {
 			sum += abs(YTest(i, 0) - YPred(i, 0));
@@ -96,7 +107,7 @@ void ELM::Score(Eigen::MatrixXf YTest, Eigen::MatrixXf YPred, bool regression) {
 		float error = sum / total;
 		std::cout << "Mean absolute error: " << error << " using " << hiddenSize << " hidden nodes" << std::endl;
 	}
-	else {
+	else if (type == "clf") {
 		int correct = 0;
 
 		for (int i = 0; i < total; i++) {

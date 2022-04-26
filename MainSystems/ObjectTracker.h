@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "GameObject.h"
+#include "GameObject/GameObject.h"
 
 class ObjectTracker
 {

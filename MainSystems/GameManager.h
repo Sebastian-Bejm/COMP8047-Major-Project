@@ -3,9 +3,9 @@
 #include "ObstructionGenerator.h"
 #include "MazeGenerator.h"
 #include "ObjectTracker.h"
-#include "PhysicsWorld.h"
+#include "Physics/PhysicsWorld.h"
 #include "TimeTracker.h"
-#include "Agent.h"
+#include "AI/Agent.h"
 
 class GameManager
 {

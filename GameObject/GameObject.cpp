@@ -81,20 +81,19 @@ std::string GameObject::GetTag() {
 
 // Get the ID of the texture image passed into the object
 int GameObject::GetTextureID() {
-	std::string folderPath = "Textures/" + imageFile;
-	if (imageFile == "Textures/cyber.jpg") {
+	if (imageFile == CYBER_TEX) {
 		return 0;
 	}
-	else if (imageFile == "Textures/brick.png") {
+	else if (imageFile == BRICK_TEX) {
 		return 1;
 	}
-	else if (imageFile == "Textures/start_tex.jpg") {
+	else if (imageFile == START_TEX) {
 		return 2;
 	}
-	else if (imageFile == "Textures/end_tex.jpg") {
+	else if (imageFile == END_TEX) {
 		return 3;
 	}
-	else if (imageFile == "Textures/lava.png") {
+	else if (imageFile == LAVA_TEX) {
 		return 4;
 	}
 	return -1;

@@ -13,12 +13,12 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Character.h"
-#include "Time.h"
-#include "Camera.h"
-#include "ObjectTracker.h"
+#include "Utility/Time.h"
+#include "MainSystems/Camera.h"
+#include "MainSystems/ObjectTracker.h"
 #include "ShapeDetails.h"
-#include "TimeTracker.h"
-#include "GameManager.h"
+#include "MainSystems/TimeTracker.h"
+#include "MainSystems/GameManager.h"
 
 extern GLFWwindow* window;
 

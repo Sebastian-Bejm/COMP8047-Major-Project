@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Shader.h"
-#include "Camera.h"
+#include "Rendering/Shader.h"
+#include "MainSystems/Camera.h"
 #include "Transform.h"
 #include "RigidBody.h"
+#include "Utility/Constants.h"
 
 class GameObject
 {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glad/glad.h>
-#include "GLMHeader.h"
+#include "Utility/GLMHeader.h"
 
 // Text character structure
 struct Character {

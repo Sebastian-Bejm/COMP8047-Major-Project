@@ -3,8 +3,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "GLMHeader.h"
-#include "Shader.h"
+#include "Utility/GLMHeader.h"
+#include "Rendering/Shader.h"
 
 class Camera {
 public:
@@ -13,7 +13,6 @@ public:
 
 	void SetPosition(glm::vec3 newPosition);
 	void SetOrthoMatrix(float left, float right, float bottom, float top, float nearPlane, float farPlane);
-	void SetPerspectiveMatrix(float fovDeg, float nearPlane, float farPlane);
 	void ProcessInput(GLFWwindow *window, float deltaTime);
 
 	glm::mat4 GetCameraMatrix(); 
@@ -25,7 +24,6 @@ private:
 	float cameraSpeed = 0.005f;
 	float sensitivity = 100.0f;
 
-	bool isPerspective = false;
 	bool firstClick = true;
 
 	int viewWidth;

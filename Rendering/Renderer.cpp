@@ -69,7 +69,7 @@ int Renderer::Init(glm::vec4 backgroundColour, int windowWidth, int windowHeight
 	LoadFreetype();
 
 	textProjectionMatrix = glm::ortho(0.0f, (float)windowWidth, 0.0f, (float)windowHeight);
-	textShader = Shader("FTTextVertShader.vs", "FTTextFragShader.fs");
+	textShader = Shader(FTTEXT_VS, FTTEXT_FS);
 
 	return 0;
 }
@@ -118,11 +118,11 @@ void Renderer::PrepareGLBuffers() {
 // Load textures into memory
 void Renderer::LoadTextures() {
 	// Order image according to enum in GameObject
-	std::vector<std::string> images = { "Textures/cyber.jpg", 
-		"Textures/brick.png", 
-		"Textures/start_tex.jpg", 
-		"Textures/end_tex.jpg", 
-		"Textures/lava.png"};
+	std::vector<std::string> images = { CYBER_TEX, 
+		BRICK_TEX, 
+		START_TEX, 
+		END_TEX, 
+		LAVA_TEX};
 
 	for (std::string image : images) {
 		GLenum format = NULL;

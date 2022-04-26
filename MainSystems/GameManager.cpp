@@ -7,8 +7,8 @@ GameManager& GameManager::GetInstance() {
 
 // Initialize the shaders to be used
 void GameManager::LoadShaders() {
-	Shader crateShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
-	Shader brickShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
+	Shader crateShader = Shader(TEXTURE_VS, TEXTURE_FS);
+	Shader brickShader = Shader(TEXTURE_VS, TEXTURE_FS);
 
 	shaderStorage.push_back(crateShader);
 	shaderStorage.push_back(brickShader);
@@ -37,7 +37,7 @@ void GameManager::LoadScene() {
 				glm::vec3 agentScale = glm::vec3(0.6f, 0.6f, 1.0f);
 
 				// The agent is the first object added to the object tracker
-				GameObject agent("agent", "Textures/cyber.jpg", shaderStorage[0], startPos, rotation, agentScale);
+				GameObject agent("agent", CYBER_TEX, shaderStorage[0], startPos, rotation, agentScale);
 				agent.SetBodyType(b2_dynamicBody);
 
 				trackerInstance->AddObject(agent);
@@ -45,7 +45,7 @@ void GameManager::LoadScene() {
 
 				// Render an object representing the entrance
 				glm::vec3 startPointPos = glm::vec3(x, -y, -5.0f);
-				GameObject startingPoint("point", "Textures/start_tex.jpg", shaderStorage[0], startPointPos, rotation, generalScale);
+				GameObject startingPoint("point", START_TEX, shaderStorage[0], startPointPos, rotation, generalScale);
 
 				trackerInstance->AddObject(startingPoint);
 				worldInstance->AddObject(&startingPoint);
@@ -54,7 +54,7 @@ void GameManager::LoadScene() {
 			// Render an object representing the exit
 			if (maze[r][c].IsExit()) {
 				glm::vec3 endPointPos = glm::vec3(x, -y, -5.0f);
-				GameObject endingPoint("point", "Textures/end_tex.jpg", shaderStorage[0], endPointPos, rotation, generalScale);
+				GameObject endingPoint("point", END_TEX, shaderStorage[0], endPointPos, rotation, generalScale);
 
 				trackerInstance->AddObject(endingPoint);
 				worldInstance->AddObject(&endingPoint);
@@ -64,7 +64,7 @@ void GameManager::LoadScene() {
 			if (maze[r][c].IsWall()) {
 				glm::vec3 position = glm::vec3(x, -y, 0.0f);
 
-				GameObject wall("wall", "Textures/brick.png", shaderStorage[1], position, rotation, generalScale);
+				GameObject wall("wall", BRICK_TEX, shaderStorage[1], position, rotation, generalScale);
 
 				trackerInstance->AddObject(wall);
 				worldInstance->AddObject(&wall);
@@ -91,7 +91,6 @@ void GameManager::Update() {
 
 	// Agent performs its pathfinding
 	pathfindingAgent.MoveUpdate();
-
 
 	if (agent != nullptr) {
 		// Check if agent has reached the goal, then start the grace time before starting a new maze
@@ -123,7 +122,7 @@ void GameManager::Update() {
 
 // Loads a new scene: generates a new maze, start/end point, and agent in new positions
 void GameManager::LoadNewScene() {
-	MazeGenerator::GetInstance().InitMaze(15, 15, 50);
+	MazeGenerator::GetInstance().InitMaze(MAZE_ROWS, MAZE_COLS, WALLS_TO_REMOVE);
 	MazeGenerator::GetInstance().Generate();
 
 	LoadScene();

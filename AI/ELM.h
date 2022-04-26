@@ -9,19 +9,20 @@ class ELM
 {
 public:
 
-	ELM(int inputSize, int hiddenSize, int outputSize, bool verbose=false);
+	ELM(int inputSize, int hiddenSize, int outputSize, std::string type="clf", bool verbose = false);
 
 	Eigen::MatrixXf Train(Eigen::MatrixXf X, Eigen::MatrixXf Y);
 	Eigen::MatrixXf Predict(Eigen::MatrixXf X);
-	void Score(Eigen::MatrixXf YTest, Eigen::MatrixXf YPred, bool regression=false);
+	void Score(Eigen::MatrixXf YTest, Eigen::MatrixXf YPred);
 
 private:
+
+	std::string type;
 
 	int inputSize, hiddenSize, outputSize;
 	Eigen::MatrixXf weights, bias;
 	Eigen::MatrixXf H, beta;
 
-	Eigen::MatrixXf SigmoidActivation(Eigen::MatrixXf X);
-	Eigen::MatrixXf ReLuActivation(Eigen::MatrixXf X);
-
+	Eigen::MatrixXf Sigmoid(Eigen::MatrixXf X);
+	Eigen::MatrixXf ReLu(Eigen::MatrixXf X);
 };
