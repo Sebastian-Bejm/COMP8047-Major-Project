@@ -12,7 +12,7 @@
 #include "Agent.h"
 #include "FPSCounter.h"
 #include "QLearn.h"
-#include "GenData.h"
+#include "SampleData.h"
 
 const int windowWidth = 1200, windowHeight = 980;
 const int mazeRows = 15, mazeCols = 15;

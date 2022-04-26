@@ -74,7 +74,7 @@ std::vector<std::vector<float>> ReadIrisDataset()
 
 
 template <typename T>
-std::vector< std::vector<T>> vect_Transpose(std::vector<std::vector<T>>& input_Vector)
+std::vector<std::vector<T>> vect_Transpose(std::vector<std::vector<T>>& input_Vector)
 {
 	if (input_Vector.size() > 0)
 	{
@@ -90,29 +90,6 @@ std::vector< std::vector<T>> vect_Transpose(std::vector<std::vector<T>>& input_V
 
 	}
 	return input_Vector;
-}
-
-std::vector<std::vector<float>> split_by_class(std::vector<std::vector<float>>& dataset, float data_class)
-{
-	std::vector< std::vector<float> > temp_out;
-	std::vector< std::vector<float> > out_Vector;
-	int counter = 0;
-	std::for_each(dataset[4].begin(), dataset[4].end(), [&](float& item_class)
-	{
-		if (item_class == data_class)
-		{
-			std::vector<float> temp;
-			temp.push_back(dataset[0][counter]);
-			temp.push_back(dataset[1][counter]);
-			temp.push_back(dataset[2][counter]);
-			temp.push_back(dataset[3][counter]);
-			temp.push_back(dataset[4][counter]);
-			temp_out.push_back(temp);
-		}
-		counter++;
-	});
-	out_Vector = vect_Transpose(temp_out);
-	return out_Vector;
 }
 
 std::vector<std::vector<float>> vector_Test_Split(const std::vector<std::vector<float>>& vect, float percent)
