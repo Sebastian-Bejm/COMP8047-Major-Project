@@ -61,6 +61,12 @@ void QLearn::TrainQLearn(bool verbose, int logRate) {
 	// Init QTable
 	Eigen::MatrixXd qTable = Eigen::MatrixXd::Zero(maze.size() * maze[0].size(), NUM_ACTIONS);
 
+	if (verbose) {
+		std::cout << "----------------------------------" << std::endl;
+		std::cout << "Q-Learn training for " << numEpisodes << " episodes" << std::endl;
+		std::cout << "----------------------------------" << std::endl;
+	}
+
 	auto startTime = std::chrono::system_clock::now();
 
 	QMaze qMaze(mazeNumRep, startPos, endPos);
@@ -101,7 +107,7 @@ void QLearn::TrainQLearn(bool verbose, int logRate) {
 		if (verbose) {
 			if (i % logRate == 0) {
 				std::cout << "Run: " << i << std::endl;
-				std::cout << steps << std::endl;
+				std::cout << "Number of steps made during this run: " << steps << std::endl;
 			}
 			if (i == numEpisodes - 1) {
 				std::cout << "Steps on final run: " << steps << std::endl;

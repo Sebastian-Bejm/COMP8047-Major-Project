@@ -25,4 +25,5 @@ private:
 
 	Eigen::MatrixXf Sigmoid(Eigen::MatrixXf X);
 	Eigen::MatrixXf ReLu(Eigen::MatrixXf X);
+	// Future TODO: multi classification
 };

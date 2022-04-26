@@ -37,7 +37,7 @@ void Camera::SetOrthoMatrix(float left, float right, float bottom, float top, fl
 // Processes key and mouse inputs
 // This is mainly used to look around our scene to ensure everything looks correct
 void Camera::ProcessInput(GLFWwindow* window, float deltaTime) {
-	float speed = 2.0f * deltaTime;
+	float speed = 2.5f * deltaTime;
 
 	// WASD moving
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
