@@ -213,6 +213,7 @@
     <ClInclude Include="Rendering\VAO.h" />
     <ClInclude Include="Rendering\VBO.h" />
     <ClInclude Include="Rendering\Vertex.h" />
+    <ClInclude Include="Utility\Constants.h" />
     <ClInclude Include="Utility\FileSystem.h" />
     <ClInclude Include="Utility\FPSCounter.h" />
     <ClInclude Include="Utility\GLMHeader.h" />

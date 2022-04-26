@@ -14,12 +14,6 @@
 #include "AI/QLearn.h"
 #include "AI/SampleData.h"
 
-const int windowWidth = 1200, windowHeight = 980;
-const int mazeRows = 15, mazeCols = 15;
-const int wallToRemove = 50;
-
-const float viewBounds[] = { -9.0f, 10.0f, -9.0f, 9.0f };
-
 ObjectTracker* objectTracker;
 Renderer* renderer;
 PhysicsWorld* physicsWorld;
@@ -35,15 +29,15 @@ int Initialize() {
 	glm::fvec4 backgroundColour(180.0f / 255.0f, 240.0f / 255.0f, 239.0f / 255.0f, 1.0f);
 
 	renderer = Renderer::GetInstance();
-	renderer->Init(backgroundColour, windowWidth, windowHeight);
-	renderer->SetView(viewBounds[0], viewBounds[1], viewBounds[2], viewBounds[3]);
+	renderer->Init(backgroundColour, WINDOW_WIDTH, WINDOW_HEIGHT);
+	renderer->SetView(VIEW_BOUNDS[0], VIEW_BOUNDS[1], VIEW_BOUNDS[2], VIEW_BOUNDS[3]);
 
 	objectTracker = &ObjectTracker::GetInstance();
 	physicsWorld = &PhysicsWorld::GetInstance();
 
 	// Generate a maze of size m x n (use odd numbers to avoid wall issue)
 	mazeGenerator = &MazeGenerator::GetInstance();
-	mazeGenerator->InitMaze(mazeRows, mazeCols, wallToRemove);
+	mazeGenerator->InitMaze(MAZE_ROWS, MAZE_COLS, WALLS_TO_REMOVE);
 	mazeGenerator->Generate();
 
 	obsGenerator = &ObstructionGenerator::GetInstance();
@@ -51,7 +45,9 @@ int Initialize() {
 	gameManager = &GameManager::GetInstance();
 	gameManager->LoadShaders();
 
-	camera = Camera(windowWidth, windowHeight, glm::vec3((float)(mazeCols/2), (float)(-mazeRows/2), 0));
+	float centerX = (float)(MAZE_COLS / 2);
+	float centerY = (float)(-MAZE_ROWS / 2);
+	camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT, glm::vec3(centerX, centerY, 0));
 	renderer->SetCamera(camera);
 
 	return 0;
@@ -89,6 +85,8 @@ int Teardown() {
 }
 
 int main() {
+
+	//TestGenData();
 
 	// Initalize everything required for engine
 	Initialize();

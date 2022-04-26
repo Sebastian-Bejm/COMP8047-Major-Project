@@ -118,11 +118,11 @@ void Renderer::PrepareGLBuffers() {
 // Load textures into memory
 void Renderer::LoadTextures() {
 	// Order image according to enum in GameObject
-	std::vector<std::string> images = { "Textures/cyber.jpg", 
-		"Textures/brick.png", 
-		"Textures/start_tex.jpg", 
-		"Textures/end_tex.jpg", 
-		"Textures/lava.png"};
+	std::vector<std::string> images = { CYBER_TEX, 
+		BRICK_TEX, 
+		START_TEX, 
+		END_TEX, 
+		LAVA_TEX};
 
 	for (std::string image : images) {
 		GLenum format = NULL;

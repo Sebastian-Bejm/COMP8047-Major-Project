@@ -244,6 +244,9 @@
     <ClInclude Include="GameObject\Transform.h">
       <Filter>Header Files\GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="Utility\Constants.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Textures\start_tex.jpg">

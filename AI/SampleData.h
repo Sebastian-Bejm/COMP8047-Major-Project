@@ -202,7 +202,12 @@ void TestGenData(bool regression=false) {
 	test_x = Eigen::MatrixXf::Zero(test_size, 20);
 	test_y = Eigen::MatrixXf::Zero(test_size, 1);
 
+	std::cout << "Generating random sample data:" << std::endl;
+
 	if (regression) {
+		std::cout << "Feature data from uniform float range (-5, 5)" << std::endl;
+		std::cout << "Label data from uniform float range (-200, 200)" << std::endl;
+
 		// regression data
 		// gen training data
 		for (int i = 0; i < data_x.rows(); i++) {
@@ -221,6 +226,9 @@ void TestGenData(bool regression=false) {
 		}
 	}
 	else {
+		std::cout << "Feature data from uniform float range (-5, 5)" << std::endl;
+		std::cout << "Label data from uniform int range (0, 1)" << std::endl;
+
 		// classification data
 		// gen training data
 		for (int i = 0; i < data_x.rows(); i++) {

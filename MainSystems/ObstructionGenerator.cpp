@@ -62,7 +62,7 @@ void ObstructionGenerator::GenerateObstruction(MazeCell obsCell) {
 	Shader lavaShader = Shader("TextureVertShader.vs", "TextureFragShader.fs");
 
 	glm::vec3 obsPos = glm::vec3((float)obsCell.GetColumn(), (float)(-obsCell.GetRow()), 0.0f);
-	GameObject obstruction("obstruction", "Textures/lava.png", lavaShader, obsPos, glm::vec3(0.0f), glm::vec3(1.0f));
+	GameObject obstruction("obstruction", LAVA_TEX, lavaShader, obsPos, glm::vec3(0.0f), glm::vec3(1.0f));
 
 	ObjectTracker::GetInstance().AddObject(obstruction);
 	PhysicsWorld::GetInstance().AddObject(&obstruction);
