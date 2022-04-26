@@ -36,10 +36,27 @@ void Camera::SetOrthoMatrix(float left, float right, float bottom, float top, fl
 
 // Processes key and mouse inputs
 // This is mainly used to look around our scene to ensure everything looks correct
-void Camera::ProcessInput(GLFWwindow* window, float deltaTime) {
-	float speed = 2.5f * deltaTime;
+void Camera::ProcessInput(GLFWwindow* window, float deltaTime, float& left, float& right, float& bottom, float& top) {
+	float speed = 3.0f * deltaTime;
+	float zoomFactor = 2.0f * deltaTime;
 
-	// WASD moving
+	// Q and E zoom camera
+	// zoom out
+	if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_KEY_KP_SUBTRACT) {
+		left -= zoomFactor;
+		right += zoomFactor;
+		bottom -= zoomFactor;
+		top += zoomFactor;
+	}
+	// zoom in
+	if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_KEY_KP_ADD) {
+		left += zoomFactor;
+		right -= zoomFactor;
+		bottom += zoomFactor;
+		top -= zoomFactor;
+	}
+
+	// WASD pan camera
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 		position += speed * -glm::normalize(glm::cross(front, up));
 	}
