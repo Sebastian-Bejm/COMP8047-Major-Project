@@ -2,17 +2,17 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
-#include "GameObject.h"
-#include "ObjectTracker.h"
-#include "Renderer.h"
-#include "PhysicsWorld.h"
-#include "MazeGenerator.h"
-#include "ObstructionGenerator.h"
-#include "GameManager.h"
-#include "Agent.h"
-#include "FPSCounter.h"
-#include "QLearn.h"
-#include "SampleData.h"
+#include "GameObject/GameObject.h"
+#include "MainSystems/ObjectTracker.h"
+#include "Rendering/Renderer.h"
+#include "Physics/PhysicsWorld.h"
+#include "MainSystems/MazeGenerator.h"
+#include "MainSystems/ObstructionGenerator.h"
+#include "MainSystems/GameManager.h"
+#include "AI/Agent.h"
+#include "Utility/FPSCounter.h"
+#include "AI/QLearn.h"
+#include "AI/SampleData.h"
 
 const int windowWidth = 1200, windowHeight = 980;
 const int mazeRows = 15, mazeCols = 15;

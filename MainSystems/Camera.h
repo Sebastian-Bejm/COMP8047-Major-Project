@@ -3,8 +3,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "GLMHeader.h"
-#include "Shader.h"
+#include "Utility/GLMHeader.h"
+#include "Rendering/Shader.h"
 
 class Camera {
 public:

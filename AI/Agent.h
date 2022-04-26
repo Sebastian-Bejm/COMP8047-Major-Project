@@ -1,7 +1,7 @@
 #pragma once
 
-#include "MazeGenerator.h"
-#include "ObjectTracker.h"
+#include "MainSystems/MazeGenerator.h"
+#include "MainSystems/ObjectTracker.h"
 #include "QLearn.h"
 
 enum Mode {

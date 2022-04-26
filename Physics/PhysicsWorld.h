@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-#include "GameObject.h"
-#include "ObjectTracker.h"
+#include "GameObject/GameObject.h"
+#include "MainSystems/ObjectTracker.h"
 #include "ContactListener.h"
 
 class PhysicsWorld

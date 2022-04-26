@@ -12,7 +12,7 @@ const float Iris_unknown = 3;
 
 std::vector<std::vector<float>> ReadIrisDataset()
 {
-	std::ifstream myfile("Sample Data/iris.data");
+	std::ifstream myfile("Data/iris.data");
 	std::string line;
 	std::vector<std::vector<float>> Iris_Dataset;
 	std::vector<float> temp_sepal_len;

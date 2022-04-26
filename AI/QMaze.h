@@ -5,7 +5,7 @@
 #include <iostream>
 #include <tuple>
 
-#include "MazeCell.h"
+#include "MainSystems/MazeCell.h"
 
 struct State {
 	State() {

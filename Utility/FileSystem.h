@@ -5,7 +5,7 @@
 #include <vector>
 #include <iostream>
 
-#include "MazeCell.h"
+#include "MainSystems/MazeCell.h"
 
 class FileSystem
 {
