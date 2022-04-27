@@ -58,6 +58,9 @@
     <Filter Include="Resource Files\Shaders">
       <UniqueIdentifier>{b305c81b-754f-41bc-a4ea-b7b07b043405}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Fonts">
+      <UniqueIdentifier>{d725f165-f705-4400-878d-e5670a4fd5bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
@@ -272,5 +275,10 @@
     <Text Include="Sample Data\maze.txt">
       <Filter>Resource Files\Data</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Fonts\arial.ttf">
+      <Filter>Resource Files\Fonts</Filter>
+    </Font>
   </ItemGroup>
 </Project>

@@ -162,7 +162,7 @@ void Renderer::LoadFreetype() {
 
 	// load font file as a texture
 	FT_Face face;
-	if (FT_New_Face(ft, "arial.ttf", 0, &face))
+	if (FT_New_Face(ft, ARIAL_TTF, 0, &face))
 	{
 		std::cerr << "ERROR::FREETYPE: Failed to load font" << std::endl;
 		return;

@@ -61,6 +61,7 @@ int RunEngine() {
 	PhysicsUpdate();
 
 	gameManager->Update();
+	obsGenerator->Update();
 
 	// graphics comes after physics
 	GraphicsUpdate();
@@ -96,10 +97,7 @@ int main() {
 		//counter.NextFrame();
 
 		// Run the engine systems and its updates
-		PhysicsUpdate();
-		gameManager->Update();
-		obsGenerator->Update(); 
-		GraphicsUpdate();
+		RunEngine();
 	}
 
 	// Cleanup objects and destroy/exit window when done
