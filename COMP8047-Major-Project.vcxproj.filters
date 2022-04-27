@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Resource Files\Shaders">
-      <UniqueIdentifier>{e35a8329-4e36-49c7-988f-e1bb475aabbc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\GameObject">
       <UniqueIdentifier>{21491840-9e95-4c85-943b-dc38dcf31c86}</UniqueIdentifier>
     </Filter>
@@ -31,12 +28,6 @@
     <Filter Include="Header Files\Physics">
       <UniqueIdentifier>{f0f654e6-bcaf-44a6-8d4b-be9ff4125637}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Maze">
-      <UniqueIdentifier>{3e0ba005-8e18-467e-a56f-2f622e78b6ff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Maze">
-      <UniqueIdentifier>{1b5ea42d-6924-480c-86a7-091446e55ae0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Rendering">
       <UniqueIdentifier>{cc9ce0d1-ab90-4d93-9fdb-af71b1709b1b}</UniqueIdentifier>
     </Filter>
@@ -49,218 +40,216 @@
     <Filter Include="Source Files\Utility">
       <UniqueIdentifier>{5ecbc8a2-1ec2-4293-a1a7-426fefec51fa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\MazeData">
-      <UniqueIdentifier>{2a371245-9887-45a4-b13f-254e26d05b9b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Network">
-      <UniqueIdentifier>{a6a8ac78-dc4d-42d7-8839-9b12e5be8063}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Network">
-      <UniqueIdentifier>{7fe8f00b-857d-448f-b59d-b5b19d045a4b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\MainSystems">
       <UniqueIdentifier>{b81d5aae-ec5c-43b0-86b6-db021ddd202c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\MainSystems">
       <UniqueIdentifier>{ed14e745-131e-4e88-b809-e40a1cf0c42c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\AI">
+      <UniqueIdentifier>{8c852445-5f07-469a-b7ea-ab506209e82f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI">
+      <UniqueIdentifier>{afd4c264-c28e-4563-981f-a6129f47cb33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Data">
+      <UniqueIdentifier>{ab5333cd-362d-4435-b19b-8dd2aa22e2a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{b305c81b-754f-41bc-a4ea-b7b07b043405}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Fonts">
+      <UniqueIdentifier>{d725f165-f705-4400-878d-e5670a4fd5bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Main.cpp">
+    <ClCompile Include="Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files\GameObject</Filter>
+    <ClCompile Include="AI\Agent.cpp">
+      <Filter>Source Files\AI</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files\GameObject</Filter>
+    <ClCompile Include="AI\ELM.cpp">
+      <Filter>Source Files\AI</Filter>
     </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>Source Files\GameObject</Filter>
+    <ClCompile Include="AI\QLearn.cpp">
+      <Filter>Source Files\AI</Filter>
     </ClCompile>
-    <ClCompile Include="PhysicsWorld.cpp">
+    <ClCompile Include="AI\QMaze.cpp">
+      <Filter>Source Files\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\ContactListener.cpp">
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="ContactListener.cpp">
+    <ClCompile Include="Physics\PhysicsWorld.cpp">
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="MazeCell.cpp">
-      <Filter>Source Files\Maze</Filter>
-    </ClCompile>
-    <ClCompile Include="MazeGenerator.cpp">
-      <Filter>Source Files\Maze</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Source Files\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>Source Files\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Source Files\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="stb.cpp">
-      <Filter>Source Files\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="FPSCounter.cpp">
+    <ClCompile Include="Utility\FileSystem.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="ELM.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="QMaze.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="FileSystem.cpp">
+    <ClCompile Include="Utility\FPSCounter.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="GameManager.cpp">
+    <ClCompile Include="Rendering\Renderer.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Shader.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\stb.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Texture.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="MainSystems\Camera.cpp">
       <Filter>Source Files\MainSystems</Filter>
     </ClCompile>
-    <ClCompile Include="ObjectTracker.cpp">
+    <ClCompile Include="MainSystems\GameManager.cpp">
       <Filter>Source Files\MainSystems</Filter>
     </ClCompile>
-    <ClCompile Include="ObstructionGenerator.cpp">
+    <ClCompile Include="MainSystems\MazeCell.cpp">
       <Filter>Source Files\MainSystems</Filter>
     </ClCompile>
-    <ClCompile Include="TimeTracker.cpp">
+    <ClCompile Include="MainSystems\MazeGenerator.cpp">
       <Filter>Source Files\MainSystems</Filter>
     </ClCompile>
-    <ClCompile Include="QLearn.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Agent.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="MainSystems\ObjectTracker.cpp">
       <Filter>Source Files\MainSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="MainSystems\ObstructionGenerator.cpp">
+      <Filter>Source Files\MainSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="MainSystems\TimeTracker.cpp">
+      <Filter>Source Files\MainSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\GameObject.cpp">
+      <Filter>Source Files\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Transform.cpp">
+      <Filter>Source Files\GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="DefaultFragShader.fs">
+    <None Include="Data\iris.data">
+      <Filter>Resource Files\Data</Filter>
+    </None>
+    <None Include="Shaders\DefaultFragShader.fs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="DefaultVertShader.vs">
+    <None Include="Shaders\DefaultVertShader.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="TextureFragShader.fs">
+    <None Include="Shaders\FTTextFragShader.fs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="TextureVertShader.vs">
+    <None Include="Shaders\FTTextVertShader.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="FTTextFragShader.fs">
+    <None Include="Shaders\TextureFragShader.fs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="FTTextVertShader.vs">
+    <None Include="Shaders\TextureVertShader.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EBO.h">
-      <Filter>Header Files\GameObject</Filter>
+    <ClInclude Include="AI\Agent.h">
+      <Filter>Header Files\AI</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Header Files\GameObject</Filter>
+    <ClInclude Include="Rendering\Character.h">
+      <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="VAO.h">
-      <Filter>Header Files\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="VBO.h">
-      <Filter>Header Files\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Header Files\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Header Files\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="Vertex.h">
-      <Filter>Header Files\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsWorld.h">
+    <ClInclude Include="Physics\ContactListener.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="ContactListener.h">
+    <ClInclude Include="Rendering\EBO.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ELM.h">
+      <Filter>Header Files\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\FileSystem.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\FPSCounter.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\GLMHeader.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\PhysicsWorld.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="RigidBody.h">
-      <Filter>Header Files\Physics</Filter>
+    <ClInclude Include="AI\QLearn.h">
+      <Filter>Header Files\AI</Filter>
     </ClInclude>
-    <ClInclude Include="MazeCell.h">
-      <Filter>Header Files\Maze</Filter>
+    <ClInclude Include="AI\QMaze.h">
+      <Filter>Header Files\AI</Filter>
     </ClInclude>
-    <ClInclude Include="MazeGenerator.h">
-      <Filter>Header Files\Maze</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer.h">
+    <ClInclude Include="Rendering\Renderer.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
+    <ClInclude Include="Rendering\Shader.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="ShapeDetails.h">
+    <ClInclude Include="Rendering\ShapeDetails.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
+    <ClInclude Include="Rendering\Texture.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="FPSCounter.h">
+    <ClInclude Include="Utility\Time.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Time.h">
-      <Filter>Header Files\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="GLMHeader.h">
-      <Filter>Header Files\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Character.h">
+    <ClInclude Include="Rendering\VAO.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="ELM.h">
-      <Filter>Header Files\Network</Filter>
+    <ClInclude Include="Rendering\VBO.h">
+      <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="QMaze.h">
-      <Filter>Header Files\Network</Filter>
+    <ClInclude Include="Rendering\Vertex.h">
+      <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="FileSystem.h">
-      <Filter>Header Files\Utility</Filter>
+    <ClInclude Include="AI\SampleData.h">
+      <Filter>Header Files\AI</Filter>
     </ClInclude>
-    <ClInclude Include="GameManager.h">
+    <ClInclude Include="MainSystems\Camera.h">
       <Filter>Header Files\MainSystems</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectTracker.h">
+    <ClInclude Include="MainSystems\GameManager.h">
       <Filter>Header Files\MainSystems</Filter>
     </ClInclude>
-    <ClInclude Include="ObstructionGenerator.h">
+    <ClInclude Include="MainSystems\MazeCell.h">
       <Filter>Header Files\MainSystems</Filter>
     </ClInclude>
-    <ClInclude Include="TimeTracker.h">
+    <ClInclude Include="MainSystems\MazeGenerator.h">
       <Filter>Header Files\MainSystems</Filter>
     </ClInclude>
-    <ClInclude Include="QLearn.h">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Agent.h">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
+    <ClInclude Include="MainSystems\ObstructionGenerator.h">
       <Filter>Header Files\MainSystems</Filter>
     </ClInclude>
-    <ClInclude Include="Tag.h">
+    <ClInclude Include="MainSystems\ObjectTracker.h">
+      <Filter>Header Files\MainSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="MainSystems\TimeTracker.h">
+      <Filter>Header Files\MainSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\GameObject.h">
       <Filter>Header Files\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="GenData.h">
-      <Filter>Header Files\Network</Filter>
+    <ClInclude Include="GameObject\RigidBody.h">
+      <Filter>Header Files\GameObject</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="maze.txt">
-      <Filter>Resource Files\MazeData</Filter>
-    </Text>
+    <ClInclude Include="GameObject\Transform.h">
+      <Filter>Header Files\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Constants.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Textures\start_tex.jpg">
@@ -281,5 +270,15 @@
     <Image Include="Textures\lava.png">
       <Filter>Resource Files\Textures</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Sample Data\maze.txt">
+      <Filter>Resource Files\Data</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Fonts\arial.ttf">
+      <Filter>Resource Files\Fonts</Filter>
+    </Font>
   </ItemGroup>
 </Project>
