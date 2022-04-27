@@ -20,11 +20,6 @@ void TimeTracker::StopTimer() {
 	}
 }
 
-// Get the current time as time point
-auto TimeTracker::GetCurrentTime() {
-	return std::chrono::system_clock::now();
-}
-
 // Get the time duration from the start as a string
 std::string TimeTracker::GetCurrentTimeString() {
 	auto currentTime = std::chrono::system_clock::now();

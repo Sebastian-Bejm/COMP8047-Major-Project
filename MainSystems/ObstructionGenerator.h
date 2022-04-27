@@ -11,7 +11,6 @@ public:
 	static ObstructionGenerator& GetInstance();
 
 	void Update();
-	void UpdateMarkedObstructions();
 
 	void StartGenerator(bool start);
 	bool GetMazeUpdates();
@@ -25,6 +24,7 @@ private:
 
 	const int revealRadius = 1.5f;
 
+	void UpdateMarkedObstructions();
 	void FindObstructions();
 	void GenerateObstruction(MazeCell obsCell);
 

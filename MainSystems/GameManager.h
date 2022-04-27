@@ -15,11 +15,7 @@ public:
 
 	void LoadShaders();
 	void LoadScene();
-
 	void Update();
-
-	void LoadNewScene();
-	void ResetScene();
 	void CleanScene(bool programExit=false);
 
 	int GetMazesCompleted();
@@ -35,6 +31,9 @@ private:
 	const int graceTime = 1000;
 
 	int mazesCompleted = 0;
+
+	void LoadNewScene();
+	void ResetScene();
 
 	void StartAgent(GameObject* agent, bool newUpdates = false);
 	bool InTerminalState(GameObject* agent);

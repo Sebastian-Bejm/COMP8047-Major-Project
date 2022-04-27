@@ -16,8 +16,7 @@ MazeGenerator* mazeGenerator;
 ObstructionGenerator* obsGenerator;
 GameManager* gameManager;
 
-Camera camera;
-FPSCounter counter = FPSCounter();
+//FPSCounter counter = FPSCounter();
 
 // Initialize all systems in the engine
 int Initialize() {
@@ -42,29 +41,22 @@ int Initialize() {
 
 	float centerX = (float)(MAZE_COLS / 2);
 	float centerY = (float)(-MAZE_ROWS / 2);
-	camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT, glm::vec3(centerX, centerY, 0));
+	Camera camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT, glm::vec3(centerX, centerY, 0));
 	renderer->SetCamera(camera);
 
 	return 0;
 }
 
-void PhysicsUpdate() {
-	physicsWorld->Update(objectTracker);
-}
-
-void GraphicsUpdate() {
-	renderer->Update(objectTracker);
-}
-
+// Run the engine and its systems updates
 int RunEngine() {
 	// Physics update comes first
-	PhysicsUpdate();
+	physicsWorld->Update(objectTracker);
 
 	gameManager->Update();
 	obsGenerator->Update();
 
 	// graphics comes after physics
-	GraphicsUpdate();
+	renderer->Update(objectTracker);
 
 	return 0;
 }

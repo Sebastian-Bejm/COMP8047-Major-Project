@@ -13,8 +13,6 @@ public:
 	void StartTimer();
 	void StopTimer();
 
-	auto GetCurrentTime();
-
 	std::string GetCurrentTimeString();
 	std::string GetLastBestTimeString();
 
