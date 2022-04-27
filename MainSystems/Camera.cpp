@@ -27,7 +27,7 @@ void Camera::SetPosition(glm::vec3 newPosition) {
 }
 
 // Set the view and orthographic projection matrices
-void Camera::SetOrthoMatrix(float left, float right, float bottom, float top, float nearPlane, float farPlane) {
+void Camera::SetOrthoMatrix(float left, float right, float bottom, float top) {
 	viewMatrix = glm::lookAt(position, position + front, up);
 	projectionMatrix = glm::ortho(left, right, bottom, top, nearPlane, farPlane);
 

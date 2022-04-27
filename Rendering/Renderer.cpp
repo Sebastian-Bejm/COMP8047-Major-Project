@@ -286,7 +286,7 @@ int Renderer::Update(ObjectTracker* tracker) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	camera.ProcessInput(window, deltaTime, viewLeft, viewRight, viewBottom, viewTop);
-	camera.SetOrthoMatrix(viewLeft, viewRight, viewBottom, viewTop, 0.1f, 100.0f);
+	camera.SetOrthoMatrix(viewLeft, viewRight, viewBottom, viewTop);
 
 	// Draw the game objects here with a reference to the camera
 	std::vector<GameObject> objects = tracker->GetAllObjects();

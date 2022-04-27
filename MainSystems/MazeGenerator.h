@@ -9,7 +9,6 @@
 #include <random>
 
 #include "MazeCell.h"
-#include "Utility/FileSystem.h"
 
 class MazeGenerator
 {
@@ -18,7 +17,6 @@ public:
 	static MazeGenerator& GetInstance();
 
 	void InitMaze(int rows, int cols, int wallsToRemove = 0);
-	void InitMaze(std::string filename);
 	void Generate();
 	void PrintMaze();
 

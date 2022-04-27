@@ -12,7 +12,7 @@ public:
 	Camera(int viewWidth, int viewHeight, glm::vec3 position);
 
 	void SetPosition(glm::vec3 newPosition);
-	void SetOrthoMatrix(float left, float right, float bottom, float top, float nearPlane, float farPlane);
+	void SetOrthoMatrix(float left, float right, float bottom, float top);
 	void ProcessInput(GLFWwindow *window, float deltaTime, float& left, float& right, float& bottom, float& top);
 
 	glm::mat4 GetCameraMatrix(); 
@@ -23,6 +23,9 @@ private:
 
 	int viewWidth;
 	int viewHeight;
+
+	float nearPlane = 0.1f;
+	float farPlane = 100.0f;
 
 	glm::vec3 position;
 	glm::vec3 front = glm::vec3(0.0f, 0.0f, -1.0f);

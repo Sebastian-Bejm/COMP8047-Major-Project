@@ -33,17 +33,6 @@ GameObject& ObjectTracker::GetObjectByTag(std::string objectTag) {
 	}
 }
 
-std::vector<std::reference_wrapper<GameObject>> ObjectTracker::GetObjectsByTag(std::string objectTag) {
-	std::vector<std::reference_wrapper<GameObject>> foundObjects;
-	for (size_t i = 0; i < objectStorage.size(); i++) {
-		if (objectStorage[i].GetTag() == objectTag) {
-			foundObjects.push_back(objectStorage[i]);
-		}
-	}
-	return foundObjects;
-}
-
-
 // Returns all the objects in this tracker
 std::vector<GameObject>& ObjectTracker::GetAllObjects() {
 	return objectStorage;
