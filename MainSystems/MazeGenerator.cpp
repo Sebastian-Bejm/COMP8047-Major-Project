@@ -79,17 +79,11 @@ void MazeGenerator::Generate() {
 	// Set the start and end points
 	CreateMazePositions();
 
-	PrintMaze();
-
-	std::cout << std::endl;
-	std::cout << std::endl;
-	std::cout << std::endl;
-
 	// Start trying to remove walls
 	RemoveWalls();
-	MarkObstructions();
 
-	PrintMaze();
+	// If there are locations where there are wall "islands" add more obstructions
+	MarkObstructions();
 }
 
 // Print the generated maze. Mainly used for debugging.
@@ -406,40 +400,40 @@ bool MazeGenerator::RemoveWall(int row, int col) {
 			}
 		}
 		else if (hasTop && !hasBottom) {
-			bool left = mazeCells[row + 1][col - 1].IsWall();
-			bool right = mazeCells[row + 1][col + 1].IsWall();
-			if (left || right) {
-				mazeCells[row][col].SetObstruction(true);
-				return true;
-			}
+		bool left = mazeCells[row + 1][col - 1].IsWall();
+		bool right = mazeCells[row + 1][col + 1].IsWall();
+		if (left || right) {
+			mazeCells[row][col].SetObstruction(true);
+			return true;
+		}
 		}
 
 	}
 	else if (evenRow && !evenCol) {
-		// Even row and uneven column
-		bool hasLeft = mazeCells[row][col - 2].IsWall();
-		bool hasRight = mazeCells[row][col + 2].IsWall();
+	// Even row and uneven column
+	bool hasLeft = mazeCells[row][col - 2].IsWall();
+	bool hasRight = mazeCells[row][col + 2].IsWall();
 
-		if (hasLeft && hasRight) {
+	if (hasLeft && hasRight) {
+		mazeCells[row][col].SetObstruction(true);
+		return true;
+	}
+	else if (!hasLeft && hasRight) {
+		bool top = mazeCells[row - 1][col - 1].IsWall();
+		bool bottom = mazeCells[row + 1][col - 1].IsWall();
+		if (top || bottom) {
 			mazeCells[row][col].SetObstruction(true);
 			return true;
 		}
-		else if (!hasLeft && hasRight) {
-			bool top = mazeCells[row - 1][col - 1].IsWall();
-			bool bottom = mazeCells[row + 1][col - 1].IsWall();
-			if (top || bottom) {
-				mazeCells[row][col].SetObstruction(true);
-				return true;
-			}
+	}
+	else if (hasLeft && !hasRight) {
+		bool top = mazeCells[row - 1][col + 1].IsWall();
+		bool bottom = mazeCells[row + 1][col + 1].IsWall();
+		if (top || bottom) {
+			mazeCells[row][col].SetObstruction(true);
+			return true;
 		}
-		else if (hasLeft && !hasRight) {
-			bool top = mazeCells[row - 1][col + 1].IsWall();
-			bool bottom = mazeCells[row + 1][col + 1].IsWall();
-			if (top || bottom) {
-				mazeCells[row][col].SetObstruction(true);
-				return true;
-			}
-		}
+	}
 	}
 
 	return false;
@@ -460,10 +454,10 @@ void MazeGenerator::MarkObstructions() {
 		for (size_t j = 0; j < mazeCells[i].size(); j++) {
 			MazeCell currentCell = mazeCells[i][j];
 			// check index so we dont get an out of bounds error
-			if (currentCell.IsWall() && i > 1 && j > 1 && i < mazeCells.size()-1 && j < mazeCells.size()-1) {
+			if (currentCell.IsWall() && i > 1 && j > 1 && i < mazeCells.size() - 1 && j < mazeCells.size() - 1) {
 
 				// check if there are surrounding walls in the four directions
-				if (!mazeCells[i - 1][j].IsWall() && !mazeCells[i + 1][j].IsWall() 
+				if (!mazeCells[i - 1][j].IsWall() && !mazeCells[i + 1][j].IsWall()
 					&& !mazeCells[i][j - 1].IsWall() && !mazeCells[i][j + 1].IsWall()) {
 
 					// generate a random spot for obstruction
@@ -487,8 +481,26 @@ void MazeGenerator::MarkObstructions() {
 
 					mazeCells[i + y][j + x].SetObstruction(true);
 				}
-				
+
 			}
 		}
+	}
+
+	// remove obstructions near end point to resolve crash issue
+	MazeCell end = GetEndCell();
+	size_t r = end.GetRow();
+	size_t c = end.GetColumn();
+
+	if (mazeCells[r - 1][c].IsObstruction()) {
+		mazeCells[r - 1][c].SetObstruction(false);
+	}
+	else if (mazeCells[r + 1][c].IsObstruction()) {
+		mazeCells[r + 1][c].SetObstruction(false);
+	}
+	else if (mazeCells[r][c - 1].IsObstruction()) {
+		mazeCells[r][c - 1].SetObstruction(false);
+	}
+	else if (mazeCells[r][c + 1].IsObstruction()) {
+		mazeCells[r][c + 1].SetObstruction(false);
 	}
 }

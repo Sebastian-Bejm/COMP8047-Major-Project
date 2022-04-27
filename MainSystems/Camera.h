@@ -13,18 +13,13 @@ public:
 
 	void SetPosition(glm::vec3 newPosition);
 	void SetOrthoMatrix(float left, float right, float bottom, float top, float nearPlane, float farPlane);
-	void ProcessInput(GLFWwindow *window, float deltaTime);
+	void ProcessInput(GLFWwindow *window, float deltaTime, float& left, float& right, float& bottom, float& top);
 
 	glm::mat4 GetCameraMatrix(); 
 	glm::mat4 GetProjectionMatrix();
 	glm::vec3 GetPosition();
 
 private:
-
-	float cameraSpeed = 0.005f;
-	float sensitivity = 100.0f;
-
-	bool firstClick = true;
 
 	int viewWidth;
 	int viewHeight;

@@ -4,11 +4,11 @@ Agent::Agent() {}
 
 // Initialize the QLearn class with the hyperparameters
 void Agent::InitializeHyperparameters() {
-	double discountFactor = 0.95;
+	double discountFactor = 0.85;
 	double eps = 0.5;
 	double epsDecayFactor = 0.998;
 	double learningRate = 0.8;
-	int numEpisodes = 1000;
+	int numEpisodes = 500;
 
 	// Initalize the QLearn class with hyperparameters
 	instance.InitHyperparameters(discountFactor, eps, epsDecayFactor, learningRate, numEpisodes);
@@ -23,10 +23,10 @@ void Agent::InitializeEnvironment() {
 void Agent::Train(Mode mode, bool verbose) {
 	// Set the training mode
 	if (mode == Mode::QLEARN) {
-		instance.TrainQLearn(verbose);
+		instance.TrainQLearn(verbose, 50);
 	}
 	else if (mode == Mode::QELM) {
-		instance.TrainQELM(verbose);
+		instance.TrainQELM(verbose, 10);
 	}
 
 	// Get the path from QLearn

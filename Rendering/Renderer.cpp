@@ -162,7 +162,7 @@ void Renderer::LoadFreetype() {
 
 	// load font file as a texture
 	FT_Face face;
-	if (FT_New_Face(ft, "arial.ttf", 0, &face))
+	if (FT_New_Face(ft, ARIAL_TTF, 0, &face))
 	{
 		std::cerr << "ERROR::FREETYPE: Failed to load font" << std::endl;
 		return;
@@ -285,7 +285,7 @@ int Renderer::Update(ObjectTracker* tracker) {
 	// Clean the back buffer and assign the new color to it, and depth buffer for correct 3D rendering
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	camera.ProcessInput(window, deltaTime);
+	camera.ProcessInput(window, deltaTime, viewLeft, viewRight, viewBottom, viewTop);
 	camera.SetOrthoMatrix(viewLeft, viewRight, viewBottom, viewTop, 0.1f, 100.0f);
 
 	// Draw the game objects here with a reference to the camera

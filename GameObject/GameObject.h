@@ -6,13 +6,13 @@
 #include "RigidBody.h"
 #include "Utility/Constants.h"
 
-class GameObject
+class GameObject 
 {
 public:
 
-	GameObject(std::string tag, std::string textureFile, Shader& shader, 
+	GameObject(std::string tag, std::string textureFile, Shader& shader,
 		glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
-	
+
 	Transform* GetTransform();
 	void ResetTransform();
 
@@ -41,4 +41,3 @@ private:
 	RigidBody* rigidBody;
 
 };
-
