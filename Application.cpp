@@ -16,8 +16,6 @@ MazeGenerator* mazeGenerator;
 ObstructionGenerator* obsGenerator;
 GameManager* gameManager;
 
-//FPSCounter counter = FPSCounter();
-
 // Initialize all systems in the engine
 int Initialize() {
 	glm::fvec4 backgroundColour(180.0f / 255.0f, 240.0f / 255.0f, 239.0f / 255.0f, 1.0f);
@@ -41,6 +39,7 @@ int Initialize() {
 
 	float centerX = (float)(MAZE_COLS / 2);
 	float centerY = (float)(-MAZE_ROWS / 2);
+
 	Camera camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT, glm::vec3(centerX, centerY, 0));
 	renderer->SetCamera(camera);
 
@@ -49,11 +48,12 @@ int Initialize() {
 
 // Run the engine and its systems updates
 int RunEngine() {
-	// Physics update comes first
-	physicsWorld->Update(objectTracker);
 
 	gameManager->Update();
 	obsGenerator->Update();
+
+	// Physics update comes first
+	physicsWorld->Update(objectTracker);
 
 	// graphics comes after physics
 	renderer->Update(objectTracker);
@@ -84,9 +84,6 @@ int main() {
 	while (!glfwWindowShouldClose(window)) {
 		// Tell GLFW to keep track of input events
 		glfwPollEvents();
-
-		// FPS counter
-		//counter.NextFrame();
 
 		// Run the engine systems and its updates
 		RunEngine();
