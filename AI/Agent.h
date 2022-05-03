@@ -29,7 +29,7 @@ private:
 	std::vector<MazeCell> currentPath;
 	int currentPointIndex = 0;
 
-	float agentSpeed = 0.3f;
+	float agentSpeed = 0.2f;
 
 	void MoveTowards(float destX, float destY);
 };
