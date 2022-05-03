@@ -1,6 +1,7 @@
 # COMP8047-Major-Project
 
 For COMP 8047 Major Project course
+
 Student info:
 Sebastian Bejm, A01033342
 
@@ -16,6 +17,6 @@ S: move down
 
 D: move right
 
-+ (plus): zoom camera in
+Plus (+): zoom camera in
 
-- (minus): zoom camera out
+Minus (-): zoom camera out
