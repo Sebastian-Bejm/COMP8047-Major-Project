@@ -5,8 +5,17 @@ Student info:
 Sebastian Bejm, A01033342
 
 Controls:
-Use WASD keys to move the camera around the scene
-W - move up
-A - move left
-S - move down
-D - move right
+
+Use WASD keys to move the camera around the scene and plus/minus (+/-) to zoom the camera
+
+W: move up
+
+A: move left
+
+S: move down
+
+D: move right
+
++ (plus): zoom camera in
+
+- (minus): zoom camera out
